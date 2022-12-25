@@ -17,6 +17,7 @@
 */
 
 // reactstrap components
+import axios from 'axios'
 import {
   Button,
   Card,
@@ -33,7 +34,25 @@ import {
 } from "reactstrap";
 
 const Register = () => {
-  return (
+  function handleSubmit(e)
+    {
+      e.preventDefault();
+      const name=e.target.Name.value;
+      const email=e.target.email.value;
+      const password=e.target.password.value;
+      axios({
+        method:'post',
+        url:"http://localhost:8000/auth/register",
+        data:{name:name, email:email , password:password},
+      })
+      .then(res=>{
+        console.log(res);
+      })
+      .catch(error=>{
+        console.log(error);
+      })
+    }
+  return ( 
     <>
       <Col lg="6" md="8">
         <Card className="bg-secondary shadow border-0">
@@ -82,7 +101,7 @@ const Register = () => {
             <div className="text-center text-muted mb-4">
               <small>Or sign up with credentials</small>
             </div>
-            <Form role="form">
+            <Form role="form" onSubmit={handleSubmit}>
               <FormGroup>
                 <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
@@ -90,7 +109,7 @@ const Register = () => {
                       <i className="ni ni-hat-3" />
                     </InputGroupText>
                   </InputGroupAddon>
-                  <Input placeholder="Name" type="text" />
+                  <Input placeholder="Name" type="text" name="Name" />
                 </InputGroup>
               </FormGroup>
               <FormGroup>
@@ -102,6 +121,7 @@ const Register = () => {
                   </InputGroupAddon>
                   <Input
                     placeholder="Email"
+                    name="email"
                     type="email"
                     autoComplete="new-email"
                   />
@@ -117,6 +137,7 @@ const Register = () => {
                   <Input
                     placeholder="Password"
                     type="password"
+                    name="password"
                     autoComplete="new-password"
                   />
                 </InputGroup>
@@ -150,7 +171,7 @@ const Register = () => {
                 </Col>
               </Row>
               <div className="text-center">
-                <Button className="mt-4" color="primary" type="button">
+                <Button className="mt-4" color="primary" type="submit">
                   Create account
                 </Button>
               </div>

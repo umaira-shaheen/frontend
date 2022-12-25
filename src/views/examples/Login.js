@@ -31,8 +31,7 @@ import {
   InputGroup,
   Row,
   Col,
-  Toast,
-  ToastContainer
+  
 } from "reactstrap";
 
 
@@ -59,7 +58,7 @@ axios({
 }
   return (
     <>
-    <ToastContainer className="p-3" position='bottom-end'>
+    {/* <ToastContainer className="p-3" position='bottom-end'>
     <Toast>
       <Toast.Header>
         <strong className="me-auto">Bootstrap</strong>
@@ -67,7 +66,7 @@ axios({
       </Toast.Header>
       <Toast.Body>Hello, world! This is a toast message.</Toast.Body>
     </Toast>
-    </ToastContainer>
+    </ToastContainer> */}
       <Col lg="5" md="7">
         <Card className="bg-secondary shadow border-0">
           <CardHeader className="bg-transparent pb-5">
