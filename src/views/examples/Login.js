@@ -17,7 +17,9 @@
 */
 
 // reactstrap components
+import { useState } from 'react';
 import axios from 'axios'
+import { Redirect } from 'react-router-dom';
 import {
   Button,
   Card,
@@ -36,6 +38,8 @@ import {
 
 
 const Login = () => {
+ const[isloggedin, setlogin]=useState(false);
+  
 function handleSubmit(e)
 {
 e.preventDefault()
@@ -49,12 +53,17 @@ axios({
 
 })
 .then(res=>{
-  console.log(res);
+  // return <Redirect to="/admin/index">
+  setlogin(true)
 })
 .catch(error=>{
   console.log(error);
 })
 
+}
+if(isloggedin)
+{
+  return <Redirect to="/admin/index" />;
 }
   return (
     <>
