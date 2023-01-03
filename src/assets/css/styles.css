@@ -1,0 +1,29 @@
+.toast-header {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    color: #6c757d;
+    background-color: rgba(255,255,255,.85);
+    background-clip: padding-box;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    border-top-left-radius: calc(0.25rem - 1px);
+    border-top-right-radius: calc(0.25rem - 1px);
+  }
+  
+  .toast-container
+  {
+    min-width: 300px;
+  }
+  
+  .toast-body
+  {
+    background: white;
+    padding: 10px;
+    border-radius: 0px 0px 5px 5px;
+    margin-top: -1px;
+  }
+
+  .end-0
+  {
+    right: 0 !important;
+  }

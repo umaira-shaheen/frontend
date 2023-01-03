@@ -32,13 +32,15 @@ import {
   InputGroupText,
   InputGroup,
   Row,
-  Col,
-  
+  Col
 } from "reactstrap";
 
+import { Toast, ToastContainer } from 'react-bootstrap';
 
 const Login = () => {
- const[isloggedin, setlogin]=useState(false);
+ const [isloggedin, setlogin]=useState(false);
+//  useState for error message. initially error message will be false
+const [error, setError] = useState(false);
   
 function handleSubmit(e)
 {
@@ -67,15 +69,20 @@ if(isloggedin)
 }
   return (
     <>
-    {/* <ToastContainer className="p-3" position='bottom-end'>
-    <Toast>
-      <Toast.Header>
-        <strong className="me-auto">Bootstrap</strong>
-        <small>11 mins ago</small>
-      </Toast.Header>
-      <Toast.Body>Hello, world! This is a toast message.</Toast.Body>
-    </Toast>
-    </ToastContainer> */}
+      <ToastContainer position="top-end" className="p-3">
+        <Toast>
+          <Toast.Header>
+            <img
+              src="holder.js/20x20?text=%20"
+              className="rounded me-2"
+              alt=""
+            />
+            <strong className="me-auto">Bootstrap</strong>
+            <small className="text-muted">just now</small>
+          </Toast.Header>
+          <Toast.Body>See? Just like this.</Toast.Body>
+        </Toast>
+      </ToastContainer>
       <Col lg="5" md="7">
         <Card className="bg-secondary shadow border-0">
           <CardHeader className="bg-transparent pb-5">
