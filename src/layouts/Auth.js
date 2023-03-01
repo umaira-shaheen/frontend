@@ -16,7 +16,7 @@
 
 */
 import React from "react";
-import { useLocation, Route, Switch, Redirect } from "react-router-dom";
+import { useLocation, Route, Switch, Redirect,Link } from "react-router-dom";
 // reactstrap components
 import { Container, Row, Col } from "reactstrap";
 
@@ -62,15 +62,25 @@ const Auth = (props) => {
     <>
       <div className="main-content" ref={mainContent}>
         <AuthNavbar />
-        <div className="header bg-gradient-info py-7 py-lg-8">
+        <div className="header bg-gradient-info py-3 py-lg-4">
           <Container>
             <div className="header-body text-center mb-7">
               <Row className="justify-content-center">
-                <Col lg="5" md="6">
-                  <h1 className="text-white">UKCELL</h1>
-                  <p className="text-lead text-light">
+                <Col lg="12" md="12">
+                <Col className="collapse-brand" xs="12">
+                  <Link to="/">
+                    <img
+                      alt="..."
+                      src={require("./UKCELL.png")}
+                      
+                    />
+                  </Link>
+                </Col>
+
+                  {/* <h1 className="text-white">UKCELL</h1> */}
+                  {/* <p className="text-lead text-light">
                   “Education is the passport to the future, for tomorrow belongs to those who prepare for it today.”
-                  </p>
+                  </p> */}
                 </Col>
               </Row>
             </div>

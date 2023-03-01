@@ -29,11 +29,11 @@ const Footer = () => {
             © {new Date().getFullYear()}{" "}
             <a
               className="font-weight-bold ml-1"
-              href="https://www.creative-tim.com?ref=adr-admin-footer"
+              // href="https://www.creative-tim.com?ref=adr-admin-footer"
               rel="noopener noreferrer"
               target="_blank"
             >
-              Creative Tim
+              UKCELL 
             </a>
           </div>
         </Col>
@@ -42,41 +42,41 @@ const Footer = () => {
           <Nav className="nav-footer justify-content-center justify-content-xl-end">
             <NavItem>
               <NavLink
-                href="https://www.creative-tim.com?ref=adr-admin-footer"
+                // href="https://www.creative-tim.com?ref=adr-admin-footer"
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                Creative Tim
+                About US
               </NavLink>
             </NavItem>
 
             <NavItem>
               <NavLink
-                href="https://www.creative-tim.com/presentation?ref=adr-admin-footer"
+                // href="https://www.creative-tim.com/presentation?ref=adr-admin-footer"
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                About Us
+                Progress
               </NavLink>
             </NavItem>
 
             <NavItem>
               <NavLink
-                href="http://blog.creative-tim.com?ref=adr-admin-footer"
+                // href="http://blog.creative-tim.com?ref=adr-admin-footer"
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                Blog
+                FAQ
               </NavLink>
             </NavItem>
 
             <NavItem>
               <NavLink
-                href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md?ref=adr-admin-footer"
+                // href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md?ref=adr-admin-footer"
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                MIT License
+                Contact us
               </NavLink>
             </NavItem>
           </Nav>

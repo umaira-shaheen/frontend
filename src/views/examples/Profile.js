@@ -1,22 +1,4 @@
-/*!
 
-=========================================================
-* Argon Dashboard React - v1.2.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-// reactstrap components
 import {
   Button,
   Card,
@@ -48,7 +30,7 @@ const Profile = () => {
                       <img
                         alt="..."
                         className="rounded-circle"
-                        src={require("../../assets/img/theme/team-4-800x800.jpg")}
+                        src={require("../../assets/img/theme/umaira_img.jpeg")}
                       />
                     </a>
                   </div>
@@ -59,7 +41,7 @@ const Profile = () => {
                   <Button
                     className="mr-4"
                     color="info"
-                    href="#pablo"
+                    href="linkedin.com/in/umaira-shaheen-a795ab258"
                     onClick={(e) => e.preventDefault()}
                     size="sm"
                   >
@@ -68,7 +50,7 @@ const Profile = () => {
                   <Button
                     className="float-right"
                     color="default"
-                    href="#pablo"
+                    href="umairashaheen32@gmail.com"
                     onClick={(e) => e.preventDefault()}
                     size="sm"
                   >
@@ -81,7 +63,7 @@ const Profile = () => {
                   <div className="col">
                     <div className="card-profile-stats d-flex justify-content-center mt-md-5">
                       <div>
-                        <span className="heading">22</span>
+                        {/* <span className="heading">22</span>
                         <span className="description">Friends</span>
                       </div>
                       <div>
@@ -90,36 +72,35 @@ const Profile = () => {
                       </div>
                       <div>
                         <span className="heading">89</span>
-                        <span className="description">Comments</span>
+                        <span className="description">Comments</span> */}
                       </div>
                     </div>
                   </div>
                 </Row>
                 <div className="text-center">
                   <h3>
-                    Jessica Jones
-                    <span className="font-weight-light">, 27</span>
+                    Umaira Shaheen
+                    <span className="font-weight-light"></span>
                   </h3>
                   <div className="h5 font-weight-300">
                     <i className="ni location_pin mr-2" />
-                    Bucharest, Romania
+                    Software Engineer
                   </div>
                   <div className="h5 mt-4">
                     <i className="ni business_briefcase-24 mr-2" />
-                    Solution Manager - Creative Tim Officer
+                    Uk College of English Language
                   </div>
                   <div>
                     <i className="ni education_hat mr-2" />
-                    University of Computer Science
+                    International Islamic Universty Islamabad
                   </div>
                   <hr className="my-4" />
                   <p>
-                    Ryan — the name taken by Melbourne-raised, Brooklyn-based
-                    Nick Murphy — writes, performs and records all of his own
-                    music.
+                  “You can teach a student a lesson for a day; but if you can teach him to learn by
+                   creating curiosity, he will continue the learning process as long as he lives.”
                   </p>
                   <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                    Show more
+                    {/* Show more */}
                   </a>
                 </div>
               </CardBody>

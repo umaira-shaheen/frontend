@@ -62,7 +62,7 @@ axios({
 })
 
 }
-const onDismiss = () => setError(false);
+const onDismiss = () => setError(false); 
 
 if(isloggedin)
 {
