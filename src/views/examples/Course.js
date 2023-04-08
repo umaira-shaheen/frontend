@@ -41,8 +41,8 @@ const Course = (args) => {
   const[enddate,setenddate]=useState(null);
   const[description,setCoursedescription]=useState(null);
   const[category,setCoursecategory]=useState(null);
-  // const [courserecord, setCourseRecord] = useState(null);
-  // const [isDeleteCourse, setDeleteCourse]=useState(false);
+  const[rerender,setRerender]=useState(false);
+
   
   
 //  !#################################### Delete COURSE FUNCTION ##############################################
@@ -93,6 +93,8 @@ const Course = (args) => {
       if(res.data == "success")
       {
         seteditSuccess(true); 
+        GetCourse();
+        setRerender(!rerender);
       }
       else
       {
@@ -100,7 +102,7 @@ const Course = (args) => {
         setError(true);
       }
       setEditModal(!editmodal); 
-      GetCourse();
+      
     })
     .catch(error=>{
 
@@ -153,10 +155,6 @@ const Course = (args) => {
 // !#################################### Get Course Api ##############################################
  function GetCourse(e)
   {
-   
-  useEffect(() => {
-    // Update the document title using the browser API
-    
     axios({ 
       method:'get',
       url:"http://localhost:8000/course/GetCourse",
@@ -170,10 +168,11 @@ const Course = (args) => {
     .catch(error=>{
       console.log(error);
     })
-  }, []);
   }
 
+  useEffect(() => {
   GetCourse();
+  }, []);
 // !#################################### Add COURSE FUNCTION ##############################################
 
   function AddCourse(e)
@@ -195,7 +194,8 @@ const Course = (args) => {
       if(res.data == "success")
       {
         setaddSuccess(true);
-       
+        GetCourse();
+        setRerender(!rerender);
       }
       else
       {
@@ -257,7 +257,7 @@ const Course = (args) => {
           <strong> Course deleted successfully! </strong> 
         </Alert>
         <Alert color="success" isOpen={editsuccess} toggle={onDismisseditSuccess}>
-          <strong> Course Updated Successfully successfully! </strong> 
+          <strong> Course Updated successfully! </strong> 
         </Alert>
         <Modal isOpen={modal} toggle={toggle} {...args} size='lg'>
         <Form  role="form" onSubmit={AddCourse}>
@@ -369,7 +369,7 @@ const Course = (args) => {
             
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" type="submit" onClick={() => {GetCourse(e)}}>
+            <Button color="primary" type="submit" >
               Add Course
             </Button>{' '}
             <Button color="secondary" onClick={toggle}>
@@ -508,7 +508,7 @@ const Course = (args) => {
            
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" type="submit" onClick={() => {GetCourse(e)}}>
+            <Button color="primary" type="submit" >
               Update
             </Button>{' '}
             <Button color="secondary" onClick={editModalClose}>
@@ -623,6 +623,7 @@ const Course = (args) => {
             </Card>
           </div>
         </Row>
+      
       </Container>
     </>
 

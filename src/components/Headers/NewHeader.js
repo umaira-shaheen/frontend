@@ -3,7 +3,8 @@ import { Card, CardBody, CardTitle, Container,Button, Row, Col } from "reactstra
 const NewHeader = () => {
   return (
     <>
-      <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
+    {/* <Card className="bg-gradient-default shadow"></Card> */}
+      <div className="header bg-gradient-default shadow pb-8 pt-5 pt-md-8">
         <Container fluid>
        
         

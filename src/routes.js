@@ -17,12 +17,15 @@
 */
 import Index from "views/Index.js";
 import Course from "views/examples/Course";
+import User from "views/examples/User";
+import Quiz from "views/examples/Quiz";
+import Assignment from "views/examples/Assignment";
 import Profile from "views/examples/Profile.js";
 // import Maps from "views/examples/Maps.js";
 import Register from "views/examples/Register.js";
 import Login from "views/examples/Login.js";
 // import Tables from "views/examples/Tables.js";
-// import Icons from "views/examples/Icons.js";
+import Icons from "views/examples/Icons.js";
 
 var routes = [
   {
@@ -39,15 +42,21 @@ var routes = [
     component: Course,
     layout: "/admin"
   },
-  
+  {
+    path: "/users",
+    name: "Users",
+    icon: "ni ni-single-02 text-yellow",
+    component: User,
+    layout: "/admin"
+  },
 
-  // {
-  //   path: "/icons",
-  //   name: "Icons",
-  //   icon: "ni ni-planet text-blue",
-  //   component: Icons,
-  //   layout: "/admin"
-  // },
+  {
+    path: "/icons",
+    name: "Icons",
+    icon: "ni ni-planet text-blue",
+    component: Icons,
+    layout: "/admin"
+  },
   // {
   //   path: "/maps",
   //   name: "Maps",
@@ -57,9 +66,23 @@ var routes = [
   // },
   {
     path: "/user-profile",
-    name: "User Profile",
+    name: "My Profile",
     icon: "ni ni-single-02 text-yellow",
     component: Profile,
+    layout: "/admin"
+  },
+  {
+    path: "/quiz",
+    name: "Quiz",
+    icon: "ni ni-books",
+    component: Quiz,
+    layout: "/admin"
+  },
+  {
+    path: "/assignments",
+    name: "Assignment",
+    icon: "ni ni-books",
+    component: Assignment,
     layout: "/admin"
   },
   // {

@@ -17,6 +17,7 @@
 */
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { render } from 'react-dom';
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import "assets/plugins/nucleo/css/nucleo.css";
@@ -26,6 +27,13 @@ import "assets/css/styles.css"
 
 import AdminLayout from "layouts/Admin.js";
 import AuthLayout from "layouts/Auth.js";
+import Home from "views/Frontpages/Homepage";
+import About from "views/Frontpages/About";
+import Contact from "views/Frontpages/Contact";
+import Courses from "views/Frontpages/Courses";
+import Feature from "views/Frontpages/Feature";
+import Team from "views/Frontpages/Team";
+import Testimonial from "views/Frontpages/Testimonial";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -34,7 +42,15 @@ root.render(
     <Switch>
       <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
       <Route path="/auth" render={(props) => <AuthLayout {...props} />} />
-      <Redirect from="/" to="/admin/index" />
+      {/* <Route path="/" render={(props) => <AuthLayout {...props} />} /> */}
+      <Route exact path="/" render={(props) => <Home {...props} />} />
+      <Route path="/about-us" render={(props) => <About {...props} />} />
+      <Route path="/contact-us" render={(props) => <Contact {...props} />} />
+      <Route path="/courses" render={(props) => <Courses {...props} />} />
+      <Route path="/team" render={(props) => <Team {...props} />} />
+      <Route path="/features" render={(props) => <Feature {...props} />} />
+      <Route path="/testimonial" render={(props) => <Testimonial {...props} />} />
+      {/* <Redirect from="/" to="/admin/index" /> */}
     </Switch>
   </BrowserRouter>
 );
