@@ -25,7 +25,9 @@ const About=()=>
                         <h6 className="d-inline-block position-relative text-secondary text-uppercase pb-2">About Us</h6>
                         <h1 className="display-4">First Choice For Online Education Anywhere</h1>
                     </div>
-                    <p>Tempor erat elitr at rebum at at clita aliquyam consetetur. Diam dolor diam ipsum et, tempor voluptua sit consetetur sit. Aliquyam diam amet diam et eos sadipscing labore. Clita erat ipsum et lorem et sit, sed stet no labore lorem sit. Sanctus clita duo justo et tempor consetetur takimata eirmod, dolores takimata consetetur invidunt magna dolores aliquyam dolores dolore. Amet erat amet et magna</p>
+                    <p>Established back in 2007 by DR.Yasir Masood. UKCELL is founded on the ideals of inclusivity, diversity and collaboration, with a passion of  increasing access to education, healthy learning and delivering social good.
+
+                      Grounded by a sense of community and the notion that collective expertise and power can transform people’s lives, what makes us unique is our ability to impart the power of learning, sharing and connection by sitting at home in just one click</p>
                     <div className="row pt-3 mx-0">
                         <div className="col-3 px-0">
                             <div className="bg-success text-center p-4">

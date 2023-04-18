@@ -18,7 +18,7 @@ const Feature=()=>
                         <h6 className="d-inline-block position-relative text-secondary text-uppercase pb-2">Why Choose Us?</h6>
                         <h1 className="display-4">Why You Should Start Learning with Us?</h1>
                     </div>
-                    <p className="mb-4 pb-2">Aliquyam accusam clita nonumy ipsum sit sea clita ipsum clita, ipsum dolores amet voluptua duo dolores et sit ipsum rebum, sadipscing et erat eirmod diam kasd labore clita est. Diam sanctus gubergren sit rebum clita amet.</p>
+                    <p className="mb-4 pb-2">Our main aim </p>
                     <div className="d-flex mb-3">
                         <div className="btn-icon bg-primary mr-4">
                             <i className="fa fa-2x fa-graduation-cap text-white"></i>
