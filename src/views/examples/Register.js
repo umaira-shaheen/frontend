@@ -17,7 +17,9 @@
 */
 
 // reactstrap components
-import axios from 'axios'
+import axios from 'axios';
+import { useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import {
   Button,
   Card,
@@ -30,34 +32,48 @@ import {
   InputGroupText,
   InputGroup,
   Row,
-  Col
+  Col,
+  Alert 
 } from "reactstrap";
 
 const Register = () => {
+const [isregistered, setRegister]=useState(false);
+const [error, setError] = useState(false);
   function handleSubmit(e)
     {
       e.preventDefault();
-      const name=e.target.Name.value;
+      const Firstname=e.target.First_Name.value;
+      const Lastname=e.target.Last_Name.value;
       const email=e.target.email.value;
       const password=e.target.password.value;
       axios({
         method:'post',
         url:"http://localhost:8000/auth/register",
-        data:{name:name, email:email , password:password},
+        data:{Firstname:Firstname, Lastname:Lastname, email:email , password:password},
       })
       .then(res=>{
         console.log(res);
+        setRegister(true);
       })
       .catch(error=>{
         console.log(error);
+        setError(true);
       })
     }
+    const onDismiss = () => setError(false); 
+
+    if(isregistered)
+    {
+      return <Redirect to="/admin/index" />;    }
   return ( 
     <>
       <Col lg="6" md="8">
         <Card className="bg-secondary shadow border-0">
-          <CardHeader className="bg-transparent pb-5">
-            <div className="text-muted text-center mt-2 mb-4">
+          {/* <CardHeader className="bg-transparent pb-5"> */}
+          <Alert color="danger" isOpen={error} toggle={onDismiss}>
+              <strong>Error! </strong> Invalid credentials
+           </Alert>
+            {/* <div className="text-muted text-center mt-2 mb-4">
               <small>Sign up with</small>
             </div>
             <div className="text-center">
@@ -95,11 +111,11 @@ const Register = () => {
                 </span>
                 <span className="btn-inner--text">Google</span>
               </Button>
-            </div>
-          </CardHeader>
+            </div> */}
+          {/* </CardHeader> */}
           <CardBody className="px-lg-5 py-lg-5">
             <div className="text-center text-muted mb-4">
-              <small>Or sign up with credentials</small>
+              <small> sign up with credentials</small>
             </div>
             <Form role="form" onSubmit={handleSubmit}>
               <FormGroup>
@@ -109,7 +125,17 @@ const Register = () => {
                       <i className="ni ni-hat-3" />
                     </InputGroupText>
                   </InputGroupAddon>
-                  <Input placeholder="Name" type="text" name="Name" />
+                  <Input placeholder="First Name" type="text" name="First_Name" required />
+                </InputGroup>
+              </FormGroup>
+              <FormGroup>
+                <InputGroup className="input-group-alternative mb-3">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-hat-3" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input placeholder="Last Name" type="text" name="Last_Name" required />
                 </InputGroup>
               </FormGroup>
               <FormGroup>
@@ -124,6 +150,7 @@ const Register = () => {
                     name="email"
                     type="email"
                     autoComplete="new-email"
+                    required
                   />
                 </InputGroup>
               </FormGroup>
@@ -139,6 +166,7 @@ const Register = () => {
                     type="password"
                     name="password"
                     autoComplete="new-password"
+                    required
                   />
                 </InputGroup>
               </FormGroup>
