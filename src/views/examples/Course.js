@@ -188,6 +188,7 @@ const Course = (args) => {
     axios({    //AddCourse API Calling
       method:'post',
       withCredentials: true,
+      sameSite: 'none',
       url:"http://localhost:8000/course/AddCourse",
       data:{course_name:course_name, course_code:course_code , start_date:start_date, end_date:end_date, Description:Description,Category:Category},
     })
