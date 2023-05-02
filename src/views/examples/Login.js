@@ -49,7 +49,7 @@ const password=e.target.elements.password.value;
 // axios.get('http://localhost:8000/auth/get_data?name=rida').then(res =>{console.log(res)})
 axios({
   method:'post',
-  credentials: 'same-origin',
+  withCredentials: true,
   url :"http://localhost:8000/auth/validate",
   data:{email:email , password:password}
 })
