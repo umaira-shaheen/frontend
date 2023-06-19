@@ -30,11 +30,15 @@ import AuthLayout from "layouts/Auth.js";
 import Home from "views/Frontpages/Homepage";
 import About from "views/Frontpages/About";
 import Contact from "views/Frontpages/Contact";
-import Courses from "views/Frontpages/Courses";
+import ContactUs from "views/Frontpages/ContactUs";
+import CoursesList from "views/Frontpages/CoursesList";
+import Our_features from "views/Frontpages/Our_features";
+import Detail from "views/Frontpages/Detail";
+import Forgot_password from "views/examples/Forgot_password";
 import Feature from "views/Frontpages/Feature";
-import Team from "views/Frontpages/Team";
+import Team from "views/Frontpages/Our_team";
 import Testimonial from "views/Frontpages/Testimonial";
-
+import AboutUs from "views/Frontpages/AboutUS";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
@@ -45,11 +49,13 @@ root.render(
       {/* <Route path="/" render={(props) => <AuthLayout {...props} />} /> */}
       <Route exact path="/" render={(props) => <Home {...props} />} />
       <Route path="/about-us" render={(props) => <About {...props} />} />
-      <Route path="/contact-us" render={(props) => <Contact {...props} />} />
-      <Route path="/courses" render={(props) => <Courses {...props} />} />
-      <Route path="/team" render={(props) => <Team {...props} />} />
-      <Route path="/features" render={(props) => <Feature {...props} />} />
+      <Route path="/AboutUs" render={(props) => <AboutUs {...props} />} />
+      <Route path="/contact-us" render={(props) => <ContactUs {...props} />} />
+      <Route path="/coursesList" render={(props) => <CoursesList {...props} />} />
+      <Route path="/Our_team" render={(props) => <Team {...props} />} />
+      <Route path="/Our_features" render={(props) => <Our_features {...props} />} />
       <Route path="/testimonial" render={(props) => <Testimonial {...props} />} />
+      <Route path="/detail" render={(props) => <Detail {...props} />} />
       {/* <Redirect from="/" to="/admin/index" /> */}
     </Switch>
   </BrowserRouter>

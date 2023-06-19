@@ -1,11 +1,14 @@
 import Navbar from "./NavBar";
 import Footer from "./Footer";
 import Header from "./Header";
+import NavBar from "./NavBar";
+import Topbar from "./Topbar";
 import feature from "assets/img/landing_images/pic3.jpeg";
 const Feature = () => {
     return (
         <>
-
+        <Topbar/>
+        <NavBar/>
 
             {/* <!-- Feature Start --> */}
             <div className="my-front-css-custom">
@@ -58,6 +61,7 @@ const Feature = () => {
                 </div>
             </div>
             {/* <!-- Feature Start --> */}
+            <Footer/>
         </>
     )
 }

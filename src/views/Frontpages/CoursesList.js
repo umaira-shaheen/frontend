@@ -1,15 +1,16 @@
 import Navbar from "./NavBar";
 import Footer from "./Footer";
 import Header from "./Header";
-import { Link } from "react-router-dom";
 import axios from "axios";
-import { useState, useEffect } from "react";
-import Detail from "./Detail";
+import { Link } from "react-router-dom";
+import { useState,useEffect} from "react";
 
 // import bg_img from "assets/img/landing_images/bg-image.jpg";
 import "./front.scss"
-const Courses = () => {
-    const [coursetable, setCoursetable] = useState(null);
+import Topbar from "./Topbar";
+const CoursesList=()=>
+{
+  const [coursetable, setCoursetable] = useState(null);
     function GetCourse(e) {
         axios({
             method: 'get',
@@ -27,11 +28,12 @@ const Courses = () => {
     useEffect(() => {
         GetCourse();
     }, []);
-    return (
-        <>
-
-
-            <div className="my-front-css-custom">
+   
+  return(
+    <>
+    <Topbar/>
+    <Navbar/>
+     <div className="my-front-css-custom">
                 {/* <!-- Courses Start --> */}
                 <div class="container-fluid py-5">
                     <div class="container py-5">
@@ -92,9 +94,9 @@ const Courses = () => {
                     </div>
                 </div>
                 {/* <!-- Courses End --> */}
+                <Footer/>
             </div>
-
-        </>
-    );
+    </>
+  )
 }
-export default Courses;
+export default CoursesList;

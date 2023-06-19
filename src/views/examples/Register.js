@@ -19,7 +19,7 @@
 // reactstrap components
 import axios from 'axios';
 import { useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect,Link } from 'react-router-dom';
 import {
   Button,
   Card,
@@ -46,10 +46,11 @@ const [error, setError] = useState(false);
       const Lastname=e.target.Last_Name.value;
       const email=e.target.email.value;
       const password=e.target.password.value;
+      const role = "Student";
       axios({
         method:'post',
         url:"http://localhost:8000/auth/register",
-        data:{Firstname:Firstname, Lastname:Lastname, email:email , password:password},
+        data:{Firstname:Firstname, Lastname:Lastname, email:email , password:password , role:role},
       })
       .then(res=>{
         console.log(res);
@@ -176,28 +177,7 @@ const [error, setError] = useState(false);
                   <span className="text-success font-weight-700">strong</span>
                 </small>
               </div>
-              <Row className="my-4">
-                <Col xs="12">
-                  <div className="custom-control custom-control-alternative custom-checkbox">
-                    <input
-                      className="custom-control-input"
-                      id="customCheckRegister"
-                      type="checkbox"
-                    />
-                    <label
-                      className="custom-control-label"
-                      htmlFor="customCheckRegister"
-                    >
-                      <span className="text-muted">
-                        I agree with the{" "}
-                        <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                          Privacy Policy
-                        </a>
-                      </span>
-                    </label>
-                  </div>
-                </Col>
-              </Row>
+             
               <div className="text-center">
                 <Button className="mt-4" color="primary" type="submit">
                   Create account
@@ -206,6 +186,12 @@ const [error, setError] = useState(false);
             </Form>
           </CardBody>
         </Card>
+        <Row className="my-4" style={{marginLeft:"100px"}}>
+                <Col  className="text-right" xs="6">
+                <span className="text-light"><small>Already have an account?</small></span>
+                <Link to={"/auth/login"} style={{ paddingLeft: '10px' }} className="text-success font-weight-300 ml-90"><small>Login</small></Link> 
+                </Col>
+          </Row>
       </Col>
     </>
   );

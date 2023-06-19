@@ -30,11 +30,11 @@ const Admin = (props) => {
   const mainContent = React.useRef(null);
   const location = useLocation();
 
-  React.useEffect(() => {
-    document.documentElement.scrollTop = 0;
-    document.scrollingElement.scrollTop = 0;
-    mainContent.current.scrollTop = 0;
-  }, [location]);
+  // React.useEffect(() => {
+  //   document.documentElement.scrollTop = 0;
+  //   document.scrollingElement.scrollTop = 0;
+  //   mainContent.current.scrollTop = 0;
+  // }, [location]);
 
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
@@ -63,7 +63,9 @@ const Admin = (props) => {
     }
     return "Brand";
   };
-
+  if (localStorage.getItem("user") === null) {
+    return <Redirect to="/auth/login" />;
+  }
   return (
     <>
       <Sidebar

@@ -1,10 +1,13 @@
 import Navbar from "./NavBar";
 import Footer from "./Footer";
 import Header from "./Header";
-const Contact=()=>
+import Topbar from "./Topbar";
+const ContactUs=()=>
 {
     return(
         <>
+        <Topbar/>
+        <Navbar/>
          {/* <!-- Contact Start --> */}
     <div className="my-front-css-custom">
     <div className="container-fluid py-5">
@@ -18,7 +21,7 @@ const Contact=()=>
                             </div>
                             <div className="mt-n1">
                                 <h4>Our Location</h4>
-                                <p className="m-0">UK College of English Language, near MCB Bank, Gujar khan</p>
+                                <p className="m-0">Uk College of English Langugae, Gujar Khan</p>
                             </div>
                         </div>
                         <div className="d-flex align-items-center mb-5">
@@ -36,7 +39,7 @@ const Contact=()=>
                             </div>
                             <div className="mt-n1">
                                 <h4>Email Us</h4>
-                                <p className="m-0">umairashaheen322gmail.com</p>
+                                <p className="m-0">umairashaheen32@gmail.com</p>
                             </div>
                         </div>
                     </div>
@@ -76,4 +79,4 @@ const Contact=()=>
         </>
     )
 };
-export default Contact;
+export default ContactUs;

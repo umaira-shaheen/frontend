@@ -26,14 +26,14 @@ const Footer = () => {
       <Row className="align-items-center justify-content-xl-between">
         <Col xl="6">
           <div className="copyright text-center text-xl-left text-muted">
-            © {new Date().getFullYear()}{" "}
+            {/* © {new Date().getFullYear()}{" "} */}
             <a
               className="font-weight-bold ml-1"
               // href="https://www.creative-tim.com?ref=adr-admin-footer"
               rel="noopener noreferrer"
               target="_blank"
             >
-              UKCELL 
+              {/* UKCELL  */}
             </a>
           </div>
         </Col>
@@ -46,7 +46,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                About US
+                {/* About US */}
               </NavLink>
             </NavItem>
 
@@ -56,7 +56,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                Progress
+                {/* Progress */}
               </NavLink>
             </NavItem>
 
@@ -66,7 +66,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                FAQ
+                {/* FAQ */}
               </NavLink>
             </NavItem>
 
@@ -76,7 +76,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                Contact us
+                {/* Contact us */}
               </NavLink>
             </NavItem>
           </Nav>

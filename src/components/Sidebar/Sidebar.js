@@ -55,6 +55,8 @@ import {
 var ps;
 
 const Sidebar = (props) => {
+  const storedUser = localStorage.getItem('user');
+  const user_info = JSON.parse(storedUser);
   const [collapseOpen, setCollapseOpen] = useState();
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
@@ -70,21 +72,72 @@ const Sidebar = (props) => {
   };
   // creates the links that appear in the left menu / Sidebar
   const createLinks = (routes) => {
-    return routes.map((prop, key) => {
-      return (
-        <NavItem key={key}>
-          <NavLink
-            to={prop.layout + prop.path}
-            tag={NavLinkRRD}
-            onClick={closeCollapse}
-            activeClassName="active"
-          >
-            <i className={prop.icon} />
-            {prop.name}
-          </NavLink>
-        </NavItem>
-      );
-    });
+    const filteredRoutes = props.routes.filter(
+      (route) => (!(route.name === "Users" && user_info.Role === "Teacher") && (route.name !== "Login" && route.name !== "Register"))
+    );
+    
+    return (
+      <nav>
+        {/* Always show these routes */}
+        
+        {filteredRoutes.map((prop, key) => (
+          <NavItem key={key}>
+            <NavLink
+              to={prop.layout + prop.path}
+              tag={NavLinkRRD}
+              onClick={closeCollapse}
+              activeClassName="active"
+            >
+              <i className={prop.icon} />
+              {prop.name}
+            </NavLink>
+          </NavItem>
+        ))}
+       
+        {/* Conditionally show the "Users" route if the user role is "admin" */}
+        {/* {user_info.Role === 'Teacher' ? null : (
+          <NavItem>
+            <NavLink
+              to="/admin/users"
+              tag={NavLinkRRD}
+              onClick={closeCollapse}
+              activeClassName="active"
+            >
+              <i className="ni ni-single-02 text-yellow" />
+              Users
+            </NavLink>
+          </NavItem>
+        )} */}
+      </nav>
+    );
+
+      //   <NavItem key={key}>
+      //     <NavLink
+      //       to={prop.layout + prop.path}
+      //       tag={NavLinkRRD}
+      //       onClick={closeCollapse}
+      //       activeClassName="active"
+      //     >
+      //       <i className={prop.icon} />
+      //       {prop.name}
+      //     </NavLink>
+          
+      //   { user_info.Role === 'Admin'&&
+          
+      //     <NavLink
+      //       to="/admin/users"
+      //       tag={NavLinkRRD}
+      //       onClick={closeCollapse}
+      //       activeClassName="active"
+      //     >
+      //       <i className="ni ni-single-02 text-yellow" />
+      //       Users
+      //     </NavLink>
+      //    }
+      //    </NavItem>
+      
+      // );
+    // });
   };
 
   const { bgColor, routes, logo } = props;
@@ -236,12 +289,12 @@ const Sidebar = (props) => {
           {/* <h6 className="navbar-heading text-muted">Documentation</h6> */}
           {/* Navigation */}
           <Nav className="mb-md-3" navbar>
-            <NavItem>
-              {/* <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/overview?ref=adr-admin-sidebar"> */}
-                {/* <i className="ni ni-spaceship" /> */}
-                {/* Getting started */}
-              {/* </NavLink> */}
-            </NavItem>
+            {/* <NavItem>
+              <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/overview?ref=adr-admin-sidebar"> */}
+                {/* <i className="ni ni-spaceship" />
+                Getting started */}
+            {/* </NavLink>
+            </NavItem> */} 
             <NavItem>
             {/* <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/overview?ref=adr-admin-sidebar"> */}
                 {/* <i className="ni ni-spaceship" />

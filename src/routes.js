@@ -18,16 +18,19 @@
 import Index from "views/Index.js";
 import Course from "views/examples/Course";
 import User from "views/examples/User";
+
 import Quiz from "views/examples/Quiz";
 import Assignment from "views/examples/Assignment";
 import Profile from "views/examples/Profile.js";
 // import Maps from "views/examples/Maps.js";
+import Forgot_password from "views/examples/Forgot_password";
 import Register from "views/examples/Register.js";
 import Login from "views/examples/Login.js";
 // import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 
 var routes = [
+ 
   {
     path: "/index",
     name: "Dashboard",
@@ -42,6 +45,8 @@ var routes = [
     component: Course,
     layout: "/admin"
   },
+
+  
   {
     path: "/users",
     name: "Users",
@@ -50,13 +55,13 @@ var routes = [
     layout: "/admin"
   },
 
-  {
-    path: "/icons",
-    name: "Icons",
-    icon: "ni ni-planet text-blue",
-    component: Icons,
-    layout: "/admin"
-  },
+  // {
+  //   path: "/icons",
+  //   name: "Icons",
+  //   icon: "ni ni-planet text-blue",
+  //   component: Icons,
+  //   layout: "/admin"
+  // },
   // {
   //   path: "/maps",
   //   name: "Maps",
@@ -64,6 +69,7 @@ var routes = [
   //   component: Maps,
   //   layout: "/admin"
   // },
+
   {
     path: "/user-profile",
     name: "My Profile",
@@ -85,6 +91,7 @@ var routes = [
     component: Assignment,
     layout: "/admin"
   },
+  
   // {
   //   path: "/tables",
   //   name: "Tables",
@@ -105,6 +112,13 @@ var routes = [
     name: "Register",
     icon: "ni ni-circle-08 text-pink",
     component: Register,
+    layout: "/auth"
+  },
+  {
+    path: "/ForgotPassword",
+    name: "Forgotpassword",
+    icon: "ni ni-circle-08 text-pink",
+    component: Forgot_password,
     layout: "/auth"
   }
 ];

@@ -2,13 +2,15 @@ import Navbar from "./NavBar";
 import Footer from "./Footer";
 import Header from "./Header";
 import about_img from "assets/img/landing_images/aboutus.jpg";
-
-const About=()=>
+import Topbar from "./Topbar";
+import NavBar from "./NavBar";
+import "./front.scss"
+const AboutUs=()=>
 {
     return(
         <>
-        
-       
+        <Topbar/>
+        <NavBar/>
         
          {/* <!-- About Start --> */}
          <div className="my-front-css-custom">
@@ -64,4 +66,4 @@ const About=()=>
         </>
     )
 };
-export default About;
+export default AboutUs;

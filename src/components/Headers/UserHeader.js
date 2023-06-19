@@ -20,6 +20,8 @@
 import { Button, Container, Row, Col } from "reactstrap";
 
 const UserHeader = () => {
+  const storedUser = localStorage.getItem('user');
+  const user_info = JSON.parse(storedUser);
   return (
     <>
       <div
@@ -38,7 +40,7 @@ const UserHeader = () => {
         <Container className="d-flex align-items-center" fluid>
           <Row>
             <Col lg="7" md="10">
-              <h1 className="display-2 text-white">Hello umaira!</h1>
+              <h1 className="display-2 text-white">Hello {user_info.First_name}</h1>
               <p className="text-white mt-0 mb-5">
                 This is your profile page. You can see the progress you've made
                 with your work and manage your projects or assigned tasks

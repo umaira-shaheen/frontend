@@ -15,6 +15,9 @@ import {
 import UserHeader from "components/Headers/UserHeader.js";
 
 const Profile = () => {
+  
+  const storedUser = localStorage.getItem('user');
+  const user_info = JSON.parse(storedUser);
   return (
     <>
       <UserHeader />
@@ -79,12 +82,12 @@ const Profile = () => {
                 </Row>
                 <div className="text-center">
                   <h3>
-                    Umaira Shaheen
+                    {user_info.First_name} {user_info.Last_name}
                     <span className="font-weight-light"></span>
                   </h3>
                   <div className="h5 font-weight-300">
                     <i className="ni location_pin mr-2" />
-                    Software Engineer
+                   {user_info.Role}
                   </div>
                   <div className="h5 mt-4">
                     <i className="ni business_briefcase-24 mr-2" />

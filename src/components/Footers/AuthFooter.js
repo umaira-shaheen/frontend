@@ -19,7 +19,7 @@
 
 // reactstrap components
 import { NavItem, NavLink, Nav, Container, Row, Col } from "reactstrap";
-
+import {  Link } from 'react-router-dom';
 const Login = () => {
   return (
     <>
@@ -29,13 +29,8 @@ const Login = () => {
             <Col xl="6">
               <div className="copyright text-center text-xl-left text-muted">
                 © {new Date().getFullYear()}{" "}
-                <a
-                  className="font-weight-bold ml-1"
-                  href="https://www.creative-tim.com?ref=adr-auth-footer"
-                  target="_blank"
-                >
-                  UKCELL
-                </a>
+                
+                <Link to={"/"} className="font-weight-bold ml-1">UKCELL</Link>
               </div>
             </Col>
             <Col xl="6">

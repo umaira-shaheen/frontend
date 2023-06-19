@@ -19,7 +19,7 @@
 // reactstrap components
 import { useState } from 'react';
 import axios from 'axios'
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import {
   Button,
   Card,
@@ -55,7 +55,10 @@ axios({
 })
 .then(res=>{
   // return <Redirect to="/admin/index">
-  setlogin(true)
+  setlogin(true);
+   const user_id=res.data._id;
+   const user_role=res.data.Role;
+   localStorage.setItem('user', JSON.stringify(res.data));
 })
 .catch(error=>{
   setError(true)
@@ -63,10 +66,13 @@ axios({
 
 }
 const onDismiss = () => setError(false); 
-
-if(isloggedin)
-{
-  return <Redirect to="/admin/index" />;
+if (localStorage.getItem("user") != null) {
+  const storedUser = localStorage.getItem('user');
+  const user_info = JSON.parse(storedUser);
+  if(user_info.Email)
+  {
+    return <Redirect to="/admin/user-profile" />;
+  }
 }
   return (
     <>
@@ -133,22 +139,10 @@ if(isloggedin)
         </Card>
         <Row className="mt-3">
           <Col xs="6">
-            <a
-              className="text-light"
-              href="#pablo"
-              onClick={(e) => e.preventDefault()}
-            >
-              <small>Forgot password?</small>
-            </a>
+          <Link to={"/auth/ForgotPassword"} className="text-light"><small>Forgot Password?</small></Link> 
           </Col>
           <Col className="text-right" xs="6">
-            <a
-              className="text-light"
-              href="#pablo"
-              onClick={(e) => e.preventDefault()}
-            >
-              <small>Create new account</small>
-            </a>
+            <Link to={"/auth/register"} className="text-light"><small>Create new account</small></Link> 
           </Col>
         </Row>
       </Col>
