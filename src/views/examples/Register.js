@@ -20,6 +20,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { Redirect,Link } from 'react-router-dom';
+
 import {
   Button,
   Card,
@@ -39,6 +40,7 @@ import {
 const Register = () => {
 const [isregistered, setRegister]=useState(false);
 const [error, setError] = useState(false);
+const [errorMessage, setErrorMessage] = useState("");
   function handleSubmit(e)
     {
       e.preventDefault();
@@ -53,11 +55,22 @@ const [error, setError] = useState(false);
         data:{Firstname:Firstname, Lastname:Lastname, email:email , password:password , role:role},
       })
       .then(res=>{
-        console.log(res);
+       if(res.data=="successfully inserted")
+       {
         setRegister(true);
+
+       }
+       else
+       {
+         setErrorMessage(res.data);
+         setError(true);
+       }
+        console.log(res);
+       
       })
       .catch(error=>{
         console.log(error);
+        setErrorMessage("Failed to connect to backend");
         setError(true);
       })
     }
@@ -65,15 +78,20 @@ const [error, setError] = useState(false);
 
     if(isregistered)
     {
-      return <Redirect to="/admin/index" />;    }
+      return <Redirect to="/admin/index" />;   
+   }
   return ( 
     <>
       <Col lg="6" md="8">
         <Card className="bg-secondary shadow border-0">
           {/* <CardHeader className="bg-transparent pb-5"> */}
-          <Alert color="danger" isOpen={error} toggle={onDismiss}>
-              <strong>Error! </strong> Invalid credentials
-           </Alert>
+          <Alert color="success" isOpen={isregistered} toggle={onDismiss}>
+          <strong> You are successfully registered!! </strong>
+        </Alert>
+        <Alert color="danger" isOpen={error} toggle={onDismiss}>
+          <strong>Error! </strong> {errorMessage}
+        </Alert>
+          
             {/* <div className="text-muted text-center mt-2 mb-4">
               <small>Sign up with</small>
             </div>
@@ -171,12 +189,12 @@ const [error, setError] = useState(false);
                   />
                 </InputGroup>
               </FormGroup>
-              <div className="text-muted font-italic">
+              {/* <div className="text-muted font-italic">
                 <small>
                   password strength:{" "}
                   <span className="text-success font-weight-700">strong</span>
                 </small>
-              </div>
+              </div> */}
              
               <div className="text-center">
                 <Button className="mt-4" color="primary" type="submit">

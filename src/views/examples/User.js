@@ -56,6 +56,7 @@ const User = (args) => {
     const[phoneno,setPhoneno]=useState(null);
     const[address,setAddress]=useState(null);
     const[role,setRole]=useState(null);
+    const [rerender, setRerender] = useState(false);
     const edittoggle1=(event)=>
         {
             setEditModal(!editmodal);
@@ -109,7 +110,8 @@ const User = (args) => {
       if(res.data.indicator=="success")
       {
         setdeleteSuccess(true); 
-       
+        GetUser();
+        setRerender(!rerender);
       }
       else{
         setError(true);
@@ -171,7 +173,8 @@ const User = (args) => {
       if(res.data == "success")
       {
         setaddSuccess(true);
-       
+        GetUser();
+        setRerender(!rerender);
       }
       else
       {
@@ -206,6 +209,8 @@ const User = (args) => {
       if(res.data == "success")
       {
         seteditSuccess(true); 
+        GetUser();
+        setRerender(!rerender);
       }
       else
       {

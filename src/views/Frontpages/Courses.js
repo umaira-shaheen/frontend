@@ -13,7 +13,7 @@ const Courses = () => {
     function GetCourse(e) {
         axios({
             method: 'get',
-            url: "http://localhost:8000/course/GetCourse",
+            url: "http://localhost:8000/course/GetRecentCourse",
         })
             .then(res => {
                 if (res.data) {

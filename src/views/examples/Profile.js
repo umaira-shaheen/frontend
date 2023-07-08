@@ -1,4 +1,5 @@
-
+import React, { useState,useRef } from 'react';
+import axios from 'axios';
 import {
   Button,
   Card,
@@ -15,9 +16,92 @@ import {
 import UserHeader from "components/Headers/UserHeader.js";
 
 const Profile = () => {
-  
+  const fileInputRef = useRef(null);
   const storedUser = localStorage.getItem('user');
   const user_info = JSON.parse(storedUser);
+  const [error, setError] = useState(false);
+  const [editsuccess, seteditSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [addsuccess, setaddSuccess] = useState(false);
+  function EditImage(e)
+  {
+    const formData = new FormData();
+    if(file)
+    {
+      formData.append('file', file);
+    }
+    axios({    //AddCourse API Calling
+      method: 'post',
+      withCredentials: true,
+      sameSite: 'none',
+      url: "http://localhost:8000/User/AddProfileImage",
+      data: formData,
+    })
+      .then(res => {
+        if (res.data == "success") {
+          setaddSuccess(true);
+          console.log(res.data);
+          
+        }
+        else {
+          setErrorMessage(res.data);
+          setError(true);
+        }
+        
+        // window.location.reload(false);
+      })
+      .catch(error => {
+        setErrorMessage("Failed to connect to backend")
+        setError(true);
+       
+      })
+  }
+  function EditProfile(e) {
+    const id = e.target.id.value;
+    const user_name = e.target.username.value;
+    const first_name = e.target.firstname.value;
+    const last_name = e.target.lastname.value;
+    const address = e.target.address.value;
+    const phone_no = e.target.phoneno.value;
+    e.preventDefault();
+    axios({     //edit Course on the base of id API Calling
+      method: 'post',
+      withCredentials: true,
+      sameSite: 'none',
+      url: "http://localhost:8000/User/EditProfile",
+      data: { id: id, user_name: user_name, first_name: first_name, last_name: last_name, address: address, phone_no: phone_no },
+    })
+      .then(res => {
+        if (res.data == "success") {
+          seteditSuccess(true);
+
+
+        }
+        else {
+          setErrorMessage(res.data);
+          setError(true);
+        }
+
+
+      })
+      .catch(error => {
+        console.log(error)
+        if (error.response.data == "Not logged in") {
+          localStorage.clear(); // Clear local storage
+          history.push('/auth/login');
+        }
+        setErrorMessage("Failed to connect to backend");
+        setError(true);
+        console.log(error);
+
+      })
+  };
+  const [file, setFile] = useState(null);
+  const handleFileInputChange = (event) => {
+    const file_1 = event.target.files[0];
+    setFile(file_1);
+    EditImage();
+  };
   return (
     <>
       <UserHeader />
@@ -48,24 +132,36 @@ const Profile = () => {
                     onClick={(e) => e.preventDefault()}
                     size="sm"
                   >
-                    Connect
+                    Remove 
                   </Button>
-                  <Button
-                    className="float-right"
-                    color="default"
-                    href="umairashaheen32@gmail.com"
-                    onClick={(e) => e.preventDefault()}
-                    size="sm"
-                  >
-                    Message
-                  </Button>
+                 
+                    <Button
+                      className="float-right"
+                      color="default"
+
+                      
+                      size="sm"
+                      onClick={() => fileInputRef.current.click()}
+                    >
+                      Edit Image
+                    </Button>
+                    <input
+                      id="fileInput"
+                      type="file"
+                      ref={fileInputRef}
+                      style={{ display: 'none' }}
+                      onChange={handleFileInputChange}
+                    />
+                 
                 </div>
               </CardHeader>
               <CardBody className="pt-0 pt-md-4">
                 <Row>
+
                   <div className="col">
                     <div className="card-profile-stats d-flex justify-content-center mt-md-5">
                       <div>
+                       
                         {/* <span className="heading">22</span>
                         <span className="description">Friends</span>
                       </div>
@@ -81,26 +177,26 @@ const Profile = () => {
                   </div>
                 </Row>
                 <div className="text-center">
-                  <h3>
+                  <h3 style={{ fontSize: '24px', marginTop: '-30px' }}>
                     {user_info.First_name} {user_info.Last_name}
                     <span className="font-weight-light"></span>
                   </h3>
                   <div className="h5 font-weight-300">
                     <i className="ni location_pin mr-2" />
-                   {user_info.Role}
+                    {user_info.Role}
                   </div>
-                  <div className="h5 mt-4">
+                  <div className="h5 mt-4" style={{ fontSize: '16px' }}>
                     <i className="ni business_briefcase-24 mr-2" />
                     Uk College of English Language
                   </div>
-                  <div>
+                  {/* <div>
                     <i className="ni education_hat mr-2" />
                     International Islamic Universty Islamabad
-                  </div>
+                  </div> */}
                   <hr className="my-4" />
                   <p>
-                  “You can teach a student a lesson for a day; but if you can teach him to learn by
-                   creating curiosity, he will continue the learning process as long as he lives.”
+                    “You can teach a student a lesson for a day; but if you can teach him to learn by
+                    creating curiosity, he will continue the learning process as long as he lives.”
                   </p>
                   <a href="#pablo" onClick={(e) => e.preventDefault()}>
                     {/* Show more */}
@@ -116,7 +212,7 @@ const Profile = () => {
                   <Col xs="8">
                     <h3 className="mb-0">My account</h3>
                   </Col>
-                  <Col className="text-right" xs="4">
+                  {/* <Col className="text-right" xs="4">
                     <Button
                       color="primary"
                       href="#pablo"
@@ -125,11 +221,11 @@ const Profile = () => {
                     >
                       Settings
                     </Button>
-                  </Col>
+                  </Col> */}
                 </Row>
               </CardHeader>
               <CardBody>
-                <Form>
+                <Form onSubmit={EditProfile}>
                   <h6 className="heading-small text-muted mb-4">
                     User information
                   </h6>
@@ -140,15 +236,38 @@ const Profile = () => {
                           <label
                             className="form-control-label"
                             htmlFor="input-username"
+                            name="username"
                           >
                             Username
                           </label>
                           <Input
                             className="form-control-alternative"
-                            defaultValue="lucky.jesse"
+                            defaultValue={user_info.First_name}
                             id="input-username"
                             placeholder="Username"
                             type="text"
+                            name="username"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col lg="6">
+                        <FormGroup>
+                          <label
+                            className="form-control-label"
+                            htmlFor="input-id"
+                            name="id"
+                            hidden
+                          >
+                            Id
+                          </label>
+                          <Input
+                            className="form-control-alternative"
+                            defaultValue={user_info._id}
+                            id="input-id"
+                            placeholder="Id"
+                            type="text"
+                            name="id"
+                            hidden
                           />
                         </FormGroup>
                       </Col>
@@ -157,14 +276,18 @@ const Profile = () => {
                           <label
                             className="form-control-label"
                             htmlFor="input-email"
+                            name="email"
                           >
                             Email address
                           </label>
                           <Input
                             className="form-control-alternative"
                             id="input-email"
+                            defaultValue={user_info.Email}
                             placeholder="jesse@example.com"
                             type="email"
+                            name="email"
+                            readOnly
                           />
                         </FormGroup>
                       </Col>
@@ -175,15 +298,17 @@ const Profile = () => {
                           <label
                             className="form-control-label"
                             htmlFor="input-first-name"
+                            name="firstname"
                           >
                             First name
                           </label>
                           <Input
                             className="form-control-alternative"
-                            defaultValue="Lucky"
+                            defaultValue={user_info.First_name}
                             id="input-first-name"
                             placeholder="First name"
                             type="text"
+                            name="firstname"
                           />
                         </FormGroup>
                       </Col>
@@ -192,15 +317,17 @@ const Profile = () => {
                           <label
                             className="form-control-label"
                             htmlFor="input-last-name"
+                            name="lastname"
                           >
                             Last name
                           </label>
                           <Input
                             className="form-control-alternative"
-                            defaultValue="Jesse"
+                            defaultValue={user_info.Last_name}
                             id="input-last-name"
                             placeholder="Last name"
                             type="text"
+                            name="lastname"
                           />
                         </FormGroup>
                       </Col>
@@ -223,10 +350,12 @@ const Profile = () => {
                           </label>
                           <Input
                             className="form-control-alternative"
-                            defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
+                            defaultValue={user_info.Address}
                             id="input-address"
                             placeholder="Home Address"
                             type="text"
+                            name="address"
+
                           />
                         </FormGroup>
                       </Col>
@@ -238,18 +367,19 @@ const Profile = () => {
                             className="form-control-label"
                             htmlFor="input-city"
                           >
-                            City
+                            Phone Number
                           </label>
                           <Input
                             className="form-control-alternative"
-                            defaultValue="New York"
+                            defaultValue={user_info.Phone_no}
                             id="input-city"
                             placeholder="City"
                             type="text"
+                            name="phoneno"
                           />
                         </FormGroup>
                       </Col>
-                      <Col lg="4">
+                      {/* <Col lg="4">
                         <FormGroup>
                           <label
                             className="form-control-label"
@@ -265,8 +395,8 @@ const Profile = () => {
                             type="text"
                           />
                         </FormGroup>
-                      </Col>
-                      <Col lg="4">
+                      </Col> */}
+                      {/* <Col lg="4">
                         <FormGroup>
                           <label
                             className="form-control-label"
@@ -281,12 +411,19 @@ const Profile = () => {
                             type="number"
                           />
                         </FormGroup>
-                      </Col>
+                      </Col> */}
                     </Row>
+                    <Button
+                      color="info"
+                      type="submit"
+                      // onClick={(e) => e.preventDefault()}
+                    >
+                      Edit profile
+                    </Button>
                   </div>
-                  <hr className="my-4" />
+                  {/* <hr className="my-4" />
                   {/* Description */}
-                  <h6 className="heading-small text-muted mb-4">About me</h6>
+                  {/* <h6 className="heading-small text-muted mb-4">About me</h6>
                   <div className="pl-lg-4">
                     <FormGroup>
                       <label>About Me</label>
@@ -294,12 +431,12 @@ const Profile = () => {
                         className="form-control-alternative"
                         placeholder="A few words about you ..."
                         rows="4"
-                        defaultValue="A beautiful Dashboard for Bootstrap 4. It is Free and
-                        Open Source."
+                        defaultValue="I am jawad Amin graduated from Punjab Universty Lahore. Currently, associated with 
+                        UKCELL to deliver my services. I have experience of teaching for more than 5 years"
                         type="textarea"
                       />
                     </FormGroup>
-                  </div>
+                  </div> */}
                 </Form>
               </CardBody>
             </Card>

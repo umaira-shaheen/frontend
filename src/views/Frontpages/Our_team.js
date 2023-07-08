@@ -1,8 +1,8 @@
 import Navbar from "./NavBar";
 import Footer from "./Footer";
 import Header from "./Header";
-import team1 from "assets/img/landing_images/team-1.jpg";
-import team2 from "assets/img/landing_images/team-2.jpg";
+import team1 from "assets/img/landing_images/team-1.jpeg";
+import team2 from "assets/img/landing_images/team-2.jpeg";
 import team3 from "assets/img/landing_images/team-3.jpg";
 import team4 from "assets/img/landing_images/team-4.jpg";
 
@@ -52,8 +52,8 @@ const Team=()=>{
           <div className="team-item" style={{padding: "15px"}}>
                     <img className="img-fluid w-100" src={team1} alt=""/>
                     <div className="bg-light text-center p-4">
-                        <h5 className="mb-3">Instructor Name</h5>
-                        <p className="mb-2">Web Design & Development</p>
+                        <h5 className="mb-3">Iram Fatima</h5>
+                        <p className="mb-2">M.Phil English</p>
                         <div className="d-flex justify-content-center">
                             <a className="mx-1 p-1" href="#"><i className="fab fa-twitter"></i></a>
                             <a className="mx-1 p-1" href="#"><i className="fab fa-facebook-f"></i></a>
@@ -66,8 +66,8 @@ const Team=()=>{
                 <div className="team-item" style={{padding: "15px"}}>
                     <img className="img-fluid w-100" src={team2} alt=""/>
                     <div className="bg-light text-center p-4">
-                        <h5 className="mb-3">Instructor Name</h5>
-                        <p className="mb-2">Web Design & Development</p>
+                        <h5 className="mb-3">Umaira Shaheen</h5>
+                        <p className="mb-2">Software Engineer</p>
                         <div className="d-flex justify-content-center">
                             <a className="mx-1 p-1" href="#"><i className="fab fa-twitter"></i></a>
                             <a className="mx-1 p-1" href="#"><i className="fab fa-facebook-f"></i></a>
@@ -80,8 +80,8 @@ const Team=()=>{
                 <div className="team-item" style={{padding: "15px"}}>
                     <img className="img-fluid w-100" src={team3} alt=""/>
                     <div className="bg-light text-center p-4">
-                        <h5 className="mb-3">Instructor Name</h5>
-                        <p className="mb-2">Web Design & Development</p>
+                        <h5 className="mb-3">Sharjeel Younus</h5>
+                        <p className="mb-2">MSC English</p>
                         <div className="d-flex justify-content-center">
                             <a className="mx-1 p-1" href="#"><i className="fab fa-twitter"></i></a>
                             <a className="mx-1 p-1" href="#"><i className="fab fa-facebook-f"></i></a>
@@ -94,8 +94,8 @@ const Team=()=>{
                 <div className="team-item" style={{padding: "15px"}}>
                     <img className="img-fluid w-100" src={team4} alt=""/>
                     <div className="bg-light text-center p-4">
-                        <h5 className="mb-3">Instructor Name</h5>
-                        <p className="mb-2">Web Design & Development</p>
+                        <h5 className="mb-3">Saad Aslam</h5>
+                        <p className="mb-2">Graphic Designer</p>
                         <div className="d-flex justify-content-center">
                             <a className="mx-1 p-1" href="#"><i className="fab fa-twitter"></i></a>
                             <a className="mx-1 p-1" href="#"><i className="fab fa-facebook-f"></i></a>

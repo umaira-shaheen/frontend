@@ -8,6 +8,7 @@ import { useState,useEffect} from "react";
 import "./front.scss";
 const Detail = () => {
     const [coursetable, setCoursetable] = useState(null);
+    const [AllCoursetable, setAllCoursetable] = useState(null);
     const location = useLocation();
     const { courseName, courseCode, courseImage, startdate, enddate, coursecategory, description, instructor } = location.state;
     var moment = require('moment');
@@ -16,7 +17,7 @@ const Detail = () => {
     {
       axios({ 
         method:'get',
-        url:"http://localhost:8000/course/GetCourse",
+        url:"http://localhost:8000/course/GetRecentCourse",
       })
       .then(res=>{
         if(res.data)
@@ -28,8 +29,25 @@ const Detail = () => {
         console.log(error);
       })
     }
+    function GetAllCourse(e)
+    {
+      axios({ 
+        method:'get',
+        url:"http://localhost:8000/course/GetAllCourse",
+      })
+      .then(res=>{
+        if(res.data)
+        {
+          setAllCoursetable(res.data)
+        }
+      })
+      .catch(error=>{
+        console.log(error);
+      })
+    }
     useEffect(() => {
       GetCourse();
+      GetAllCourse();
       }, []);
 
     return (
@@ -54,8 +72,8 @@ const Detail = () => {
 
                                 <h2 className="mb-3">Related Courses</h2>
                                 <div class="row">
-                            {coursetable ?
-                                coursetable.map((row, index) => {
+                            {AllCoursetable ?
+                                AllCoursetable.map((row, index) => {
                                     return (
                                         <div class="col-lg-4 col-md-6 pb-4" key={index}>
                                             <Link

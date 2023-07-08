@@ -46,7 +46,7 @@ const Course = (args) => {
   const [enddate, setenddate] = useState(null);
   const [description, setCoursedescription] = useState(null);
   const [category, setCoursecategory] = useState(null);
-  const [course_img, setCourseImg] = useState(null);
+  const [courseImg, setCourseImg] = useState(null);
 
   const [status, setCourseStatus] = useState(null);
   const [rerender, setRerender] = useState(false);
@@ -63,7 +63,8 @@ const Course = (args) => {
       .then(res => {
         if (res.data.indicator == "success") {
           setdeleteSuccess(true);
-
+          GetCourse();
+          setRerender(!rerender);
         }
         else {
           setError(true);
@@ -82,6 +83,7 @@ const Course = (args) => {
   };
 
   function EditCourse(e) {
+    e.preventDefault();
     const course_name = e.target.Coursename.value;
     const course_code = e.target.coursecode.value;
     const start_date = e.target.startdate.value;
@@ -89,11 +91,13 @@ const Course = (args) => {
     const Category = e.target.category.value;
     const Description = e.target.description.value;
     const status=e.target.status.value
-    e.preventDefault();
+    
+    
     axios({     //edit Course on the base of id API Calling
       method: 'post',
       url: "http://localhost:8000/course/EditCourse",
-      data: { id: id, course_name: course_name, course_code: course_code, status:status, start_date: start_date, end_date: end_date, Description: Description, Category: Category },
+       data: { id: id, course_name: course_name, course_code: course_code, status:status, start_date: start_date, end_date: end_date, Description: Description, Category: Category },
+    
     })
       .then(res => {
         if (res.data == "success") {
@@ -164,6 +168,7 @@ const Course = (args) => {
           setCourseid(res.data._id);
           setCourseName(res.data.Course_title);
           setCoursecode(res.data.Course_code);
+          setCourseImg(res.data.course_img);
           setCoursecategory(res.data.Course_category);
           setstartdate(res.data.start_date);
           setenddate(res.data.end_date);
@@ -195,7 +200,7 @@ const Course = (args) => {
     axios({
       method: 'get',
       withCredentials: true,
-      url: "http://localhost:8000/course/GetCourse",
+      url: "http://localhost:8000/course/GetAllCourse",
     })
       .then(res => {
         if (res.data) {
@@ -397,7 +402,7 @@ const Course = (args) => {
                 <Col md={6}>
                   <FormGroup>
                     <Label for="enddate">
-                      Start Date
+                      End Date
                     </Label>
                     <Input
                       id="enddate"
@@ -636,6 +641,7 @@ const Course = (args) => {
                     <Input type="file"  onChange={handleFileInputChange} />
                   </Label>
                   </FormGroup>
+                  <img width={100} height={'auto'} id="edit_image_placeholder" src={"http://localhost:8000/" + courseImg} />
                 </Col>
              
                 <Col md={6}>

@@ -18,6 +18,7 @@
 import Index from "views/Index.js";
 import Course from "views/examples/Course";
 import User from "views/examples/User";
+import Question from "views/examples/Question";
 
 import Quiz from "views/examples/Quiz";
 import Assignment from "views/examples/Assignment";
@@ -31,13 +32,13 @@ import Icons from "views/examples/Icons.js";
 
 var routes = [
  
-  {
-    path: "/index",
-    name: "Dashboard",
-    icon: "ni ni-tv-2 text-primary",
-    component: Index,
-    layout: "/admin"
-  },
+  // {
+  //   path: "/index",
+  //   name: "Dashboard",
+  //   icon: "ni ni-tv-2 text-primary",
+  //   component: Index,
+  //   layout: "/admin"
+  // },
   {
     path: "/courses",
     name: "Courses",
@@ -91,6 +92,13 @@ var routes = [
     component: Assignment,
     layout: "/admin"
   },
+  {
+    path: "/questions",
+    name: "Questions",
+    icon: "ni ni-books",
+    component: Question,
+    layout: "/admin"
+  },
   
   // {
   //   path: "/tables",
@@ -114,12 +122,12 @@ var routes = [
     component: Register,
     layout: "/auth"
   },
-  {
-    path: "/ForgotPassword",
-    name: "Forgotpassword",
-    icon: "ni ni-circle-08 text-pink",
-    component: Forgot_password,
-    layout: "/auth"
-  }
+  // {
+  //   path: "/ForgotPassword",
+  //   name: "Forgotpassword",
+  //   icon: "ni ni-circle-08 text-pink",
+  //   component: Forgot_password,
+  //   layout: "/auth"
+  // }
 ];
 export default routes;
