@@ -78,7 +78,7 @@ const User = (args) => {
 
     function GetUser(e)
   {
-   
+    
    useEffect(() => {
     // Update the document title using the browser API
     
@@ -89,6 +89,7 @@ const User = (args) => {
     .then(res=>{
       if(res.data)
       {
+        console.log(res.data);
         setUsertable(res.data)
       }
     })

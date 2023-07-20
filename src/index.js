@@ -29,6 +29,7 @@ import AdminLayout from "layouts/Admin.js";
 import AuthLayout from "layouts/Auth.js";
 import Home from "views/Frontpages/Homepage";
 import About from "views/Frontpages/About";
+import  MyPdfDocument from "views/examples/MyPdfDocument";
 import Contact from "views/Frontpages/Contact";
 import ContactUs from "views/Frontpages/ContactUs";
 import CoursesList from "views/Frontpages/CoursesList";
@@ -56,6 +57,7 @@ root.render(
       <Route path="/Our_features" render={(props) => <Our_features {...props} />} />
       <Route path="/testimonial" render={(props) => <Testimonial {...props} />} />
       <Route path="/detail" render={(props) => <Detail {...props} />} />
+      <Route path="/QuizPdf" render={(props) => <MyPdfDocument {...props} />} />
       {/* <Redirect from="/" to="/admin/index" /> */}
     </Switch>
   </BrowserRouter>

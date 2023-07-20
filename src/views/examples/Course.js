@@ -332,12 +332,20 @@ const Course = (args) => {
   }
   const closeModal = () => setModal(false);
   const [file, setFile] = useState(null);
-
+  const [filtered_courses, setFilteredCourses] = useState('');
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
     setFile(file);
   };
-
+  const handleCourseChange = (e) => {
+    // Function to filter the quiz questions based on the selected quiz
+    const filteredCourses = coursetable.filter(
+        (course) => course.Course_title === e.target.value
+    );
+    setFilteredCourses(filteredCourses);
+    setCurrentCourse(e.target.value)
+};
+const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
   return (
     <>
       <NewHeader />
@@ -780,9 +788,35 @@ const Course = (args) => {
             <Card className="shadow">
               <CardHeader className="border-0">
                 <Row className="align-items-center">
+                  
                   <div className="col">
-                    <h3 className="mb-0">Courses</h3>
-                  </div>
+                                        <Label for="quiz_title">
+                                            Search Course
+                                        </Label>
+                                        <Input
+                                            id="quiz_title"
+                                            name="quiz_title"
+                                            type="select"
+                                            onChange={handleCourseChange}
+                                            style={{ width: '300px' }} 
+                                        >
+                                            <option value="No Course Selected Yet">No Course Selected Yet</option>
+                                            {coursetable ?
+                                                coursetable
+                                                    .map((row, index) => {
+                                                        return (
+                                                            <option key={index} value={row.Course_title}>
+                                                                {row.Course_title}
+                                                            </option>
+                                                        )
+                                                    })
+                                                :
+                                                <h1>No Course Added yet!</h1>
+                                            }
+
+
+                                        </Input>
+                                    </div>
                   {user_info.Role == "Admin" ?
                     <div className="col text-right">
 
@@ -837,8 +871,9 @@ const Course = (args) => {
                 </thead>
                 <tbody>
 
-                  {coursetable ?
-                    coursetable.map((row, index) => {
+                {filtered_courses.length > 0 ?
+
+                  filtered_courses.map((row, index) => {
                       return (
                         <tr key={index}>
                           <th scope="row">
@@ -876,9 +911,55 @@ const Course = (args) => {
                             :
                             <></>
                           }
-                        </tr>)
+                        </tr>
+                        )
                     })
                     :
+                    coursetable && coursetable.length > 0 && currentCourse == "No Course Selected Yet"  ? (
+                      coursetable.map((row, index) => (
+                       
+                          <tr key={index}>
+                            <th scope="row">
+                              {/* <i className="ni ni-book-bookmark text-blue"/> */}
+                              <span className="mb-0 text-sm">
+                                {row.Course_title}
+                              </span>
+  
+                            </th>
+                            <td>{row.Course_code}</td>
+                            <td>{row.status}</td>
+                            <td>
+                              <Badge color="" className="badge-dot">
+                                <i className="bg-info" />
+                                {moment(row.start_date).format('DD-MM-YYYY')}
+  
+                              </Badge>
+                            </td>
+                            <td>
+                              <Badge color="" className="badge-dot">
+                                <i className="bg-info" />
+                                {moment(row.end_date).format('DD-MM-YYYY')}
+                              </Badge>
+                            </td>
+                            <td>{row.Course_category}</td>
+                            {user_info.Role == "Admin" ?
+                              <td>
+                                <Button color="primary" onClick={() => { FindCourse(row._id) }}>
+                                  <i className="ni ni-active-40"></i>
+                                </Button>
+                                <Button color="danger" onClick={() => { Deletetoggle(row._id, row.Course_title) }}>
+                                  <i className="ni ni-fat-remove"></i>
+                                </Button>
+                              </td>
+                             
+                             :
+                             <></>
+                           }
+                          </tr>
+                          ))
+                                    ) : 
+
+                         
                     <tr>
                       <td span="5">No course found!</td>
                     </tr>

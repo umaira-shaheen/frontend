@@ -61,7 +61,8 @@ const CoursesList=()=>
                                                         enddate: row.end_date,
                                                         coursecategory: row.Course_category,
                                                         description: row.description,
-                                                        instructor: row.assigned_to
+                                                        instructor: row.assigned_to,
+                                                        course_id: row._id
                                                     }
                                                 }}
                                                 className="courses-list-item position-relative d-block overflow-hidden mb-2"

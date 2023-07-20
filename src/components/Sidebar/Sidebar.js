@@ -72,8 +72,63 @@ const Sidebar = (props) => {
   };
   // creates the links that appear in the left menu / Sidebar
   const createLinks = (routes) => {
+    
     const filteredRoutes = props.routes.filter(
-      (route) => (!(route.name === "Users" && user_info.Role === "Teacher") && (route.name !== "Login" && route.name !== "Register"))
+      // (route) => (!(route.name === "Users" && user_info.Role === "Teacher")&& !(route.name === "Attempt Assignment" && user_info.Role === "Teacher")  && !(route.name === "Users"  && user_info.Role === "Student" )&& !(route.name === "Quiz"  && user_info.Role === "Student" )&& !(route.name === "Assignment"  && user_info.Role === "Student" ) && !(route.name === "Quiz Questions"  && user_info.Role === "Student" ) && (route.name !== "Login" && route.name !== "Register"))
+     (route)=>
+     {
+      if (user_info.Role === "Teacher" && route.name === "Users") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Teacher" && route.name === "My Assignments") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Teacher" && route.name === "My Quizes") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Teacher" && route.name === "My Courses") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Student" && route.name === "Users") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Student" && route.name === "Quiz") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Student" && route.name === "Assignment") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Student" && route.name === "Quiz Questions") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Student" && route.name === "Courses") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Admin" && route.name === "Quiz") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Admin" && route.name === "Assignment") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Admin" && route.name === "Quiz Questions") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Admin" && route.name === "My Assignments") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Admin" && route.name === "My Quizes") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Admin" && route.name === "My Courses") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (route.name === "Login" || route.name === "Register") {
+        return false; // Exclude the Login and Register routes
+      }
+      return true; // Include all other routes
+
+     }
+       
     );
     
     return (

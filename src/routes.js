@@ -19,7 +19,8 @@ import Index from "views/Index.js";
 import Course from "views/examples/Course";
 import User from "views/examples/User";
 import Question from "views/examples/Question";
-
+import View_Assignment from "views/examples/View_Assignment";
+import Attempt_Quiz from "views/examples/Attempt_Quiz";
 import Quiz from "views/examples/Quiz";
 import Assignment from "views/examples/Assignment";
 import Profile from "views/examples/Profile.js";
@@ -29,7 +30,7 @@ import Register from "views/examples/Register.js";
 import Login from "views/examples/Login.js";
 // import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
-
+import Student_Courses from "views/examples/Student_Courses";
 var routes = [
  
   // {
@@ -56,13 +57,13 @@ var routes = [
     layout: "/admin"
   },
 
-  // {
-  //   path: "/icons",
-  //   name: "Icons",
-  //   icon: "ni ni-planet text-blue",
-  //   component: Icons,
-  //   layout: "/admin"
-  // },
+  {
+    path: "/icons",
+    name: "Icons",
+    icon: "ni ni-planet text-blue",
+    component: Icons,
+    layout: "/admin"
+  },
   // {
   //   path: "/maps",
   //   name: "Maps",
@@ -81,22 +82,43 @@ var routes = [
   {
     path: "/quiz",
     name: "Quiz",
-    icon: "ni ni-books",
+    icon: "ni ni-books text-blue",
     component: Quiz,
     layout: "/admin"
   },
   {
     path: "/assignments",
     name: "Assignment",
-    icon: "ni ni-books",
+    icon: "ni ni-books text-blue",
     component: Assignment,
     layout: "/admin"
   },
   {
     path: "/questions",
-    name: "Questions",
-    icon: "ni ni-books",
+    name: "Quiz Questions",
+    icon: "ni ni-book-bookmark",
     component: Question,
+    layout: "/admin"
+  },
+  {
+    path: "/Attempt Assignment",
+    name: "My Assignments",
+    icon: "ni ni-collection text-yellow",
+    component: View_Assignment,
+    layout: "/admin"
+  },
+  {
+    path: "/Attempt Quiz",
+    name: "My Quizes",
+    icon: "ni ni-collection text-yellow",
+    component: Attempt_Quiz,
+    layout: "/admin"
+  },
+  {
+    path: "/My Courses",
+    name: "My Courses",
+    icon: "ni ni-collection text-yellow",
+    component: Student_Courses,
     layout: "/admin"
   },
   

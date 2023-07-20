@@ -35,6 +35,7 @@ const Assignment = (args) => {
   const history = useHistory();
   var moment = require('moment');
   const [Assignmenttable, setAssignmenttable] = useState(null);
+  const [coursetable, setCoursetable] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
@@ -80,6 +81,22 @@ const Assignment = (args) => {
   const [total_marks, setmarks] = useState(null);
   const [date, setdate] = useState(null);
   const [rerender, setRerender] = useState(false);
+  function GetCourse(e) {
+    axios({
+      method: 'get',
+      withCredentials: true,
+      url: "http://localhost:8000/course/GetAllCourse",
+    })
+      .then(res => {
+        if (res.data) {
+          setCoursetable(res.data)
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
+
   function DeleteAssignment() {
     axios({     //DeleteCourse API Calling
       method: 'get',
@@ -90,7 +107,7 @@ const Assignment = (args) => {
       .then(res => {
         if (res.data.indicator == "success") {
           setdeleteSuccess(true);
-          GetAssignment();
+          GetTeacherAssignment();
           setRerender(!rerender);
         }
         else {
@@ -114,74 +131,104 @@ const Assignment = (args) => {
       })
 
   };
-
+  function GetTeacherCourses(e) {
+    axios({
+      method: 'get',
+      withCredentials: true,
+      url: "http://localhost:8000/course/get_teacher_courses",
+    })
+      .then(res => {
+        if (res.data) {
+          setCoursetable(res.data)
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
   function AddAssignment(e) {
+
     e.preventDefault();
     const assignment_title = e.target.assignment_title.value;
     const date = e.target.date.value;
     const total_marks = e.target.total_marks.value;
     const status = e.target.status.value;
     const description = editorContent;
-    axios({    //AddUser API Calling
-      method: 'post',
-      withCredentials: true,
-      sameSite: 'none',
-      url: "http://localhost:8000/Assignment/AddAssignment",
-      data: { assignment_title: assignment_title, date: date, total_marks: total_marks, status: status, description: description },
-    })
-      .then(res => {
-        if (res.data == "success") {
-          setaddSuccess(true);
-          GetAssignment();
-          setRerender(!rerender);
-        }
-        else {
-          setErrorMessage(res.data);
-          setError(true);
-        }
-        closeModal();
-        // window.location.reload(false);
-      })
-      .catch(error => {
-        console.log(error)
-        if (error && error.response) {
-          if (error.response.data && error.response.data == "Not logged in") {
-            localStorage.clear(); // Clear local storage
-            history.push('/auth/login');
-          }
-        }
-        setErrorMessage("Failed to connect to backend")
-        setError(true);
-        closeModal();
-      })
-  }
-  function GetAssignment(e) {
+    const Assignment_course = e.target.courses.value;
+    const selectedDate = new Date(date);
+    const currentDate = new Date();
+    if (selectedDate < currentDate) {
+      setErrorMessage("Selected date should be greater than or equal to today's date");
+      setError(true);
+      closeModal();
+      return;
+    }
+    else {
 
-      axios({
-        method: 'get',
+      axios({    //AddUser API Calling
+        method: 'post',
         withCredentials: true,
         sameSite: 'none',
-        url: "http://localhost:8000/Assignment/GetAssignment",
+        url: "http://localhost:8000/Assignment/AddAssignment",
+        data: { assignment_title: assignment_title, date: date, total_marks: total_marks, status: status, description: description, Assignment_course: Assignment_course },
       })
         .then(res => {
-          if (res.data) {
-            setAssignmenttable(res.data)
+          if (res.data == "success") {
+            setaddSuccess(true);
+            GetTeacherAssignment();
+            setRerender(!rerender);
           }
+          else {
+            setErrorMessage(res.data);
+            setError(true);
+          }
+          closeModal();
+          // window.location.reload(false);
         })
         .catch(error => {
+          console.log(error)
           if (error && error.response) {
             if (error.response.data && error.response.data == "Not logged in") {
               localStorage.clear(); // Clear local storage
               history.push('/auth/login');
             }
           }
-          console.log(error);
+          setErrorMessage("Failed to connect to backend")
+          setError(true);
+          closeModal();
         })
+
+
+    }
+  }
+  function GetAssignment(e) {
+
+    axios({
+      method: 'get',
+      withCredentials: true,
+      sameSite: 'none',
+      url: "http://localhost:8000/Assignment/GetAssignment",
+    })
+      .then(res => {
+        if (res.data) {
+          setAssignmenttable(res.data)
+        }
+      })
+      .catch(error => {
+        if (error && error.response) {
+          if (error.response.data && error.response.data == "Not logged in") {
+            localStorage.clear(); // Clear local storage
+            history.push('/auth/login');
+          }
+        }
+        console.log(error);
+      })
   }
 
   useEffect(() => {
     // Update the document title using the browser API
-
+    //  GetCourse();
+    GetTeacherCourses();
     axios({
       method: 'get',
       withCredentials: true,
@@ -210,8 +257,16 @@ const Assignment = (args) => {
     const total_marks = e.target.marks.value;
     const description = editorContent;
     const status = e.target.status.value;
+    const selectedDate = new Date(date);
+    const currentDate = new Date();
+    if (selectedDate < currentDate) {
+      setErrorMessage("Selected date should be greater than or equal to today's date");
+      setError(true);
+      setEditModal(!editmodal);
+      return;
+    }
 
-    
+
     axios({     //edit Course on the base of id API Calling
       method: 'post',
       withCredentials: true,
@@ -222,7 +277,7 @@ const Assignment = (args) => {
       .then(res => {
         if (res.data == "success") {
           seteditSuccess(true);
-          GetAssignment();
+          GetTeacherAssignment();
           setRerender(!rerender);
         }
         else {
@@ -287,31 +342,58 @@ const Assignment = (args) => {
       })
   };
   useEffect(() => {
-    // Update the document title using the browser API
+    const storedUser = localStorage.getItem('user');
+    const user_info = JSON.parse(storedUser);
+    const user_id = user_info._id;
+    console.log(user_info);
+    // add course_id into local storage - last_url
+    if (user_info == null) {
+        localStorage.setItem('state', JSON.stringify(location.state))
+
+        history.push('/auth/login');
+    }
+    else 
+    {
 
     axios({
       method: 'get',
       withCredentials: true,
       sameSite: 'none',
-      url: "http://localhost:8000/Assignment/GetAssignment",
+      url: "http://localhost:8000/Assignment/GetTeacherAssignment?temp_id=" + user_id,
     })
       .then(res => {
-        if (res.data) {
-          setAssignmenttable(res.data)
-        }
+        if (res.data.data && res.data.message == "success") {
+          console.log(res.data.data);
+          setAssignmenttable(res.data.data);
+      }
+      else if (res.data.message == "only student can access this") {
+          alert("only student can access this")
+      }
       })
       .catch(error => {
-        
-        if(error && error.response)
-        {
+
+        if (error && error.response) {
           if (error.response.data && error.response.data == "Not logged in") {
-              localStorage.clear(); // Clear local storage
-              history.push('/auth/login');
+            localStorage.clear(); // Clear local storage
+            history.push('/auth/login');
           }
         }
         console.log(error);
       })
+    }
   }, []);
+  const [filtered_courses, setFilteredCourses] = useState('');
+  const handleAssignmentChange = (e) => {
+    // Function to filter the quiz questions based on the selected quiz
+    const filteredCourses = coursetable.filter(
+      (assignment) => assignment.Course_title === e.target.value
+    );
+    setFilteredCourses(filteredCourses);
+    setCurrentQuiz(e.target.value)
+  };
+  const [assignmentmodal, setassignmentModal] = useState(false);
+
+  const assignmenttoggleclose = () => setassignmentModal(!assignmentmodal);
   return (
     <>
       <NewHeader />
@@ -329,6 +411,8 @@ const Assignment = (args) => {
           <strong> Assignment Updated successfully! </strong>
         </Alert>
         {/* Delete modal */}
+
+
 
         <Modal isOpen={deletemodal} toggle={DeletetoggleClose} {...args} size='sm'>
           <ModalHeader toggle={DeletetoggleClose} >Delete Assignment</ModalHeader>
@@ -361,7 +445,39 @@ const Assignment = (args) => {
                       name="assignment_title"
                       placeholder="Enter Assignment Title"
                       type="text"
+                      required
                     />
+                  </FormGroup>
+                </Col>
+                <Col md={6}>
+                  <FormGroup>
+                    <Label for="category">
+                      Select Assignment Course
+                    </Label>
+
+                    <Input
+                      id="Allcourses"
+                      name="courses"
+                      type="select"
+                      required
+                    >
+                      {coursetable ?
+                        coursetable
+
+                          .map((row, index) => {
+                            return (
+                              <option key={index} value={row.Course_title}>
+                                {row.Course_title}
+                              </option>
+                            )
+                          })
+                        :
+                        <h1>Courses not assigned yet!</h1>
+                      }
+
+
+                    </Input>
+
                   </FormGroup>
                 </Col>
 
@@ -376,6 +492,7 @@ const Assignment = (args) => {
                       name="date"
                       placeholder="Submission Deadline"
                       type="date"
+
                     />
                   </FormGroup>
                 </Col>
@@ -389,6 +506,9 @@ const Assignment = (args) => {
                       name="total_marks"
                       placeholder="Total Marks"
                       type="text"
+                      min={'5'}
+                      max={'100'}
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -401,6 +521,7 @@ const Assignment = (args) => {
                       id="status"
                       name="status"
                       type="select"
+                      required
 
                     >
                       <option value="Draft">
@@ -421,6 +542,7 @@ const Assignment = (args) => {
                     <Editor
                       initialValue='Assignment Description'
                       onEditorChange={HandleEditor}
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -439,6 +561,7 @@ const Assignment = (args) => {
           </Form>
         </Modal>
         {/* Edit modal */}
+
         <Modal isOpen={editmodal} toggle={edittoggle1} {...args} size='lg'>
           <Form role="form" onSubmit={EditAssignment} >
             <ModalHeader toggle={edittoggle1}>Update Assignment</ModalHeader>
@@ -556,8 +679,33 @@ const Assignment = (args) => {
               <CardHeader className="border-0">
                 <Row className="align-items-center">
                   <div className="col">
-                    <h3 className="mb-0">Course Assignment</h3>
+                    <Label for="quiz_title">
+                      Search Assignment
+                    </Label>
+                    <Input
+                      id="course_title"
+                      name="course_title"
+                      type="select"
+                      onChange={handleAssignmentChange}
+                    >
+                      <option value="No Assignment Selected Yet">No Assignment Selected Yet</option>
+                      {coursetable ?
+                        coursetable
+                          .map((row, index) => {
+                            return (
+                              <option key={index} value={row.Course_title}>
+                                {row.Course_title}
+                              </option>
+                            )
+                          })
+                        :
+                        <h1>No Assignment Added yet!</h1>
+                      }
+
+
+                    </Input>
                   </div>
+
                   <div className="col text-right">
                     <Button
                       color="primary"
@@ -574,10 +722,11 @@ const Assignment = (args) => {
                 <thead className="thead-light">
                   <tr>
                     <th scope="col">Assignment Title</th>
-                   
+
                     <th scope="col">Submission Date</th>
                     <th scope="col">Total Marks</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Description</th>
                     <th scope="col">Action</th>
 
                     <th scope="col" />
@@ -597,7 +746,7 @@ const Assignment = (args) => {
 
                           </th>
 
-                        
+
                           <td>
                             <Badge color="" className="badge-dot">
                               <i className="bg-info" />
@@ -606,12 +755,39 @@ const Assignment = (args) => {
                           </td>
                           <td>{row.Total_marks}</td>
                           <td>{row.Status}</td>
+                          <Modal isOpen={assignmentmodal} toggle={assignmenttoggleclose} {...args}>
+                              <ModalHeader toggle={assignmenttoggleclose}>Assignment Question</ModalHeader>
+                              <ModalBody>
+                                <div>
+                                  {<div dangerouslySetInnerHTML={{ __html: row.description }} />}
+                                </div>
+                              </ModalBody>
+                              <ModalFooter>
+                                
+                                <Button color="secondary" onClick={toggle}>
+                                  Cancel
+                                </Button>
+                              </ModalFooter>
+                            </Modal>
                           <td>
-                            <Button color="primary" onClick={() => { FindAssignment(row._id) }}>
+                           
+                            <Button color="success"
+                               onClick={toggle}
+                              style={{ fontSize: '13px', padding: '4px 8px' }}>
+                              View Question
+                            </Button>
+                          </td>
+                          <td>
+                            <Button color="primary"
+                              style={{ fontSize: '15px', padding: '4px 8px' }}
+                              onClick={() => { FindAssignment(row._id) }}>
                               Edit
                               {/* <i className="ni ni-active-40"></i> */}
                             </Button>
-                            <Button color="danger" onClick={() => { Deletetoggle(row._id, row.Assignment_title) }}>
+                            <Button color="danger"
+                              style={{ fontSize: '15px', padding: '4px 8px' }}
+
+                              onClick={() => { Deletetoggle(row._id, row.Assignment_title) }}>
                               Delete
                               {/* <i className="ni ni-fat-remove"></i> */}
                             </Button>

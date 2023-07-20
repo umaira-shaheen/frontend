@@ -18,8 +18,14 @@
 
 // reactstrap components
 import { Button, Container, Row, Col } from "reactstrap";
+import { Redirect, Link,useHistory } from 'react-router-dom';
+
 
 const UserHeader = () => {
+  // const history = useHistory();
+  // const handleRedirect = () => {
+  //   history.push('http://localhost:3000');
+  // };
   const storedUser = localStorage.getItem('user');
   const user_info = JSON.parse(storedUser);
   return (
@@ -44,14 +50,30 @@ const UserHeader = () => {
               <p className="text-white mt-0 mb-5">
                 This is your profile page. You can see the progress you've made
                 with your work and manage your projects or assigned tasks
+
               </p>
-              {/* <Button
-                color="info"
-                href="#pablo"
-                onClick={(e) => e.preventDefault()}
-              >
-                Edit profile
-              </Button> */}
+
+              {/* <Col xs="6">
+                <a href="http://localhost:3000" className="btn btn-primary" style={{ marginTop: '-10px' }}>
+                  Go to Website
+                </a>
+              </Col> */}
+              <Col xs="6">
+                <Link
+                  to="/"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.open('http://localhost:3000', '_blank');               
+                     }}
+                  className="btn btn-primary"
+                  style={{ marginTop: '-10px' }}
+                >
+                  Go to Website
+                </Link>
+              </Col>
+
+
+
             </Col>
           </Row>
         </Container>

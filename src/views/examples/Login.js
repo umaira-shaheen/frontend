@@ -19,7 +19,7 @@
 // reactstrap components
 import { useState } from 'react';
 import axios from 'axios'
-import { Redirect, Link } from 'react-router-dom';
+import { Redirect, Link, useHistory } from 'react-router-dom';
 import {
   Button,
   Card,
@@ -40,7 +40,7 @@ const Login = () => {
  const [isloggedin, setlogin]=useState(false);
 //  useState for error message. initially error message will be false
 const [error, setError] = useState(false);
-  
+const history = useHistory();
 function handleSubmit(e)
 {
 e.preventDefault()
@@ -55,9 +55,20 @@ axios({
 })
 .then(res=>{
   // return <Redirect to="/admin/index">
+  var state = localStorage.getItem('state');
+  state = JSON.parse(state)
+  if(state !== null && state !== undefined)
+  {
+    localStorage.clear('state')
+    localStorage.setItem('user', JSON.stringify(res.data));
+    history.push('/detail', state);
+    return
+  }
+
   setlogin(true);
    const user_id=res.data._id;
    const user_role=res.data.Role;
+   
    localStorage.setItem('user', JSON.stringify(res.data));
 })
 .catch(error=>{

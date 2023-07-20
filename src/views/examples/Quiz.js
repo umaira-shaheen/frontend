@@ -37,7 +37,7 @@ const Quiz = (args) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
-  
+
   const [error, setError] = useState(false);
   const [addsuccess, setaddSuccess] = useState(false);
   const onDismissaddSuccess = () => setaddSuccess(false);
@@ -77,12 +77,14 @@ const Quiz = (args) => {
   function DeleteQuiz() {
     axios({     //DeleteCourse API Calling
       method: 'get',
+      withCredentials: true,
+      sameSite: 'none',
       url: "http://localhost:8000/Quiz/DeleteQuiz?temp_id=" + tempId
     })
       .then(res => {
         if (res.data.indicator == "success") {
           setdeleteSuccess(true);
-          GetQuiz();
+          GetTeacherQuiz();
           setRerender(!rerender);
 
         }
@@ -94,10 +96,10 @@ const Quiz = (args) => {
         // window.location.reload(false);
       })
       .catch(error => {
-      
+
         if (error.response.data == "Not logged in") {
-            localStorage.clear(); // Clear local storage
-            history.push('/auth/login');
+          localStorage.clear(); // Clear local storage
+          history.push('/auth/login');
         }
         console.log(error);
         setErrorMessage("Network Error!");
@@ -113,22 +115,29 @@ const Quiz = (args) => {
     const start_date = e.target.start_date.value;
     const end_date = e.target.end_date.value;
     const questions = e.target.questions.value;
-    const status=e.target.status.value;
+    const status = e.target.status.value;
+    const quiz_course=e.target.courses.value;
+    if (new Date(end_date) <= new Date(start_date)) {
+      setErrorMessage('End date should be greater than start date');
+      setError(true);
+      closeModal();
+      return;
+    }
     axios({    //AddUser API Calling
       method: 'post',
       withCredentials: true,
       sameSite: 'none',
       url: "http://localhost:8000/Quiz/AddQuiz",
-      data: { quiz_title: quiz_title, start_date: start_date, end_date: end_date, questions: questions, status:status },
+      data: { quiz_title: quiz_title, start_date: start_date, end_date: end_date, questions: questions, status: status, quiz_course:quiz_course },
     })
       .then(res => {
-        if(res.data == "success") {
+        if (res.data == "success") {
           setaddSuccess(true);
-          GetQuiz();
+          GetTeacherQuiz();
           setRerender(!rerender);
         }
         else {
-          setErrorMessage(res.data);
+          setErrorMessage(res.data); 
           setError(true);
         }
         closeModal();
@@ -136,11 +145,10 @@ const Quiz = (args) => {
       })
       .catch(error => {
         console.log(error)
-        if(error && error.response)
-        {
+        if (error && error.response) {
           if (error.response.data && error.response.data == "Not logged in") {
-              localStorage.clear(); // Clear local storage
-              history.push('/auth/login');
+            localStorage.clear(); // Clear local storage
+            history.push('/auth/login');
           }
         }
         setErrorMessage("Failed to connect to backend")
@@ -148,34 +156,23 @@ const Quiz = (args) => {
         closeModal();
       })
   }
-  function GetQuiz(e) {
-      // Update the document title using the browser API
-
-      axios({
-        method: 'get',
-        withCredentials: true,
-        sameSite: 'none',
-        url: "http://localhost:8000/Quiz/GetQuiz",
+  const [coursetable, setCoursetable] = useState(null);
+  function GetTeacherCourses(e) {
+    axios({
+      method: 'get',
+      withCredentials: true,
+      url: "http://localhost:8000/course/get_teacher_courses",
+    })
+      .then(res => {
+        if (res.data) {
+          setCoursetable(res.data)
+        }
       })
-        .then(res => {
-          if (res.data) {
-            setquiztable(res.data)
-          }
-        })
-        .catch(error => {
-          console.log(error)
-          if(error && error.response)
-          {
-            if (error.response.data && error.response.data == "Not logged in") {
-                localStorage.clear(); // Clear local storage
-                history.push('/auth/login');
-            }
-          }
-        
-        })
+      .catch(error => {
+        console.log(error);
+      })
   }
-
-  useEffect(() => {
+  function GetQuiz(e) {
     // Update the document title using the browser API
 
     axios({
@@ -190,35 +187,81 @@ const Quiz = (args) => {
         }
       })
       .catch(error => {
-        console.log(error);
-       
-        if(error && error.response)
-        {
+        console.log(error)
+        if (error && error.response) {
           if (error.response.data && error.response.data == "Not logged in") {
-              localStorage.clear(); // Clear local storage
-              history.push('/auth/login');
+            localStorage.clear(); // Clear local storage
+            history.push('/auth/login');
           }
         }
+
       })
+  }
+
+  useEffect(() => {
+    // Update the document title using the browser API
+    GetTeacherCourses();
+    
+    const storedUser = localStorage.getItem('user');
+    const user_info = JSON.parse(storedUser);
+    const user_id = user_info._id;
+    console.log(user_info);
+    // add course_id into local storage - last_url
+    if (user_info == null) {
+        localStorage.setItem('state', JSON.stringify(location.state))
+
+        history.push('/auth/login');
+    }
+    axios({
+      method: 'get',
+      withCredentials: true,
+      sameSite: 'none',
+      url: "http://localhost:8000/Quiz/GetTeacherQuiz?temp_id=" + user_id,
+    })
+      .then(res => {
+        if (res.data.data && res.data.message == "success") {
+          console.log(res.data.data);
+          setquiztable(res.data.data);
+      }
+      else if (res.data.message == "only Teacher can access this") {
+          alert("only teacher can access this")
+      }
+      })
+      .catch(error => {
+        console.log(error);
+
+        if (error.response.data.message == "Not logged in") {
+          localStorage.clear(); // Clear local storage
+          history.push('/auth/login');
+      }
+        
+      })
+    
   }, []);
   function EditQuiz(e) {
     const quiz_title = e.target.quiz_title.value;
     const start_date = e.target.start_date.value;
     const end_date = e.target.end_date.value;
     const questions = e.target.questions.value;
-    const status=e.target.status.value;
+    const status = e.target.status.value;
+    if (new Date(end_date) <= new Date(start_date)) {
+      setErrorMessage('End date should be greater than start date');
+      setError(true);
+      setEditModal(!editmodal);
+      return;
+    }
     e.preventDefault();
     axios({     //edit Course on the base of id API Calling
       method: 'post',
       withCredentials: true,
       sameSite: 'none',
       url: "http://localhost:8000/Quiz/EditQuiz",
-      data: { id: id, quiz_title: quiz_title, start_date: start_date, end_date: end_date, questions: questions, status:status },
+      data: { id: id, quiz_title: quiz_title, start_date: start_date, end_date: end_date, questions: questions, status: status },
     })
       .then(res => {
         if (res.data == "success") {
           seteditSuccess(true);
-          GetQuiz();
+          GetTeacherQuiz();
           setRerender(!rerender);
         }
         else {
@@ -231,8 +274,8 @@ const Quiz = (args) => {
       .catch(error => {
         console.log(error)
         if (error.response.data == "Not logged in") {
-            localStorage.clear(); // Clear local storage
-            history.push('/auth/login');
+          localStorage.clear(); // Clear local storage
+          history.push('/auth/login');
         }
         setErrorMessage("Failed to connect to backend");
         setError(true);
@@ -267,8 +310,8 @@ const Quiz = (args) => {
       .catch(error => {
         console.log(error)
         if (error.response.data == "Not logged in") {
-            localStorage.clear(); // Clear local storage
-            history.push('/auth/login');
+          localStorage.clear(); // Clear local storage
+          history.push('/auth/login');
         }
         console.log(error);
         setError(true);
@@ -309,7 +352,7 @@ const Quiz = (args) => {
           </ModalFooter>
 
         </Modal>
-        
+
         <Modal isOpen={modal} toggle={toggle} {...args} size='lg'>
           <Form role="form" onSubmit={AddQuiz}>
             <ModalHeader toggle={toggle}>Add new Quiz</ModalHeader>
@@ -325,7 +368,38 @@ const Quiz = (args) => {
                       name="quiz_title"
                       placeholder="Enter Quiz Title"
                       type="text"
+                      required
                     />
+                  </FormGroup>
+                </Col>
+                <Col md={6}>
+                  <FormGroup>
+                    <Label for="category">
+                      Select Quiz Course
+                    </Label>
+
+                    <Input
+                      id="Allcourses"
+                      name="courses"
+                      type="select"
+                    >
+                      {coursetable ?
+                        coursetable
+                         
+                          .map((row, index) => {
+                            return (
+                              <option key={index} value={row.Course_title}>
+                                {row.Course_title}
+                              </option>
+                            )
+                          })
+                        :
+                        <h1>Courses not assigned yet!</h1>
+                      }
+
+
+                    </Input>
+
                   </FormGroup>
                 </Col>
                 <Col md={6}>
@@ -338,6 +412,7 @@ const Quiz = (args) => {
                       name="start_date"
                       placeholder="Enter Quiz Start Date"
                       type="date"
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -351,6 +426,7 @@ const Quiz = (args) => {
                       name="end_date"
                       placeholder="Enter Quiz End Date"
                       type="date"
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -363,11 +439,14 @@ const Quiz = (args) => {
                       id="questions"
                       name="questions"
                       placeholder="Total Questions"
-                      type="text"
+                      type="Number"
+                      min={'1'}
+                      max={'20'}
+                      required
                     />
                   </FormGroup>
                 </Col>
-                
+
                 <Col md={6}>
                   <FormGroup>
                     <Label for="status">
@@ -377,7 +456,8 @@ const Quiz = (args) => {
                       id="status"
                       name="status"
                       type="select"
-                     
+                      required
+
                     >
                       <option value="Draft">
                         Draft
@@ -385,12 +465,12 @@ const Quiz = (args) => {
                       <option value="Publish">
                         Publish
                       </option>
-                     
+
                     </Input>
                   </FormGroup>
                 </Col>
               </Row>
-             
+
 
 
             </ModalBody>
@@ -491,7 +571,7 @@ const Quiz = (args) => {
                       id="status"
                       name="status"
                       type="select"
-                     defaultValue={status}
+                      defaultValue={status}
                     >
                       <option value="Draft">
                         Draft
@@ -499,7 +579,7 @@ const Quiz = (args) => {
                       <option value="Publish">
                         Publish
                       </option>
-                     
+
                     </Input>
                   </FormGroup>
                 </Col>
@@ -532,7 +612,7 @@ const Quiz = (args) => {
                     >
                       Add new Quiz
                     </Button>
-                    
+
                   </div>
 
                 </Row>
@@ -541,14 +621,14 @@ const Quiz = (args) => {
 
                 <thead className="thead-light">
                   <tr>
-                    <th scope="col">Course title</th>
+                    <th scope="col">Quiz Course</th>
                     <th scope="col">Quiz start Date</th>
                     <th scope="col">Quiz End Date</th>
                     <th scope="col">Status</th>
                     <th scope="col">Total Questions</th>
-                   
 
-                    <th scope="col">Description</th>
+
+                   
                     <th scope="col">Action</th>
 
                     <th scope="col" />
@@ -556,8 +636,9 @@ const Quiz = (args) => {
                 </thead>
                 <tbody>
 
-                  {quiztable ?
-                    quiztable.map((row, index) => {
+                {quiztable ?
+                    quiztable
+                    .map((row, index) => {
                       return (
                         <tr key={index}>
                           <th scope="row">
@@ -583,12 +664,8 @@ const Quiz = (args) => {
                           </td>
                           <td>{row.Status}</td>
                           <td>{row.Questions}</td>
+
                           
-                          <td>
-                            <Button color="success" >
-                              View Question
-                            </Button>
-                          </td>
                           <td>
                             <Button color="primary" onClick={() => { FindQuiz(row._id) }}>
                               Edit

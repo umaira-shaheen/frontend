@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.2.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import { Redirect,Link, useHistory } from "react-router-dom";
 import axios from 'axios';
 import { useState } from 'react';
@@ -40,7 +23,7 @@ const AdminNavbar = (props) => {
   const history = useHistory();
   const storedUser = localStorage.getItem('user');
   const user_info = JSON.parse(storedUser);
-  
+  localStorage.setItem('user', JSON.stringify(user_info));
     const [isloggedout, setloggedOut]=useState(false);
    //  useState for error message. initially error message will be false
    const [error, setError] = useState(false);
@@ -62,11 +45,11 @@ const AdminNavbar = (props) => {
         setError(true);
       });
   }
-  if(isloggedout)
-  {
-    <Redirect to="/auth/login" />; 
+  // if(isloggedout)
+  // {
+  //   <Redirect to="/auth/login" />; 
     
-  }
+  // }
   return(
 
  
@@ -99,7 +82,7 @@ const AdminNavbar = (props) => {
                   <span className="avatar avatar-sm rounded-circle">
                     <img
                       alt="..."
-                      src={require("../../assets/img/theme/umaira_img.jpeg")}
+                      src={`http://localhost:8000/${user_info.User_img}`}
                     />
                   </span>
                   <Media className="ml-2 d-none d-lg-block">

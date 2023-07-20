@@ -9,6 +9,7 @@ import {
   Form,
   Input,
   Container,
+  Alert,
   Row,
   Col
 } from "reactstrap";
@@ -23,62 +24,98 @@ const Profile = () => {
   const [editsuccess, seteditSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [addsuccess, setaddSuccess] = useState(false);
-  function EditImage(e)
-  {
-    const formData = new FormData();
-    if(file)
-    {
-      formData.append('file', file);
-    }
-    axios({    //AddCourse API Calling
-      method: 'post',
-      withCredentials: true,
-      sameSite: 'none',
-      url: "http://localhost:8000/User/AddProfileImage",
-      data: formData,
-    })
-      .then(res => {
-        if (res.data == "success") {
-          setaddSuccess(true);
-          console.log(res.data);
+  const onDismisseditSuccess = () => seteditSuccess(false);
+  const onDismiss = () => setError(false);
+  // function EditImage(file_1)
+  // {
+
+  //   const formData = new FormData();
+  //   if(file_1)
+  //   {
+  //     formData.append('file', file_1);
+  //   }
+  //   axios({    //AddCourse API Calling
+  //     method: 'post',
+  //     withCredentials: true,
+  //     sameSite: 'none',
+  //     url: "http://localhost:8000/User/AddProfileImage",
+  //     data: formData,
+  //   })
+  //     .then(res => {
+  //       if (res.data == "success") {
+  //         setaddSuccess(true);
+  //         console.log(res.data);
           
-        }
-        else {
-          setErrorMessage(res.data);
-          setError(true);
-        }
+  //       }
+  //       else {
+  //         setErrorMessage(res.data);
+  //         setError(true);
+  //       }
         
-        // window.location.reload(false);
-      })
-      .catch(error => {
-        setErrorMessage("Failed to connect to backend")
-        setError(true);
+  //       // window.location.reload(false);
+  //     })
+  //     .catch(error => {
+  //       setErrorMessage("Failed to connect to backend")
+  //       setError(true);
        
-      })
-  }
+  //     })
+  // }
   function EditProfile(e) {
+    e.preventDefault();
     const id = e.target.id.value;
     const user_name = e.target.username.value;
     const first_name = e.target.firstname.value;
     const last_name = e.target.lastname.value;
     const address = e.target.address.value;
     const phone_no = e.target.phoneno.value;
+    const bio=e.target.bio.value;
+    const formData = new FormData();
+    if(profile_pic)
+    {
+     
+      formData.append('file', profile_pic);
+    }
+    formData.append('user_name', user_name);
+    formData.append('first_name', first_name);
+    formData.append('last_name', last_name);
+    formData.append('address', address);
+    formData.append('phone_no', phone_no);
+    formData.append('id', id);
+    formData.append('bio', bio);
     e.preventDefault();
     axios({     //edit Course on the base of id API Calling
       method: 'post',
       withCredentials: true,
       sameSite: 'none',
       url: "http://localhost:8000/User/EditProfile",
-      data: { id: id, user_name: user_name, first_name: first_name, last_name: last_name, address: address, phone_no: phone_no },
-    })
+      data: formData,
+     })
       .then(res => {
-        if (res.data == "success") {
+        if (res.data.indicator == "success") {
           seteditSuccess(true);
+       
+          if(profile_pic)
+          {
+            user_info.User_img=res.data.path;
+            localStorage.setItem('user', JSON.stringify(user_info));
 
+           
+          }
+          user_info.Address = address;
+          user_info.UserName=  user_name;
+          user_info.First_name=first_name;
+          user_info.Last_name=last_name;
+          user_info.Phone_no=phone_no;
+          user_info.Bio=bio;
+          localStorage.setItem('user', JSON.stringify(user_info));
+
+
+
+          setRerender(!rerender);
 
         }
         else {
-          setErrorMessage(res.data);
+          setErrorMessage(res.data.messege);          
           setError(true);
         }
 
@@ -89,24 +126,34 @@ const Profile = () => {
         if (error.response.data == "Not logged in") {
           localStorage.clear(); // Clear local storage
           history.push('/auth/login');
-        }
+      }
         setErrorMessage("Failed to connect to backend");
         setError(true);
         console.log(error);
 
       })
   };
-  const [file, setFile] = useState(null);
+   const[profile_pic, setProfile_Pic]=useState();
+   const [rerender, setRerender] = useState(false);
   const handleFileInputChange = (event) => {
     const file_1 = event.target.files[0];
-    setFile(file_1);
-    EditImage();
+    setProfile_Pic(file_1);
+    EditProfile();
   };
+  
   return (
     <>
+     
       <UserHeader />
+     
       {/* Page content */}
       <Container className="mt--7" fluid>
+      <Alert color="danger" isOpen={error} toggle={onDismiss}>
+          <strong>Error! </strong> {errorMessage}
+        </Alert>
+        <Alert color="success" isOpen={editsuccess} toggle={onDismisseditSuccess}>
+          <strong>Profile updated successfully! </strong>
+        </Alert>
         <Row>
           <Col className="order-xl-2 mb-5 mb-xl-0" xl="4">
             <Card className="card-profile shadow">
@@ -117,7 +164,7 @@ const Profile = () => {
                       <img
                         alt="..."
                         className="rounded-circle"
-                        src={require("../../assets/img/theme/umaira_img.jpeg")}
+                        src={`http://localhost:8000/${user_info.User_img}`}
                       />
                     </a>
                   </div>
@@ -125,7 +172,7 @@ const Profile = () => {
               </Row>
               <CardHeader className="text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
                 <div className="d-flex justify-content-between">
-                  <Button
+                  {/* <Button
                     className="mr-4"
                     color="info"
                     href="linkedin.com/in/umaira-shaheen-a795ab258"
@@ -133,13 +180,11 @@ const Profile = () => {
                     size="sm"
                   >
                     Remove 
-                  </Button>
+                  </Button> */}
                  
                     <Button
                       className="float-right"
                       color="default"
-
-                      
                       size="sm"
                       onClick={() => fileInputRef.current.click()}
                     >
@@ -194,9 +239,12 @@ const Profile = () => {
                     International Islamic Universty Islamabad
                   </div> */}
                   <hr className="my-4" />
+                  <div className="h5 mt-4" style={{ fontSize: '16px' }}>
+                    <i className="ni business_briefcase-24 mr-2" />
+                   Bio
+                  </div>
                   <p>
-                    “You can teach a student a lesson for a day; but if you can teach him to learn by
-                    creating curiosity, he will continue the learning process as long as he lives.”
+                    “{user_info.Bio}”
                   </p>
                   <a href="#pablo" onClick={(e) => e.preventDefault()}>
                     {/* Show more */}
@@ -247,6 +295,7 @@ const Profile = () => {
                             placeholder="Username"
                             type="text"
                             name="username"
+                            readOnly
                           />
                         </FormGroup>
                       </Col>
@@ -379,40 +428,23 @@ const Profile = () => {
                           />
                         </FormGroup>
                       </Col>
-                      {/* <Col lg="4">
-                        <FormGroup>
-                          <label
-                            className="form-control-label"
-                            htmlFor="input-country"
-                          >
-                            Country
-                          </label>
-                          <Input
-                            className="form-control-alternative"
-                            defaultValue="United States"
-                            id="input-country"
-                            placeholder="Country"
-                            type="text"
-                          />
-                        </FormGroup>
-                      </Col> */}
-                      {/* <Col lg="4">
-                        <FormGroup>
-                          <label
-                            className="form-control-label"
-                            htmlFor="input-country"
-                          >
-                            Postal code
-                          </label>
-                          <Input
-                            className="form-control-alternative"
-                            id="input-postal-code"
-                            placeholder="Postal code"
-                            type="number"
-                          />
-                        </FormGroup>
-                      </Col> */}
+                     
                     </Row>
+                    <hr className="my-4" />
+                
+                <div className="pl-lg-4">
+                  <FormGroup>
+                    <label>About Me</label>
+                    <Input
+                      className="form-control-alternative"
+                      placeholder="A few words about you ..."
+                      rows="4"
+                      name="bio"
+                     defaultValue={user_info.Bio}
+                      type="textarea"
+                    />
+                  </FormGroup>
+                </div>
                     <Button
                       color="info"
                       type="submit"
@@ -421,22 +453,7 @@ const Profile = () => {
                       Edit profile
                     </Button>
                   </div>
-                  {/* <hr className="my-4" />
-                  {/* Description */}
-                  {/* <h6 className="heading-small text-muted mb-4">About me</h6>
-                  <div className="pl-lg-4">
-                    <FormGroup>
-                      <label>About Me</label>
-                      <Input
-                        className="form-control-alternative"
-                        placeholder="A few words about you ..."
-                        rows="4"
-                        defaultValue="I am jawad Amin graduated from Punjab Universty Lahore. Currently, associated with 
-                        UKCELL to deliver my services. I have experience of teaching for more than 5 years"
-                        type="textarea"
-                      />
-                    </FormGroup>
-                  </div> */}
+                 
                 </Form>
               </CardBody>
             </Card>
