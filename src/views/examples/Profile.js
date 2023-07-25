@@ -109,8 +109,6 @@ const Profile = () => {
           user_info.Bio=bio;
           localStorage.setItem('user', JSON.stringify(user_info));
 
-
-
           setRerender(!rerender);
 
         }

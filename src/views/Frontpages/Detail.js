@@ -8,7 +8,8 @@ import { useState, useEffect } from "react";
 import {
     Alert,
     Button
-} from "reactstrap";
+} 
+from "reactstrap";
 import "./front.scss";
 const Detail = () => {
     const [coursetable, setCoursetable] = useState(null);

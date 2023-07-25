@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect, useHistory, Link } from 'react-router-dom';
 import {
     Button,
     Card,
@@ -70,6 +70,7 @@ const View_Assignment = (args) => {
 
 
     }, []);
+    
     const [modal, setModal] = useState(false);
 
     const toggle = () => setModal(!modal);
@@ -114,9 +115,9 @@ const View_Assignment = (args) => {
 
                                     {Assignmenttable ?
                                         Assignmenttable.map((row, index) => {
-                                            const endDate = moment(row.Date).endOf('day');
-                                            const currentDate = moment().endOf('day');
-                                            const isExpired = endDate.isBefore(currentDate);
+                                            const currentDate = new Date();
+                                            const dateToCompare = new Date(row.Date);
+                                            const isExpired = dateToCompare < currentDate ? true : false
                                             return (
                                                 <tr key={index}>
                                                     <th scope="row">
@@ -151,16 +152,37 @@ const View_Assignment = (args) => {
                                                     </Modal>
 
                                                     <td>
-                                                        <Button color="success" onClick={toggle}
-                                                            style={{ fontSize: '13px', padding: '4px 8px' }}>
-                                                            View Question
-                                                        </Button>
+                                                    {!isExpired ? (
+                                                                <>
+                                                                    <Link to={"/AssignmentPdf?assignment_id=" + row._id}
+                                                                        target="_blank"
+                                                                    >
+                                                                        <Button color="primary"
+                                                                            // onClick={() => { SearchAssignment(row._id) }}
+                                                                            style={{ fontSize: '13px', padding: '4px 8px' }}>
+                                                                            Download Assignment
+
+                                                                        </Button>
+                                                                    </Link>
+                                                                </>
+
+
+
+                                                            ) : (
+                                                                <Button
+                                                                    color="primary"
+                                                                    style={{ fontSize: '13px', padding: '4px 8px' }}
+                                                                    disabled
+                                                                >
+                                                                    Assignment Expired
+                                                                </Button>
+                                                            )}
 
 
                                                     </td>
 
                                                     <td>
-                                                        {isExpired ? (
+                                                        {!isExpired ? (
                                                             <>
                                                                 <Button
                                                                     className="float-right"

@@ -333,6 +333,7 @@ const Course = (args) => {
   const closeModal = () => setModal(false);
   const [file, setFile] = useState(null);
   const [filtered_courses, setFilteredCourses] = useState('');
+  
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
     setFile(file);

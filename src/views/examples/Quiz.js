@@ -236,6 +236,7 @@ const Quiz = (args) => {
       }
         
       })
+      
     
   }, []);
   function EditQuiz(e) {

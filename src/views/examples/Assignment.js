@@ -341,37 +341,27 @@ const Assignment = (args) => {
         setEditModal(!editmodal);
       })
   };
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    const user_info = JSON.parse(storedUser);
-    const user_id = user_info._id;
-    console.log(user_info);
-    // add course_id into local storage - last_url
-    if (user_info == null) {
-        localStorage.setItem('state', JSON.stringify(location.state))
 
-        history.push('/auth/login');
-    }
-    else 
-    {
+  function FindAssignmentQuestion(id) {
 
-    axios({
+    axios({     //FindOneCourse on the base of id API Calling
       method: 'get',
       withCredentials: true,
       sameSite: 'none',
-      url: "http://localhost:8000/Assignment/GetTeacherAssignment?temp_id=" + user_id,
+      url: "http://localhost:8000/Assignment/FindassignmentQuestion?temp_id=" + id
     })
       .then(res => {
-        if (res.data.data && res.data.message == "success") {
-          console.log(res.data.data);
-          setAssignmenttable(res.data.data);
-      }
-      else if (res.data.message == "only student can access this") {
-          alert("only student can access this")
-      }
+        if (res.data) {
+
+         console.log(res.data);
+          setdescription(res.data.description);
+
+          setassignmentModal(!assignmentmodal);
+
+        }
+
       })
       .catch(error => {
-
         if (error && error.response) {
           if (error.response.data && error.response.data == "Not logged in") {
             localStorage.clear(); // Clear local storage
@@ -379,7 +369,48 @@ const Assignment = (args) => {
           }
         }
         console.log(error);
+        setError(true);
+        setassignmentModal(!assignmentmodal);
       })
+  };
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    const user_info = JSON.parse(storedUser);
+    const user_id = user_info._id;
+    console.log(user_info);
+    // add course_id into local storage - last_url
+    if (user_info == null) {
+      localStorage.setItem('state', JSON.stringify(location.state))
+
+      history.push('/auth/login');
+    }
+    else {
+
+      axios({
+        method: 'get',
+        withCredentials: true,
+        sameSite: 'none',
+        url: "http://localhost:8000/Assignment/GetTeacherAssignment?temp_id=" + user_id,
+      })
+        .then(res => {
+          if (res.data.data && res.data.message == "success") {
+            console.log(res.data.data);
+            setAssignmenttable(res.data.data);
+          }
+          else if (res.data.message == "only student can access this") {
+            alert("only student can access this")
+          }
+        })
+        .catch(error => {
+
+          if (error && error.response) {
+            if (error.response.data && error.response.data == "Not logged in") {
+              localStorage.clear(); // Clear local storage
+              history.push('/auth/login');
+            }
+          }
+          console.log(error);
+        })
     }
   }, []);
   const [filtered_courses, setFilteredCourses] = useState('');
@@ -410,6 +441,21 @@ const Assignment = (args) => {
         <Alert color="success" isOpen={editsuccess} toggle={onDismisseditSuccess}>
           <strong> Assignment Updated successfully! </strong>
         </Alert>
+        {/* View Question ModaL */}
+        <Modal isOpen={assignmentmodal} toggle={assignmenttoggleclose} {...args}>
+          <ModalHeader toggle={assignmenttoggleclose}>Assignment Question</ModalHeader>
+          <ModalBody>
+            <div>
+              {<div dangerouslySetInnerHTML={{ __html:Description }} />}
+            </div>
+          </ModalBody>
+          <ModalFooter>
+
+            <Button color="secondary" onClick={toggle}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </Modal>
         {/* Delete modal */}
 
 
@@ -755,24 +801,11 @@ const Assignment = (args) => {
                           </td>
                           <td>{row.Total_marks}</td>
                           <td>{row.Status}</td>
-                          <Modal isOpen={assignmentmodal} toggle={assignmenttoggleclose} {...args}>
-                              <ModalHeader toggle={assignmenttoggleclose}>Assignment Question</ModalHeader>
-                              <ModalBody>
-                                <div>
-                                  {<div dangerouslySetInnerHTML={{ __html: row.description }} />}
-                                </div>
-                              </ModalBody>
-                              <ModalFooter>
-                                
-                                <Button color="secondary" onClick={toggle}>
-                                  Cancel
-                                </Button>
-                              </ModalFooter>
-                            </Modal>
+
                           <td>
-                           
+
                             <Button color="success"
-                               onClick={toggle}
+                              onClick={() => { FindAssignmentQuestion(row._id) }}
                               style={{ fontSize: '13px', padding: '4px 8px' }}>
                               View Question
                             </Button>

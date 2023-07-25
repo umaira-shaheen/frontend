@@ -48,7 +48,7 @@ const Question = (args) => {
 
     function AddQuestions(e) {
         e.preventDefault();
-        const quiz_title = e.target.quiz.value;
+        const quiz_id = e.target.quiz.value;
         const question = e.target.question.value;
         const question_type = e.target.question_type.value;
         const options = question_type === "Multichoice" ? e.target.options.value : ""; // Only assign options if question type is "Multichoice"
@@ -63,12 +63,12 @@ const Question = (args) => {
             withCredentials: true,
             sameSite: 'none',
             url: "http://localhost:8000/Question/AddQuestion",
-            data: { quiz_title: quiz_title, question: question, question_type: question_type, options: options, marks: marks },
+            data: { quiz_id: quiz_id, question: question, question_type: question_type, options: options, marks: marks },
         })
             .then(res => {
                 if (res.data == "success") {
                     setaddSuccess(true);
-                    GetQuestion();
+                    GetTeacheQuestion();
                     setRerender(!rerender);
                 }
                 else {
@@ -109,10 +109,84 @@ const Question = (args) => {
                 }
             })
     };
+function GetTeacheQuestion()
+{
+    const storedUser = localStorage.getItem('user');
+    const user_info = JSON.parse(storedUser);
+    const user_id = user_info._id;
+    console.log(user_info);
+    // add course_id into local storage - last_url
+    if (user_info == null) {
+        localStorage.setItem('state', JSON.stringify(location.state))
+
+        history.push('/auth/login');
+    }
+    axios({
+        method: 'get',
+        withCredentials: true,
+        sameSite: 'none',
+        url: "http://localhost:8000/Question/GetTeacherQuestion?temp_id=" + user_id,
+    })
+        .then(res => {
+            if (res.data.data && res.data.message == "success") {
+                console.log(res.data.data);
+                setquestiontable(res.data.data);
+            }
+            else if (res.data.message == "only Teacher can access this") {
+                alert("only teacher can access this")
+            }
+        })
+        .catch(error => {
+            console.log(error);
+
+            if (error.response.data.message == "Not logged in") {
+                localStorage.clear(); // Clear local storage
+                history.push('/auth/login');
+            }
+
+        })
+}
 
     useEffect(() => {
-        GetQuestion();
+        // GetQuestion();
         GetQuiz();
+        GetTeacheQuestion();
+    const storedUser = localStorage.getItem('user');
+    const user_info = JSON.parse(storedUser);
+    const user_id = user_info._id;
+    console.log(user_info);
+    // add course_id into local storage - last_url
+    if (user_info == null) {
+        localStorage.setItem('state', JSON.stringify(location.state))
+
+        history.push('/auth/login');
+    }
+    axios({
+      method: 'get',
+      withCredentials: true,
+      sameSite: 'none',
+      url: "http://localhost:8000/Quiz/GetTeacherQuiz?temp_id=" + user_id,
+    })
+      .then(res => {
+        if (res.data.data && res.data.message == "success") {
+          console.log(res.data.data);
+          setteacherquiztable(res.data.data);
+      }
+      else if (res.data.message == "only Teacher can access this") {
+          alert("only teacher can access this")
+      }
+      })
+      .catch(error => {
+        console.log(error);
+
+        if (error.response.data.message == "Not logged in") {
+          localStorage.clear(); // Clear local storage
+          history.push('/auth/login');
+      }
+        
+      })
+       
+
     }, []);
 
     //   Edit Quiz
@@ -134,7 +208,7 @@ const Question = (args) => {
             .then(res => {
                 if (res.data == "success") {
                     seteditSuccess(true);
-                    GetQuestion();
+                    GetTeacheQuestion();
                     setRerender(!rerender);
                 }
                 else {
@@ -154,6 +228,7 @@ const Question = (args) => {
     };
     // Find Quiz to edit the Quiz
     const [quiztable, setquiztable] = useState(null);
+    const [teacherquiztable, setteacherquiztable] = useState(null);
     const [id, setQuestionid] = useState(null);
     const [question_title, setQuestionTitle] = useState(null);
     const [type, setquiztype] = useState(null);
@@ -202,6 +277,7 @@ const Question = (args) => {
 
     const [deletemodal, setdeleteModal] = useState(false);
     const [showOptions, setShowOptions] = useState(true);
+    const [coursetable, setCoursetable] = useState(null);
     const Deletetoggle = (id) => {
 
         setTempId(id);
@@ -222,7 +298,7 @@ const Question = (args) => {
             .then(res => {
                 if (res.data.indicator == "success") {
                     setdeleteSuccess(true);
-                    GetQuestion();
+                    GetTeacheQuestion();
                     setRerender(!rerender);
                 }
                 else {
@@ -255,6 +331,7 @@ const Question = (args) => {
                 console.log(error);
             })
     }
+   
     const [option_type, setOption_type] = useState('');
     const [filtered_questions, setFilteredQuestions] = useState('');
     const handleChange = (e) => {
@@ -310,10 +387,10 @@ const Question = (args) => {
                                             name="quiz"
                                             type="select"
                                         >
-                                            {quiztable ?
-                                                quiztable.map((row, index) => {
+                                            {teacherquiztable ?
+                                                teacherquiztable.map((row, index) => {
                                                     return (
-                                                        <option key={index} value={row.Quiz_title}>
+                                                        <option key={index} value={row._id}>
                                                             {row.Quiz_title}
                                                         </option>
                                                     )
@@ -327,6 +404,7 @@ const Question = (args) => {
 
                                     </FormGroup>
                                 </Col>
+
                                 <Col md={6}>
                                     <FormGroup>
                                         <Label
@@ -413,7 +491,7 @@ const Question = (args) => {
                                         />
                                     </FormGroup>
                                 </Col>
-                                
+
                             </Row>
 
 
@@ -562,8 +640,8 @@ const Question = (args) => {
                                             onChange={handleQuizChange}
                                         >
                                             <option value="No Quiz Selected Yet">No Quiz Selected Yet</option>
-                                            {quiztable ?
-                                                quiztable
+                                            {teacherquiztable ?
+                                                teacherquiztable
                                                     .map((row, index) => {
                                                         return (
                                                             <option key={index} value={row.Quiz_title}>
@@ -648,42 +726,42 @@ const Question = (args) => {
                                         // :
                                         // filtered_questions.length === 0?
                                         // <tr>
-                                            
+
                                         //     <td colSpan="6">
-                                                
+
                                         //             "No Questions Exist for the Selected Course"
                                         //     </td>
-                                            
-                                        // </tr>
-                                         
-                                        :
-                                    
-                                    questiontable && questiontable.length > 0 && currentQuiz == "No Quiz Selected Yet"  ? (
-                                        questiontable.map((row, index) => (
-                                    <tr key={index}>
-                                        <th scope="row">
-                                            <span className="mb-0 text-sm">{row.quiz_title}</span>
-                                        </th>
-                                        <td>{row.Question}</td>
-                                        <td>{row.questions_type}</td>
-                                        <td>{row.options}</td>
-                                        <td>{row.marks}</td>
-                                        <td>
-                                            <Button color="primary" onClick={() => { FindQuestion(row._id) }}>
-                                                Edit
-                                            </Button>
-                                            <Button color="danger" onClick={() => { Deletetoggle(row._id) }}>
-                                                Delete
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                    ))
-                                    ) : 
 
-                                    <tr>
-                                        <td span="5">No Questions Added yet!</td>
-                                    </tr>
-                                        }
+                                        // </tr>
+
+                                        :
+
+                                        questiontable && questiontable.length > 0 && currentQuiz == "No Quiz Selected Yet" ? (
+                                            questiontable.map((row, index) => (
+                                                <tr key={index}>
+                                                    <th scope="row">
+                                                        <span className="mb-0 text-sm">{row.quiz_title}</span>
+                                                    </th>
+                                                    <td>{row.Question}</td>
+                                                    <td>{row.questions_type}</td>
+                                                    <td>{row.options}</td>
+                                                    <td>{row.marks}</td>
+                                                    <td>
+                                                        <Button color="primary" onClick={() => { FindQuestion(row._id) }}>
+                                                            Edit
+                                                        </Button>
+                                                        <Button color="danger" onClick={() => { Deletetoggle(row._id) }}>
+                                                            Delete
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) :
+
+                                            <tr>
+                                                <td span="5">No Questions Added yet!</td>
+                                            </tr>
+                                    }
                                 </tbody>
                             </Table>
 

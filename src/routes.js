@@ -24,6 +24,7 @@ import Attempt_Quiz from "views/examples/Attempt_Quiz";
 import Quiz from "views/examples/Quiz";
 import Assignment from "views/examples/Assignment";
 import Profile from "views/examples/Profile.js";
+import Submitted_Quizes from "views/examples/Submitted_Quizes.js";
 // import Maps from "views/examples/Maps.js";
 import Forgot_password from "views/examples/Forgot_password";
 import Register from "views/examples/Register.js";
@@ -143,6 +144,13 @@ var routes = [
     icon: "ni ni-circle-08 text-pink",
     component: Register,
     layout: "/auth"
+  },
+  {
+    path: "/Submitted Quizes",
+    name: "Submitted Quizes",
+    icon: "ni ni-circle-08 text-pink",
+    component: Submitted_Quizes,
+    layout: "/admin"
   },
   // {
   //   path: "/ForgotPassword",
