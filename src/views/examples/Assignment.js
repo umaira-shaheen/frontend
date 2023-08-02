@@ -107,7 +107,7 @@ const Assignment = (args) => {
       .then(res => {
         if (res.data.indicator == "success") {
           setdeleteSuccess(true);
-          GetTeacherAssignment();
+          getonlyteacherAssignment();
           setRerender(!rerender);
         }
         else {
@@ -175,7 +175,7 @@ const Assignment = (args) => {
         .then(res => {
           if (res.data == "success") {
             setaddSuccess(true);
-            GetTeacherAssignment();
+            getonlyteacherAssignment();
             setRerender(!rerender);
           }
           else {
@@ -277,7 +277,7 @@ const Assignment = (args) => {
       .then(res => {
         if (res.data == "success") {
           seteditSuccess(true);
-          GetTeacherAssignment();
+          getonlyteacherAssignment();
           setRerender(!rerender);
         }
         else {
@@ -373,7 +373,8 @@ const Assignment = (args) => {
         setassignmentModal(!assignmentmodal);
       })
   };
-  useEffect(() => {
+  function getonlyteacherAssignment()
+  {
     const storedUser = localStorage.getItem('user');
     const user_info = JSON.parse(storedUser);
     const user_id = user_info._id;
@@ -390,7 +391,7 @@ const Assignment = (args) => {
         method: 'get',
         withCredentials: true,
         sameSite: 'none',
-        url: "http://localhost:8000/Assignment/GetTeacherAssignment?temp_id=" + user_id,
+        url: "http://localhost:8000/Assignment/GetOnlyTeacherAssignment?temp_id=" + user_id,
       })
         .then(res => {
           if (res.data.data && res.data.message == "success") {
@@ -412,15 +413,21 @@ const Assignment = (args) => {
           console.log(error);
         })
     }
+
+  }
+  useEffect(() => {
+    getonlyteacherAssignment();
+   
   }, []);
   const [filtered_courses, setFilteredCourses] = useState('');
+  const [currentQuiz, setCurrentQuiz] = useState("No Quiz Selected Yet")
   const handleAssignmentChange = (e) => {
     // Function to filter the quiz questions based on the selected quiz
     const filteredCourses = coursetable.filter(
       (assignment) => assignment.Course_title === e.target.value
     );
     setFilteredCourses(filteredCourses);
-    setCurrentQuiz(e.target.value)
+    setCurrentQuiz(e.target.value);
   };
   const [assignmentmodal, setassignmentModal] = useState(false);
 
@@ -457,8 +464,6 @@ const Assignment = (args) => {
           </ModalFooter>
         </Modal>
         {/* Delete modal */}
-
-
 
         <Modal isOpen={deletemodal} toggle={DeletetoggleClose} {...args} size='sm'>
           <ModalHeader toggle={DeletetoggleClose} >Delete Assignment</ModalHeader>
@@ -538,6 +543,7 @@ const Assignment = (args) => {
                       name="date"
                       placeholder="Submission Deadline"
                       type="date"
+                      required
 
                     />
                   </FormGroup>
@@ -551,7 +557,7 @@ const Assignment = (args) => {
                       id="marks"
                       name="total_marks"
                       placeholder="Total Marks"
-                      type="text"
+                      type="Number"
                       min={'5'}
                       max={'100'}
                       required
@@ -637,6 +643,7 @@ const Assignment = (args) => {
                       placeholder="Enter Assignment Title"
                       type="text"
                       defaultValue={Assignment_title}
+                      
                     />
                   </FormGroup>
                 </Col>
@@ -651,6 +658,7 @@ const Assignment = (args) => {
                       placeholder="Submission Date"
                       type='date'
                       defaultValue={new Date(date).toISOString().split('T')[0]}
+                      required
                     />
 
                   </FormGroup>
@@ -667,8 +675,11 @@ const Assignment = (args) => {
                       id="marks"
                       name="marks"
                       placeholder="Total Marks"
-                      type='text'
+                      type='Number'
                       defaultValue={total_marks}
+                      min={'5'}
+                      max={'100'}
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -682,6 +693,7 @@ const Assignment = (args) => {
                       name="status"
                       type="select"
                       defaultValue={status}
+                      required
 
                     >
                       <option value="Draft">

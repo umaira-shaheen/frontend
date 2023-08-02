@@ -151,6 +151,7 @@ function GetTeacheQuestion()
         // GetQuestion();
         GetQuiz();
         GetTeacheQuestion();
+        GetOnlyTeacherQuiz();
     const storedUser = localStorage.getItem('user');
     const user_info = JSON.parse(storedUser);
     const user_id = user_info._id;
@@ -194,8 +195,13 @@ function GetTeacheQuestion()
         const id = e.target.id.value;
         const question_title = e.target.question.value;
         const type = e.target.question_type.value;
-        const options = e.target.options.value;
+        const options = type === "Multichoice" ? e.target.options.value : ""; // Only assign options if question type is "Multichoice"
+        // const options = e.target.options.value;
         const marks = e.target.marks.value;
+        if (type == "Multichoice" && options.length == 0) {
+            alert('For multipchoice question type you must provide options')
+            return
+        }
 
         e.preventDefault();
         axios({     //edit Course on the base of id API Calling
@@ -316,6 +322,43 @@ function GetTeacheQuestion()
             })
 
     };
+    function GetOnlyTeacherQuiz()
+  {
+    const storedUser = localStorage.getItem('user');
+    const user_info = JSON.parse(storedUser);
+    const user_id = user_info._id;
+    console.log(user_info);
+    // add course_id into local storage - last_url
+    if (user_info == null) {
+        localStorage.setItem('state', JSON.stringify(location.state))
+
+        history.push('/auth/login');
+    }
+    axios({
+      method: 'get',
+      withCredentials: true,
+      sameSite: 'none',
+      url: "http://localhost:8000/Quiz/GetOnlyTeacherQuiz?temp_id=" + user_id,
+    })
+      .then(res => {
+        if (res.data.data && res.data.message == "success") {
+          console.log(res.data.data);
+          setquiztable(res.data.data);
+      }
+      else if (res.data.message == "only Teacher can access this") {
+          alert("only teacher can access this")
+      }
+      })
+      .catch(error => {
+        console.log(error);
+
+        if (error.response.data.message == "Not logged in") {
+          localStorage.clear(); // Clear local storage
+          history.push('/auth/login');
+      }
+        
+      })
+  }
     function GetQuiz(e) {
         axios({
             method: 'get',
@@ -390,8 +433,8 @@ function GetTeacheQuestion()
                                             {teacherquiztable ?
                                                 teacherquiztable.map((row, index) => {
                                                     return (
-                                                        <option key={index} value={row._id}>
-                                                            {row.Quiz_title}
+                                                        <option key={index} value={row._doc._id}>
+                                                            {row._doc.Quiz_title}
                                                         </option>
                                                     )
                                                 })
@@ -551,6 +594,7 @@ function GetTeacheQuestion()
                                             name="question_type"
                                             type="select"
                                             defaultValue={type}
+                                            onChange={handleChange}
                                         >
                                             <option value="Multichoice">
                                                 Multichoice
@@ -568,7 +612,7 @@ function GetTeacheQuestion()
                                         </Input>
                                     </FormGroup>
                                 </Col>
-                                <Col md={6}>
+                                <Col md={6} className={showOptions ? '' : 'hidden'}>
                                     <FormGroup>
                                         <Label for="options">
                                             Options(Each option on new line)
@@ -644,8 +688,8 @@ function GetTeacheQuestion()
                                                 teacherquiztable
                                                     .map((row, index) => {
                                                         return (
-                                                            <option key={index} value={row.Quiz_title}>
-                                                                {row.Quiz_title}
+                                                            <option key={index} value={row._doc.Quiz_title}>
+                                                                {row._doc.Quiz_title}
                                                             </option>
                                                         )
                                                     })

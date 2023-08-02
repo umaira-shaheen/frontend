@@ -25,11 +25,40 @@ const View_Assignment = (args) => {
     var moment = require('moment');
 
     const fileInputRef = useRef(null);
-
-    const handleFileInputChange = (e) => {
-      const file = e.target.files[0];
-      // Perform the file upload logic here
+    const [assignment_file, setFile] = useState(null);
+    const handleFileInputChange = (event, id) => {
+      const file = event.target.files[0];
+      setFile(file);
       console.log(file);
+      const formData = new FormData();
+      if (file) {
+          formData.append('file', file);
+      }
+      axios({    
+          method: 'post',
+          withCredentials: true,
+          sameSite: 'none',
+          url: "http://localhost:8000/Assignment/UploadAssignment?temp_id=" + id,
+          data: formData,
+      })
+          .then(res => {
+              if (res.data == "success") {
+                  setaddSuccess(true);
+              }
+              else {
+                  setErrorMessage(res.data);
+                  setError(true);
+              }
+            
+              // window.location.reload(false);
+          })
+          .catch(error => {
+              setErrorMessage("Failed to connect to backend")
+              setError(true);
+
+          })
+
+
     };
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
@@ -108,6 +137,8 @@ const View_Assignment = (args) => {
                                         <th scope="col">Description</th>
                                         <th scope="col">Action</th>
 
+                                        <th scope="col">Obtained Marks</th>
+
                                         <th scope="col" />
                                     </tr>
                                 </thead>
@@ -116,14 +147,14 @@ const View_Assignment = (args) => {
                                     {Assignmenttable ?
                                         Assignmenttable.map((row, index) => {
                                             const currentDate = new Date();
-                                            const dateToCompare = new Date(row.Date);
+                                            const dateToCompare = new Date(row._doc.Date);
                                             const isExpired = dateToCompare < currentDate ? true : false
                                             return (
                                                 <tr key={index}>
                                                     <th scope="row">
                                                         {/* <i className="ni ni-book-bookmark text-blue"/> */}
                                                         <span className="mb-0 text-sm">
-                                                            {row.Assignment_title}
+                                                            {row._doc.Assignment_title}
                                                         </span>
 
                                                     </th>
@@ -132,14 +163,14 @@ const View_Assignment = (args) => {
                                                     <td>
                                                         <Badge color="" className="badge-dot">
                                                             <i className="bg-info" />
-                                                            {moment(row.Date).format('DD-MM-YYYY')}
+                                                            {moment(row._doc.Date).format('DD-MM-YYYY')}
                                                         </Badge>
                                                     </td>
-                                                    <td>{row.Total_marks}</td>
+                                                    <td>{row._doc.Total_marks}</td>
                                                     <Modal isOpen={modal} toggle={toggle} {...args}>
                                                         <ModalHeader toggle={toggle}>Assignment Question</ModalHeader>
                                                         <ModalBody>
-                                                            {<div dangerouslySetInnerHTML={{ __html: row.description }} />}
+                                                            {<div dangerouslySetInnerHTML={{ __html: row._doc.description }} />}
                                                         </ModalBody>
                                                         <ModalFooter>
                                                             {/* <Button color="primary" onClick={toggle}>
@@ -154,7 +185,7 @@ const View_Assignment = (args) => {
                                                     <td>
                                                     {!isExpired ? (
                                                                 <>
-                                                                    <Link to={"/AssignmentPdf?assignment_id=" + row._id}
+                                                                    <Link to={"/AssignmentPdf?assignment_id=" + row._doc._id}
                                                                         target="_blank"
                                                                     >
                                                                         <Button color="primary"
@@ -182,10 +213,14 @@ const View_Assignment = (args) => {
                                                     </td>
 
                                                     <td>
-                                                        {!isExpired ? (
+                                                        {!isExpired ? (row.has_submitted ? 
+                                                          <Button  style={{width: '120px'}} color="default" size="sm" disabled>
+                                                          Submitted
+                                                       </Button>
+                                                        : (
                                                             <>
                                                                 <Button
-                                                                    className="float-right"
+                                                                   
                                                                     color="primary"
                                                                     style={{ fontSize: '13px', padding: '4px 8px' }}
                                                                     onClick={() => fileInputRef.current.click()}
@@ -197,20 +232,23 @@ const View_Assignment = (args) => {
                                                                     type="file"
                                                                     ref={fileInputRef}
                                                                     style={{ display: 'none' }}
-                                                                    onChange={handleFileInputChange}
+                                                                    onChange={(event) => handleFileInputChange(event, row._doc._id)}
                                                                 />
                                                             </>
+                                                             ))
 
-                                                        ) : (
-                                                            <Button
-                                                                color="primary"
-                                                                style={{ fontSize: '13px', padding: '4px 8px' }}
-                                                                disabled
-                                                            >
-                                                                Assignment Expired
-                                                            </Button>
-                                                        )}
+                                                       : <></> }
+                                                            
                                                     </td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                            {row.has_submitted ? (
+                                                                row.marks_obtained !== "-1" ? (
+                                                                    row.marks_obtained
+                                                                ) : (
+                                                                    "Not Marked"
+                                                                )
+                                                            ) : null}
+                                                        </td>
 
                                                 </tr>)
                                         })

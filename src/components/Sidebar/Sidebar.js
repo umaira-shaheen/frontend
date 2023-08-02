@@ -116,6 +116,18 @@ const Sidebar = (props) => {
       if (user_info.Role === "Admin" && route.name === "My Assignments") {
         return false; // Exclude the route for Teacher role
       }
+      if (user_info.Role === "Student" && route.name === "Submitted Quizes") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Admin" && route.name === "Submitted Quizes") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Student" && route.name === "Submitted Assignments") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Admin" && route.name === "Submitted Assignments") {
+        return false; // Exclude the route for Teacher role
+      }
       if (user_info.Role === "Admin" && route.name === "My Quizes") {
         return false; // Exclude the route for Teacher role
       }

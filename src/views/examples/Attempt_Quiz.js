@@ -46,6 +46,7 @@ const Attempt_Quiz = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [file, setFile] = useState(null);
     const fileInputRef = useRef(null);
+    const [rerender, setRerender] = useState(false);
     const handleFileInputChange = (event, id) => {
 
         const file = event.target.files[0];
@@ -65,12 +66,15 @@ const Attempt_Quiz = () => {
             .then(res => {
                 if (res.data == "success") {
                     setaddSuccess(true);
+                    GetStudentQuiz();
+                    setRerender(!rerender);
+
                 }
                 else {
                     setErrorMessage(res.data);
                     setError(true);
                 }
-                closeModal();
+
                 // window.location.reload(false);
             })
             .catch(error => {
@@ -123,8 +127,9 @@ const Attempt_Quiz = () => {
 
             })
     }
-    useEffect(() => {
-
+  
+    function GetStudentQuiz() {
+      
         const storedUser = localStorage.getItem('user');
         const user_info = JSON.parse(storedUser);
         const user_id = user_info._id;
@@ -146,6 +151,8 @@ const Attempt_Quiz = () => {
                     if (res.data.data && res.data.message == "success") {
                         console.log(res.data.data);
                         setquiztable(res.data.data);
+                        // GetStudentQuiz();
+                        // setRerender(!rerender);
                     }
                     else if (res.data.message == "only student can access this") {
                         alert("only student can access this")
@@ -159,6 +166,43 @@ const Attempt_Quiz = () => {
                     }
                 })
         }
+    }
+
+
+    useEffect(() => {
+
+        GetStudentQuiz();
+        //Obtained Marks API
+        // if (user_info == null) {
+        //     localStorage.setItem('state', JSON.stringify(location.state))
+
+        //     history.push('/auth/login');
+        // }
+        // else {
+        //     axios({
+        //         method: 'get',
+        //         withCredentials: true,
+        //         sameSite: 'none',
+        //         url: "http://localhost:8000/Quiz/GetObtainedMarks?temp_id=" + user_id,
+        //     })
+        //         .then(res => {
+        //             if (res.data.data && res.data.message == "success") {
+        //                 console.log(res.data.data);
+
+        //             }
+        //             else if (res.data.message == "only student can access this") {
+        //                 alert("only student can access this")
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.log(error);
+        //             if (error.response.data.message == "Not logged in") {
+        //                 localStorage.clear(); // Clear local storage
+        //                 history.push('/auth/login');
+        //             }
+        //         })
+        // }
+
 
     }, []);
     return (
@@ -197,7 +241,7 @@ const Attempt_Quiz = () => {
 
                                             <th scope="col">Action</th>
                                             <th scope="col">Upload Quiz</th>
-
+                                            <th scope="col">Obtained Marks</th>
                                             <th scope="col" />
                                         </tr>
                                     </thead>
@@ -205,7 +249,7 @@ const Attempt_Quiz = () => {
 
                                         {quiztable ?
                                             quiztable.map((row, index) => {
-                                                const endDate = moment(row.End_date).endOf('day');
+                                                const endDate = moment(row._doc.End_date).endOf('day');
                                                 const currentDate = moment().endOf('day');
                                                 const isExpired = endDate.isBefore(currentDate);
                                                 return (
@@ -213,7 +257,7 @@ const Attempt_Quiz = () => {
                                                         <th scope="row">
                                                             {/* <i className="ni ni-book-bookmark text-blue"/> */}
                                                             <span className="mb-0 text-sm">
-                                                                {row.Quiz_title}
+                                                                {row._doc.Quiz_title}
                                                             </span>
 
                                                         </th>
@@ -221,29 +265,29 @@ const Attempt_Quiz = () => {
                                                         <td>
                                                             <Badge color="" className="badge-dot">
                                                                 <i className="bg-info" />
-                                                                {moment(row.Start_date).format('DD-MM-YYYY')}
+                                                                {moment(row._doc.Start_date).format('DD-MM-YYYY')}
 
                                                             </Badge>
                                                         </td>
                                                         <td>
                                                             <Badge color="" className="badge-dot">
                                                                 <i className="bg-info" />
-                                                                {moment(row.End_date).format('DD-MM-YYYY')}
+                                                                {moment(row._doc.End_date).format('DD-MM-YYYY')}
                                                             </Badge>
                                                         </td>
                                                         {/* <td>{row.Status}</td> */}
-                                                        <td style={{ textAlign: 'center' }}>{row.Questions}</td>
+                                                        <td style={{ textAlign: 'center' }}>{row._doc.Questions}</td>
 
 
                                                         <td>
                                                             {!isExpired ? (
                                                                 <>
-                                                                    <Link to={"/QuizPdf?quiz_id=" + row._id}
+                                                                    <Link to={"/QuizPdf?quiz_id=" + row._doc._id}
                                                                         target="_blank"
                                                                     >
                                                                         <Button color="primary"
                                                                             // onClick={() => { SearchQuiz(row._id) }}
-                                                                            style={{ fontSize: '13px', padding: '4px 8px' }}>
+                                                                            style={{ fontSize: '13px', padding: '4px 8px', width: '120px' }}>
                                                                             Download Quiz
 
                                                                         </Button>
@@ -255,7 +299,7 @@ const Attempt_Quiz = () => {
                                                             ) : (
                                                                 <Button
                                                                     color="primary"
-                                                                    style={{ fontSize: '13px', padding: '4px 8px' }}
+                                                                    style={{ fontSize: '13px', padding: '4px 8px', width: '120px' }}
                                                                     disabled
                                                                 >
                                                                     Quiz Expired
@@ -264,33 +308,41 @@ const Attempt_Quiz = () => {
 
                                                         </td>
                                                         <td>
-                                                            {!isExpired && !addsuccess && (
-                                                                <>
-                                                                    <Button
-                                                                        className="float-right"
-                                                                        color="default"
-                                                                        size="sm"
-                                                                        onClick={() => fileInputRef.current.click()}
-                                                                    >
-                                                                        Submit Quiz
-                                                                    </Button>
-                                                                    <input
-                                                                        id="fileInput"
-                                                                        type="file"
-                                                                        ref={fileInputRef}
-                                                                        style={{ display: 'none' }}
-                                                                        onChange={(event) => handleFileInputChange(event, row._id)}
-                                                                    />
-                                                                </>
-                                                            )}
-
-                                                            {addsuccess && (
-                                                                <Button className="float-right" color="default" size="sm" disabled>
+                                                            {!isExpired ? (row.has_submitted ?
+                                                                <Button style={{ width: '120px' }} color="default" size="sm" disabled>
                                                                     Submitted
                                                                 </Button>
-                                                            )}
+                                                                : (
+                                                                    <>
+                                                                        <Button
 
+                                                                            color="default"
+                                                                            size="sm"
+                                                                            style={{ width: '120px' }}
+                                                                            onClick={() => fileInputRef.current.click()}
+                                                                        >
+                                                                            Submit Quiz
+                                                                        </Button>
+                                                                        <input
+                                                                            id="fileInput"
+                                                                            type="file"
+                                                                            ref={fileInputRef}
+                                                                            style={{ display: 'none' }}
+                                                                            onChange={(event) => handleFileInputChange(event, row._doc._id)}
+                                                                        />
+                                                                    </>
+                                                                ))
+                                                                : <> </>}
 
+                                                        </td>
+                                                        <td style={{ textAlign: 'center' }}>
+                                                            {row.has_submitted ? (
+                                                                row.marks_obtained !== "-1" ? (
+                                                                    row.marks_obtained
+                                                                ) : (
+                                                                    "Not Marked"
+                                                                )
+                                                            ) : null}
                                                         </td>
 
 

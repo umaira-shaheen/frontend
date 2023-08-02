@@ -84,7 +84,7 @@ const Quiz = (args) => {
       .then(res => {
         if (res.data.indicator == "success") {
           setdeleteSuccess(true);
-          GetTeacherQuiz();
+          GetOnlyTeacherQuiz();
           setRerender(!rerender);
 
         }
@@ -114,10 +114,10 @@ const Quiz = (args) => {
     const quiz_title = e.target.quiz_title.value;
     const start_date = e.target.start_date.value;
     const end_date = e.target.end_date.value;
-    const questions = e.target.questions.value;
+    const questions = e.target.marks.value;
     const status = e.target.status.value;
     const quiz_course=e.target.courses.value;
-    if (new Date(end_date) <= new Date(start_date)) {
+    if (new Date(end_date) < new Date(start_date)) {
       setErrorMessage('End date should be greater than start date');
       setError(true);
       closeModal();
@@ -131,9 +131,9 @@ const Quiz = (args) => {
       data: { quiz_title: quiz_title, start_date: start_date, end_date: end_date, questions: questions, status: status, quiz_course:quiz_course },
     })
       .then(res => {
-        if (res.data == "success") {
+        if (res.data.indicator == "success") {
           setaddSuccess(true);
-          GetTeacherQuiz();
+          GetOnlyTeacherQuiz();
           setRerender(!rerender);
         }
         else {
@@ -197,11 +197,8 @@ const Quiz = (args) => {
 
       })
   }
-
-  useEffect(() => {
-    // Update the document title using the browser API
-    GetTeacherCourses();
-    
+  function GetOnlyTeacherQuiz()
+  {
     const storedUser = localStorage.getItem('user');
     const user_info = JSON.parse(storedUser);
     const user_id = user_info._id;
@@ -216,7 +213,7 @@ const Quiz = (args) => {
       method: 'get',
       withCredentials: true,
       sameSite: 'none',
-      url: "http://localhost:8000/Quiz/GetTeacherQuiz?temp_id=" + user_id,
+      url: "http://localhost:8000/Quiz/GetOnlyTeacherQuiz?temp_id=" + user_id,
     })
       .then(res => {
         if (res.data.data && res.data.message == "success") {
@@ -236,22 +233,28 @@ const Quiz = (args) => {
       }
         
       })
-      
+  }
+  useEffect(() => {
+    // Update the document title using the browser API
+    GetTeacherCourses();
+    GetOnlyTeacherQuiz();
     
+      
   }, []);
   function EditQuiz(e) {
+    e.preventDefault();
     const quiz_title = e.target.quiz_title.value;
     const start_date = e.target.start_date.value;
     const end_date = e.target.end_date.value;
-    const questions = e.target.questions.value;
+    const questions = e.target.marks.value;
     const status = e.target.status.value;
-    if (new Date(end_date) <= new Date(start_date)) {
+    if (new Date(end_date) < new Date(start_date)) {
       setErrorMessage('End date should be greater than start date');
       setError(true);
       setEditModal(!editmodal);
       return;
     }
-    e.preventDefault();
+   
     axios({     //edit Course on the base of id API Calling
       method: 'post',
       withCredentials: true,
@@ -262,7 +265,7 @@ const Quiz = (args) => {
       .then(res => {
         if (res.data == "success") {
           seteditSuccess(true);
-          GetTeacherQuiz();
+          GetOnlyTeacherQuiz();
           setRerender(!rerender);
         }
         else {
@@ -383,6 +386,7 @@ const Quiz = (args) => {
                       id="Allcourses"
                       name="courses"
                       type="select"
+                      required
                     >
                       {coursetable ?
                         coursetable
@@ -433,13 +437,13 @@ const Quiz = (args) => {
                 </Col>
                 <Col md={6}>
                   <FormGroup>
-                    <Label for="questions">
-                      Total Questions
+                    <Label for="Marks">
+                      Total Marks
                     </Label>
                     <Input
-                      id="questions"
-                      name="questions"
-                      placeholder="Total Questions"
+                      id="marks"
+                      name="marks"
+                      placeholder="Total Marks"
                       type="Number"
                       min={'1'}
                       max={'20'}
@@ -515,6 +519,7 @@ const Quiz = (args) => {
                       placeholder="Enter Quiz Title"
                       type="text"
                       defaultValue={quiz_title}
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -530,6 +535,7 @@ const Quiz = (args) => {
                       placeholder="Enter start date"
                       type="date"
                       defaultValue={new Date(startdate).toISOString().split('T')[0]}
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -544,6 +550,7 @@ const Quiz = (args) => {
                       placeholder="Enter End date"
                       type="date"
                       defaultValue={new Date(enddate).toISOString().split('T')[0]}
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -552,14 +559,17 @@ const Quiz = (args) => {
                 <Col md={6}>
                   <FormGroup>
                     <Label for="questions">
-                      Questions
+                      Total Marks
                     </Label>
                     <Input
-                      id="questions"
-                      name="questions"
-                      placeholder="Total Questions"
-                      type='text'
+                      id="marks"
+                      name="marks"
+                      placeholder="Total Marks"
+                      type='Number'
                       defaultValue={questions}
+                      min={'1'}
+                      max={'20'}
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -573,6 +583,7 @@ const Quiz = (args) => {
                       name="status"
                       type="select"
                       defaultValue={status}
+                      required
                     >
                       <option value="Draft">
                         Draft
@@ -622,11 +633,11 @@ const Quiz = (args) => {
 
                 <thead className="thead-light">
                   <tr>
-                    <th scope="col">Quiz Course</th>
+                    <th scope="col">Quiz Title</th>
                     <th scope="col">Quiz start Date</th>
                     <th scope="col">Quiz End Date</th>
                     <th scope="col">Status</th>
-                    <th scope="col">Total Questions</th>
+                    <th scope="col">Total Marks</th>
 
 
                    
