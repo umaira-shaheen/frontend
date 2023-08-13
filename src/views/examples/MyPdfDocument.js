@@ -82,7 +82,7 @@ const MyPDFDocument = () => {
           style={styles.logo}
         />
         <Text style={styles.header}> Course : {quizcourse}</Text>
-        <Text style={styles.header}> Total Questions : {quizquestions}</Text>
+        <Text style={styles.header}> Total Marks : {quizquestions}</Text>
         {questions ? (
         questions.map((question, index) => (
           <React.Fragment key={index}>

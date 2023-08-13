@@ -26,6 +26,11 @@ import Assignment from "views/examples/Assignment";
 import Profile from "views/examples/Profile.js";
 import Submitted_Quizes from "views/examples/Submitted_Quizes.js";
 import Submitted_Assignments from "views/examples/Submitted_Assignments.js";
+import Upload_Lectures from "views/examples/Upload_Lectures";
+import ViewFeedback from "views/examples/ViewFeedback";
+import ViewMessege from "views/examples/ViewMessege";
+import Reports from "views/examples/Reports";
+import StudentLectures from "views/examples/StudentLectures";
 // import Maps from "views/examples/Maps.js";
 import Forgot_password from "views/examples/Forgot_password";
 import Register from "views/examples/Register.js";
@@ -33,6 +38,7 @@ import Login from "views/examples/Login.js";
 // import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 import Student_Courses from "views/examples/Student_Courses";
+import StudentFeedbackForm from "views/examples/StudentFeedbackForm";
 var routes = [
  
   // {
@@ -59,13 +65,13 @@ var routes = [
     layout: "/admin"
   },
 
-  {
-    path: "/icons",
-    name: "Icons",
-    icon: "ni ni-planet text-blue",
-    component: Icons,
-    layout: "/admin"
-  },
+  // {
+  //   path: "/icons",
+  //   name: "Icons",
+  //   icon: "ni ni-planet text-blue",
+  //   component: Icons,
+  //   layout: "/admin"
+  // },
   // {
   //   path: "/maps",
   //   name: "Maps",
@@ -123,7 +129,41 @@ var routes = [
     component: Student_Courses,
     layout: "/admin"
   },
-  
+  {
+    path: "/Feedbacks",
+    name: "Feedbacks",
+    icon: "ni ni-collection text-yellow",
+    component: ViewFeedback,
+    layout: "/admin"
+  },
+  {
+    path: "/Messeges",
+    name: "Messeges",
+    icon: "ni ni-collection text-yellow",
+    component: ViewMessege,
+    layout: "/admin"
+  },
+  // {
+  //   path: "/Lectures",
+  //   name: "Lectures",
+  //   icon: "ni ni-collection text-yellow",
+  //   component: StudentLectures,
+  //   layout: "/admin"
+  // },
+  {
+    path: "/Feedback Form",
+    name: "Feedback Form",
+    icon: "ni ni-collection text-yellow",
+    component: StudentFeedbackForm,
+    layout: "/admin"
+  },
+  {
+    path: "/Reports",
+    name: "Reports",
+    icon: "ni ni-collection text-yellow",
+    component: Reports,
+    layout: "/admin"
+  },
   // {
   //   path: "/tables",
   //   name: "Tables",
@@ -158,6 +198,13 @@ var routes = [
     name: "Submitted Assignments",
     icon: "ni ni-circle-08 text-blue",
     component: Submitted_Assignments,
+    layout: "/admin"
+  },
+  {
+    path: "/Manage Lectures",
+    name: "Manage Lectures",
+    icon: "ni ni-circle-08 text-blue",
+    component: Upload_Lectures,
     layout: "/admin"
   },
   // {

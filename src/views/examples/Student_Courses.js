@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect, useHistory, Link } from 'react-router-dom';
 import {
     Container,
     Row,
@@ -94,11 +94,12 @@ const Student_Courses = () => {
                                 <thead className="thead-light">
                                     <tr>
                                         <th scope="col">Course title</th>
-                                        <th scope="col">Course Code</th>
+                                        <th scope="col">Course Id</th>
+
                                         <th scope="col">Status</th>
                                         <th scope="col">start date</th>
                                         <th scope="col">End date</th>
-                                        <th scope="col">Category</th>
+                                        <th scope="col">Open Lectures</th>
 
                                     </tr>
                                 </thead>
@@ -116,7 +117,8 @@ const Student_Courses = () => {
                                                         </span>
 
                                                     </th>
-                                                    <td>{row.Course_code}</td>
+                                                    <td>{row._id}</td>
+                                                   
                                                     <td>{row.status}</td>
                                                     <td>
                                                         <Badge color="" className="badge-dot">
@@ -132,7 +134,21 @@ const Student_Courses = () => {
 
                                                         </Badge>
                                                     </td>
-                                                    <td>{row.Course_category}</td>
+                                                    <td>
+                                                        <>
+                                                        <Link to={"/Lectures?course_id=" + row._id}
+                                                                        
+                                                                    >
+                                                                        <Button color="primary"
+                                                                       
+                                                                            style={{ fontSize: '13px', padding: '4px 8px', width: '120px' }}>
+                                                                            Open Lectures
+
+                                                                        </Button>
+                                                                    </Link>
+                                                        </>
+                                                    </td>
+
 
                                                     </tr>)
                     })

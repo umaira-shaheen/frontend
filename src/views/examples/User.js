@@ -75,31 +75,32 @@ const User = (args) => {
         const DeletetoggleClose = () => {
             setdeleteModal(!deletemodal); 
         }
-
-    function GetUser(e)
-  {
-    
+        function GetUser(e)
+        {
+          
+          axios({ 
+            method:'get',
+            url:"http://localhost:8000/User/GetUser",
+          })
+          .then(res=>{
+            if(res.data)
+            {
+              console.log(res.data);
+              setUsertable(res.data)
+            }
+          })
+          .catch(error=>{
+            console.log(error);
+          })
+        }
+  
    useEffect(() => {
     // Update the document title using the browser API
-    
-    axios({ 
-      method:'get',
-      url:"http://localhost:8000/User/GetUser",
-    })
-    .then(res=>{
-      if(res.data)
-      {
-        console.log(res.data);
-        setUsertable(res.data)
-      }
-    })
-    .catch(error=>{
-      console.log(error);
-    })
+    GetUser();
   }, []);
-  }
+  
 
-  GetUser();
+
 
   function DeleteUser()
   {
@@ -277,6 +278,7 @@ const User = (args) => {
                       placeholder="Enter FirstName"
                       type="text"
                      defaultValue={firstname}
+                     required
                     />
                   </FormGroup>
                 </Col>
@@ -291,6 +293,7 @@ const User = (args) => {
                       placeholder="Enter LastName"
                       type="text"
                       defaultValue={lastname}
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -305,6 +308,7 @@ const User = (args) => {
                       placeholder="Enter Email Address"
                       type="text"
                       defaultValue={email}
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -319,6 +323,7 @@ const User = (args) => {
                       placeholder="Enter Phone no"
                       type="text"
                       defaultValue={phoneno}
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -335,6 +340,7 @@ const User = (args) => {
                   placeholder="User's Address"
                   type='textarea'
                   defaultValue={address}
+                  required
                 />
               </FormGroup>
               </Col>
@@ -350,6 +356,7 @@ const User = (args) => {
                     name="role"
                     type="select"
                     defaultValue={role}
+                    required
                   >  
                     <option value="Teacher">
                       Teacher
@@ -407,6 +414,7 @@ const User = (args) => {
                       name="Firstname"
                       placeholder="Enter FirstName"
                       type="text"
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -420,6 +428,7 @@ const User = (args) => {
                       name="lastname"
                       placeholder="Enter LastName"
                       type="text"
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -433,6 +442,7 @@ const User = (args) => {
                       name="email"
                       placeholder="Enter Email"
                       type="text"
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -446,6 +456,7 @@ const User = (args) => {
                       name="phoneno"
                       placeholder="Enter Phone Number"
                       type="text"
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -461,6 +472,7 @@ const User = (args) => {
                   name="address"
                   placeholder="User's Address"
                   type='textarea'
+                  required
                 />
               </FormGroup>
               </Col>

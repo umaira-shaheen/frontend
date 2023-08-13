@@ -45,7 +45,9 @@ const Courses = () => {
                         </div>
                         <div class="row">
                             {coursetable ?
-                                coursetable.map((row, index) => {
+                                coursetable
+                                .filter(row => row.status === 'Publish')
+                                .map((row, index) => {
                                     return (
                                         <div class="col-lg-4 col-md-6 pb-4" key={index}>
                                             <Link

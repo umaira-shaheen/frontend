@@ -50,9 +50,11 @@ const Assignment = (args) => {
   const [tempName, setTempName] = useState('');
   const onDismissdeleteSuccess = () => setdeleteSuccess(false);
   const onDismisseditSuccess = () => seteditSuccess(false);
+  const onDismisscustomerror = () => setcustomerror(false);
   const [editmodal, setEditModal] = useState(false);
   const [deletemodal, setdeleteModal] = useState(false);
   const [editorContent, setEditorContent] = useState(null);
+  const [customerror, setcustomerror] = useState(false);
   const edittoggle1 = (event) => {
     setEditModal(!editmodal);
   };
@@ -81,21 +83,7 @@ const Assignment = (args) => {
   const [total_marks, setmarks] = useState(null);
   const [date, setdate] = useState(null);
   const [rerender, setRerender] = useState(false);
-  function GetCourse(e) {
-    axios({
-      method: 'get',
-      withCredentials: true,
-      url: "http://localhost:8000/course/GetAllCourse",
-    })
-      .then(res => {
-        if (res.data) {
-          setCoursetable(res.data)
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      })
-  }
+
 
   function DeleteAssignment() {
     axios({     //DeleteCourse API Calling
@@ -159,8 +147,9 @@ const Assignment = (args) => {
     const currentDate = new Date();
     if (selectedDate < currentDate) {
       setErrorMessage("Selected date should be greater than or equal to today's date");
-      setError(true);
-      closeModal();
+      setcustomerror(true);
+      // setError(true);
+      // closeModal();
       return;
     }
     else {
@@ -173,7 +162,7 @@ const Assignment = (args) => {
         data: { assignment_title: assignment_title, date: date, total_marks: total_marks, status: status, description: description, Assignment_course: Assignment_course },
       })
         .then(res => {
-          if (res.data == "success") {
+          if (res.data == "successfully inserted and Emails Sent To students") {
             setaddSuccess(true);
             getonlyteacherAssignment();
             setRerender(!rerender);
@@ -261,8 +250,9 @@ const Assignment = (args) => {
     const currentDate = new Date();
     if (selectedDate < currentDate) {
       setErrorMessage("Selected date should be greater than or equal to today's date");
-      setError(true);
-      setEditModal(!editmodal);
+      setcustomerror(true);
+      // setError(true);
+      // setEditModal(!editmodal);
       return;
     }
 
@@ -353,11 +343,9 @@ const Assignment = (args) => {
       .then(res => {
         if (res.data) {
 
-         console.log(res.data);
+          console.log(res.data);
           setdescription(res.data.description);
-
           setassignmentModal(!assignmentmodal);
-
         }
 
       })
@@ -373,8 +361,7 @@ const Assignment = (args) => {
         setassignmentModal(!assignmentmodal);
       })
   };
-  function getonlyteacherAssignment()
-  {
+  function getonlyteacherAssignment() {
     const storedUser = localStorage.getItem('user');
     const user_info = JSON.parse(storedUser);
     const user_id = user_info._id;
@@ -417,17 +404,18 @@ const Assignment = (args) => {
   }
   useEffect(() => {
     getonlyteacherAssignment();
-   
+
   }, []);
   const [filtered_courses, setFilteredCourses] = useState('');
-  const [currentQuiz, setCurrentQuiz] = useState("No Quiz Selected Yet")
+  const [currentAssignment, setCurrentAssignment] = useState("No Course Selected Yet")
   const handleAssignmentChange = (e) => {
-    // Function to filter the quiz questions based on the selected quiz
-    const filteredCourses = coursetable.filter(
-      (assignment) => assignment.Course_title === e.target.value
+     
+    const filteredCourses = Assignmenttable.filter(
+      (assignment) => assignment.Assignment_Course === e.target.value
     );
+   
     setFilteredCourses(filteredCourses);
-    setCurrentQuiz(e.target.value);
+    setCurrentAssignment(e.target.value);
   };
   const [assignmentmodal, setassignmentModal] = useState(false);
 
@@ -453,7 +441,7 @@ const Assignment = (args) => {
           <ModalHeader toggle={assignmenttoggleclose}>Assignment Question</ModalHeader>
           <ModalBody>
             <div>
-              {<div dangerouslySetInnerHTML={{ __html:Description }} />}
+              {<div dangerouslySetInnerHTML={{ __html: Description }} />}
             </div>
           </ModalBody>
           <ModalFooter>
@@ -483,8 +471,10 @@ const Assignment = (args) => {
         <Modal isOpen={modal} toggle={toggle} {...args} size='lg'>
           <Form role="form" onSubmit={AddAssignment}>
             <ModalHeader toggle={toggle}>Add new Assignment</ModalHeader>
-
             <ModalBody>
+              <Alert color="danger" isOpen={customerror} toggle={onDismisscustomerror}>
+                <strong> Error! {errorMessage} </strong>
+              </Alert>
               <Row >
                 <Col md={6}>
                   <FormGroup>
@@ -618,6 +608,9 @@ const Assignment = (args) => {
           <Form role="form" onSubmit={EditAssignment} >
             <ModalHeader toggle={edittoggle1}>Update Assignment</ModalHeader>
             <ModalBody>
+              <Alert color="danger" isOpen={customerror} toggle={onDismisscustomerror}>
+                <strong> Error! {errorMessage} </strong>
+              </Alert>
               <Row>
                 <Col md={6}>
                   <FormGroup>
@@ -643,7 +636,7 @@ const Assignment = (args) => {
                       placeholder="Enter Assignment Title"
                       type="text"
                       defaultValue={Assignment_title}
-                      
+
                     />
                   </FormGroup>
                 </Col>
@@ -737,32 +730,26 @@ const Assignment = (args) => {
               <CardHeader className="border-0">
                 <Row className="align-items-center">
                   <div className="col">
-                    <Label for="quiz_title">
-                      Search Assignment
-                    </Label>
+                    <Label for="quiz_title">Search Quiz by Course</Label>
                     <Input
-                      id="course_title"
-                      name="course_title"
+                      id="quiz_title"
+                      name="quiz_title"
                       type="select"
                       onChange={handleAssignmentChange}
                     >
-                      <option value="No Assignment Selected Yet">No Assignment Selected Yet</option>
-                      {coursetable ?
-                        coursetable
-                          .map((row, index) => {
-                            return (
-                              <option key={index} value={row.Course_title}>
-                                {row.Course_title}
-                              </option>
-                            )
-                          })
-                        :
-                        <h1>No Assignment Added yet!</h1>
-                      }
-
-
+                      <option value="No Quiz Selected Yet">No Course Selected Yet</option>
+                      {Assignmenttable && Assignmenttable.length > 0 ? (
+                        [...new Set(Assignmenttable.map(row => row.Assignment_Course))].map((course, index) => (
+                          <option key={index} value={course}>
+                            {course}
+                          </option>
+                        ))
+                      ) : (
+                        <option disabled>No Quiz Added yet!</option>
+                      )}
                     </Input>
                   </div>
+
 
                   <div className="col text-right">
                     <Button
@@ -791,9 +778,8 @@ const Assignment = (args) => {
                   </tr>
                 </thead>
                 <tbody>
-
-                  {Assignmenttable ?
-                    Assignmenttable.map((row, index) => {
+                  {filtered_courses.length > 0 ?
+                    filtered_courses.map((row, index) => {
                       return (
                         <tr key={index}>
                           <th scope="row">
@@ -841,10 +827,61 @@ const Assignment = (args) => {
                         </tr>)
                     })
                     :
-                    <tr>
-                      <td span="5">No Assignment found!</td>
-                    </tr>
-                  }
+                    
+
+                    Assignmenttable && Assignmenttable.length > 0 && currentAssignment == "No Course Selected Yet" ? (
+                      Assignmenttable.map((row, index) => (
+                        <tr key={index}>
+                          <th scope="row">
+                            {/* <i className="ni ni-book-bookmark text-blue"/> */}
+                            <span className="mb-0 text-sm">
+                              {row.Assignment_title}
+                            </span>
+
+                          </th>
+
+
+                          <td>
+                            <Badge color="" className="badge-dot">
+                              <i className="bg-info" />
+                              {moment(row.Date).format('DD-MM-YYYY')}
+                            </Badge>
+                          </td>
+                          <td>{row.Total_marks}</td>
+                          <td>{row.Status}</td>
+
+                          <td>
+
+                            <Button color="success"
+                              onClick={() => { FindAssignmentQuestion(row._id) }}
+                              style={{ fontSize: '13px', padding: '4px 8px' }}>
+                              View Question
+                            </Button>
+                          </td>
+                          <td>
+                            <Button color="primary"
+                              style={{ fontSize: '15px', padding: '4px 8px' }}
+                              onClick={() => { FindAssignment(row._id) }}>
+                              Edit
+                              {/* <i className="ni ni-active-40"></i> */}
+                            </Button>
+                            <Button color="danger"
+                              style={{ fontSize: '15px', padding: '4px 8px' }}
+
+                              onClick={() => { Deletetoggle(row._id, row.Assignment_title) }}>
+                              Delete
+                              {/* <i className="ni ni-fat-remove"></i> */}
+                            </Button>
+                          </td>
+
+                        </tr>
+                        ))
+                        ) :
+
+                            <tr>
+                                <td span="5">No Assignment Added yet!</td>
+                            </tr>
+                    }
                 </tbody>
               </Table>
 
@@ -853,7 +890,7 @@ const Assignment = (args) => {
         </Row>
 
 
-      </Container>
+      </Container >
     </>
 
   )

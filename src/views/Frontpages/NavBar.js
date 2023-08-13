@@ -51,12 +51,12 @@ const NavBar = () => {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse justify-content-between px-lg-3" id="navbarCollapse">
-                        <div className="navbar-nav  py-0" style={{ marginLeft: "510px" }}>
+                        <div className="navbar-nav  py-0" style={{ marginLeft: "420px" }}>
 
                             <Link to={"/"} className="nav-item nav-link ">Home</Link>
                             <Link to={"/AboutUs"} className="nav-item nav-link ">About</Link>
                             <Link to={"/coursesList"} className="nav-item nav-link ">Courses</Link>
-
+                            <Link to={"/feedbackform"} className="nav-item nav-link ">Feedback</Link>
                             <Dropdown nav isOpen={dropdownOpen} toggle={toggle} >
                                 <DropdownToggle nav caret>
                                     Quick Links

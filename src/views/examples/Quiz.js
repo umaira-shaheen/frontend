@@ -48,13 +48,16 @@ const Quiz = (args) => {
   const [tempName, setTempName] = useState('');
   const onDismissdeleteSuccess = () => setdeleteSuccess(false);
   const onDismisseditSuccess = () => seteditSuccess(false);
+  const onDismisscustomerror = () => setcustomerror(false);
   const [editmodal, setEditModal] = useState(false);
   const [deletemodal, setdeleteModal] = useState(false);
   const [rerender, setRerender] = useState(false);
+  const [customerror, setcustomerror] = useState(false);
+  const [teacherquiztable, setteacherquiztable] = useState(null);
+
   const edittoggle1 = (event) => {
     setEditModal(!editmodal);
   };
-
   const Deletetoggle = (id, name) => {
     setTempName(name);
     setTempId(id);
@@ -116,11 +119,21 @@ const Quiz = (args) => {
     const end_date = e.target.end_date.value;
     const questions = e.target.marks.value;
     const status = e.target.status.value;
-    const quiz_course=e.target.courses.value;
-    if (new Date(end_date) < new Date(start_date)) {
+    const quiz_course = e.target.courses.value;
+    const selectedDate = new Date(start_date);
+    const currentDate = new Date();
+    if (selectedDate < currentDate) {
+      setcustomerror(true);
+      setErrorMessage("Start date should be greater than or equal to today's date");
+      // setError(true);
+      // closeModal();
+      return;
+    }
+    else if (new Date(end_date) < new Date(start_date)) {
+      setcustomerror(true);
       setErrorMessage('End date should be greater than start date');
-      setError(true);
-      closeModal();
+      // setError(true);
+      // closeModal();
       return;
     }
     axios({    //AddUser API Calling
@@ -128,7 +141,7 @@ const Quiz = (args) => {
       withCredentials: true,
       sameSite: 'none',
       url: "http://localhost:8000/Quiz/AddQuiz",
-      data: { quiz_title: quiz_title, start_date: start_date, end_date: end_date, questions: questions, status: status, quiz_course:quiz_course },
+      data: { quiz_title: quiz_title, start_date: start_date, end_date: end_date, questions: questions, status: status, quiz_course: quiz_course },
     })
       .then(res => {
         if (res.data.indicator == "success") {
@@ -137,7 +150,7 @@ const Quiz = (args) => {
           setRerender(!rerender);
         }
         else {
-          setErrorMessage(res.data); 
+          setErrorMessage(res.data);
           setError(true);
         }
         closeModal();
@@ -197,17 +210,16 @@ const Quiz = (args) => {
 
       })
   }
-  function GetOnlyTeacherQuiz()
-  {
+  function GetOnlyTeacherQuiz() {
     const storedUser = localStorage.getItem('user');
     const user_info = JSON.parse(storedUser);
     const user_id = user_info._id;
     console.log(user_info);
     // add course_id into local storage - last_url
     if (user_info == null) {
-        localStorage.setItem('state', JSON.stringify(location.state))
+      localStorage.setItem('state', JSON.stringify(location.state))
 
-        history.push('/auth/login');
+      history.push('/auth/login');
     }
     axios({
       method: 'get',
@@ -219,10 +231,11 @@ const Quiz = (args) => {
         if (res.data.data && res.data.message == "success") {
           console.log(res.data.data);
           setquiztable(res.data.data);
-      }
-      else if (res.data.message == "only Teacher can access this") {
+          console.log(res.data.data);
+        }
+        else if (res.data.message == "only Teacher can access this") {
           alert("only teacher can access this")
-      }
+        }
       })
       .catch(error => {
         console.log(error);
@@ -230,16 +243,16 @@ const Quiz = (args) => {
         if (error.response.data.message == "Not logged in") {
           localStorage.clear(); // Clear local storage
           history.push('/auth/login');
-      }
-        
+        }
+
       })
   }
   useEffect(() => {
     // Update the document title using the browser API
     GetTeacherCourses();
     GetOnlyTeacherQuiz();
-    
-      
+
+
   }, []);
   function EditQuiz(e) {
     e.preventDefault();
@@ -248,13 +261,23 @@ const Quiz = (args) => {
     const end_date = e.target.end_date.value;
     const questions = e.target.marks.value;
     const status = e.target.status.value;
-    if (new Date(end_date) < new Date(start_date)) {
-      setErrorMessage('End date should be greater than start date');
-      setError(true);
-      setEditModal(!editmodal);
+    const selectedDate = new Date(start_date);
+    const currentDate = new Date();
+    if (selectedDate < currentDate) {
+      setcustomerror(true);
+      setErrorMessage("Start date should be greater than or equal to today's date");
+      // setError(true);
+      // closeModal();
       return;
     }
-   
+    else if (new Date(end_date) < new Date(start_date)) {
+      setcustomerror(true);
+      setErrorMessage('End date should be greater than start date');
+      // setError(true);
+      // setEditModal(!editmodal);
+      return;
+    }
+
     axios({     //edit Course on the base of id API Calling
       method: 'post',
       withCredentials: true,
@@ -322,6 +345,18 @@ const Quiz = (args) => {
         setEditModal(!editmodal);
       })
   };
+  const [filtered_questions, setFilteredQuestions] = useState('');
+  const [currentQuiz, setCurrentQuiz] = useState("No Quiz Selected Yet")
+
+  const handleQuizChange = (e) => {
+
+
+    const filteredQuestions = quiztable.filter(
+      (quiz) => quiz.Quiz_Course === e.target.value
+    );
+    setFilteredQuestions(filteredQuestions);
+    setCurrentQuiz(e.target.value)
+  };
 
   return (
     <>
@@ -361,6 +396,9 @@ const Quiz = (args) => {
           <Form role="form" onSubmit={AddQuiz}>
             <ModalHeader toggle={toggle}>Add new Quiz</ModalHeader>
             <ModalBody>
+              <Alert color="danger" isOpen={customerror} toggle={onDismisscustomerror}>
+                <strong> Error! {errorMessage} </strong>
+              </Alert>
               <Row >
                 <Col md={6}>
                   <FormGroup>
@@ -390,7 +428,7 @@ const Quiz = (args) => {
                     >
                       {coursetable ?
                         coursetable
-                         
+
                           .map((row, index) => {
                             return (
                               <option key={index} value={row.Course_title}>
@@ -494,6 +532,9 @@ const Quiz = (args) => {
           <Form role="form" onSubmit={EditQuiz} >
             <ModalHeader toggle={edittoggle1}>Update Quiz</ModalHeader>
             <ModalBody>
+              <Alert color="danger" isOpen={customerror} toggle={onDismisscustomerror}>
+                <strong> Error! {errorMessage} </strong>
+              </Alert>
               <Row>
                 <Col md={6}>
                   <FormGroup>
@@ -613,9 +654,31 @@ const Quiz = (args) => {
             <Card className="shadow">
               <CardHeader className="border-0">
                 <Row className="align-items-center">
+
+                 
                   <div className="col">
-                    <h3 className="mb-0">Course Quiz</h3>
+                   
+                                    
+                    <Label for="quiz_title">Search Quiz by Course</Label>
+                    <Input
+                      id="quiz_title"
+                      name="quiz_title"
+                      type="select"
+                      onChange={handleQuizChange}
+                    >
+                      <option value="No Quiz Selected Yet">No Course Selected Yet</option>
+                      {quiztable && quiztable.length > 0 ? (
+                        [...new Set(quiztable.map(row => row.Quiz_Course))].map((course, index) => (
+                          <option key={index} value={course}>
+                            {course}
+                          </option>
+                        ))
+                      ) : (
+                        <option disabled>No Quiz Added yet!</option>
+                      )}
+                    </Input>
                   </div>
+
                   <div className="col text-right">
                     <Button
                       color="primary"
@@ -638,20 +701,17 @@ const Quiz = (args) => {
                     <th scope="col">Quiz End Date</th>
                     <th scope="col">Status</th>
                     <th scope="col">Total Marks</th>
-
-
-                   
                     <th scope="col">Action</th>
 
                     <th scope="col" />
                   </tr>
                 </thead>
                 <tbody>
+                  {filtered_questions.length > 0 ?
 
-                {quiztable ?
-                    quiztable
-                    .map((row, index) => {
+                    filtered_questions.map((row, index) => {
                       return (
+                      
                         <tr key={index}>
                           <th scope="row">
                             {/* <i className="ni ni-book-bookmark text-blue"/> */}
@@ -677,7 +737,7 @@ const Quiz = (args) => {
                           <td>{row.Status}</td>
                           <td>{row.Questions}</td>
 
-                          
+
                           <td>
                             <Button color="primary" onClick={() => { FindQuiz(row._id) }}>
                               Edit
@@ -689,13 +749,61 @@ const Quiz = (args) => {
                             </Button>
                           </td>
 
-                        </tr>)
-                    })
-                    :
-                    <tr>
-                      <td span="5">No Quiz found!</td>
-                    </tr>
-                  }
+                        </tr>
+                        )
+                      })
+                     
+
+                      :
+
+                    quiztable && quiztable.length > 0 && currentQuiz == "No Quiz Selected Yet" ? (
+                      quiztable.map((row, index) => (
+                      
+                          <tr key={index}>
+                            <th scope="row">
+                              {/* <i className="ni ni-book-bookmark text-blue"/> */}
+                              <span className="mb-0 text-sm">
+                                {row.Quiz_title}
+                              </span>
+  
+                            </th>
+  
+                            <td>
+                              <Badge color="" className="badge-dot">
+                                <i className="bg-info" />
+                                {moment(row.Start_date).format('DD-MM-YYYY')}
+  
+                              </Badge>
+                            </td>
+                            <td>
+                              <Badge color="" className="badge-dot">
+                                <i className="bg-info" />
+                                {moment(row.End_date).format('DD-MM-YYYY')}
+                              </Badge>
+                            </td>
+                            <td>{row.Status}</td>
+                            <td>{row.Questions}</td>
+  
+  
+                            <td>
+                              <Button color="primary" onClick={() => { FindQuiz(row._id) }}>
+                                Edit
+                                {/* <i className="ni ni-active-40"></i> */}
+                              </Button>
+                              <Button color="danger" onClick={() => { Deletetoggle(row._id, row.Quiz_title) }}>
+                                Delete
+                                {/* <i className="ni ni-fat-remove"></i> */}
+                              </Button>
+                            </td>
+  
+                          </tr>
+                         ))
+                         ) :
+
+                             <tr>
+                                 <td span="5">No Quiz Added yet!</td>
+                             </tr>
+                     }
                 </tbody>
               </Table>
 

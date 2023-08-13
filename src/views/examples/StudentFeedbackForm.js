@@ -1,0 +1,382 @@
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Redirect, useHistory } from 'react-router-dom';
+import InputMask from 'react-input-mask';
+import feedback from "assets/img/landing_images/feedback.jpg";
+import {
+    Container,
+    Row,
+    Col,
+    Card,
+    CardHeader,
+    CardFooter,
+    Table,
+    Media,
+    Pagination,
+    PaginationItem,
+    PaginationLink,
+    Badge,
+    Button,
+    Alert,
+    UncontrolledDropdown,
+    UncontrolledTooltip,
+    Progress,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+    Modal, ModalHeader, ModalBody, ModalFooter,
+    FormGroup,
+    Form,
+    Input,
+    Label
+} from "reactstrap";
+import UserHeader from "components/Headers/UserHeader.js";
+import NewHeader from 'components/Headers/NewHeader';
+
+const StudentFeedbackForm = () => {
+    const [coursetable, setCoursetable] = useState(null);
+    const history = useHistory();
+    const [addsuccess, setaddSuccess] = useState(false);
+    const onDismissaddSuccess = () => setaddSuccess(false);
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const onDismiss = () => setError(false);
+    const [feedbacktable, setFeedbacktable] = useState("");
+    const [rerender, setRerender] = useState(false);
+    var moment = require('moment');
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        const user_info = JSON.parse(storedUser);
+        const user_id = user_info._id;
+        console.log(user_info);
+        // add course_id into local storage - last_url
+        if (user_info == null) {
+            localStorage.setItem('state', JSON.stringify(location.state))
+
+            history.push('/auth/login');
+        }
+        else {
+
+            axios({
+                method: 'get',
+                withCredentials: true,
+                url: "http://localhost:8000/course/StudentCourses?temp_id=" + user_id,
+
+            })
+                .then(res => {
+                    if (res.data.data && res.data.message == "success") {
+                        console.log(res.data.data);
+                        setCoursetable(res.data.data);
+                    }
+                    else if (res.data.message == "only student can access this") {
+                        alert("only student can access this")
+                    }
+                })
+                .catch(error => {
+                    if (error.response.data.message == "Not logged in") {
+                        localStorage.clear(); // Clear local storage
+                        history.push('/auth/login');
+                    }
+
+
+                    console.log(error);
+                })
+        }
+        GetFeedback();
+    }, []);
+    const storedUser = localStorage.getItem('user');
+    const user_info = JSON.parse(storedUser);
+    const user_id = user_info._id;
+    function GetFeedback(e) {
+
+        axios({
+            method: 'get',
+            withCredentials: true,
+            url: "http://localhost:8000/Feedback/GetFeedback?temp_id=" + user_id,
+        })
+            .then(res => {
+                if (res.data) {
+                    setFeedbacktable(res.data)
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }
+
+    function AddFeedback(e) {
+
+        e.preventDefault();
+        const id = e.target.id.value;
+        const name = e.target.name.value;
+        const email = e.target.email.value;
+        const course = e.target.course.value;
+        const phonenumber = e.target.phonenumber.value;
+        const feedback = e.target.feedback.value;
+        const comments = e.target.comments.value;
+        axios({    //AddUser API Calling
+            method: 'post',
+            withCredentials: true,
+            sameSite: 'none',
+            url: "http://localhost:8000/Feedback/AddFeedback",
+            data: { id: id, name: name, email: email, course: course, phonenumber: phonenumber, feedback: feedback, comments: comments },
+        })
+            .then(res => {
+                if (res.data == "successfully submitted") {
+                    setaddSuccess(true);
+                    GetFeedback();
+                    setRerender(!rerender);
+                }
+                else {
+                    setErrorMessage(res.data);
+                    setError(true);
+                }
+            })
+            .catch(error => {
+                console.log(error)
+                //   if (error && error.response) {
+                //     if (error.response.data && error.response.data == "Not logged in") {
+                //       localStorage.clear(); // Clear local storage
+                //       history.push('/auth/login');
+                //     }
+                //   }
+                setErrorMessage("Failed to connect to backend")
+                setError(true);
+
+            })
+
+
+    }
+
+
+    return (
+        <>
+
+            {/* <!-- Contact Start --> */}
+            <div className="my-front-css-custom">
+                <NewHeader />
+                <div className="container-fluid py-5" >
+
+                    <Alert color="success" isOpen={addsuccess} toggle={onDismissaddSuccess}>
+                        <strong>Thank You! for your valuable Feedback. You response matters alot </strong>
+                    </Alert>
+                    <Alert color="danger" isOpen={error} toggle={onDismiss}>
+                        <strong>Error! </strong> {errorMessage}
+                    </Alert>
+                    <div className="container py-5" style={{ marginTop: "-80px" }}>
+
+                        <div className="row align-items-center">
+                            <div className="col-lg-5 mb-5 mb-lg-0">
+                                <div
+                                    className="bg-light d-flex flex-column justify-content-center px-5"
+                                    style={{
+                                        height: "450px",
+                                        backgroundImage: `url(${feedback})`, // Replace with your image URL
+                                        backgroundSize: "cover",
+                                        backgroundPosition: "center",
+                                    }}
+                                >
+                                    {/* Your content goes here */}
+                                </div>
+                            </div>
+                            <div className="col-lg-7">
+                                <div className="section-title position-relative mb-4">
+                                    <h6 className="d-inline-block position-relative text-secondary text-uppercase pb-2">Reviews?</h6>
+                                    <h3 className="display-6">Your Feedback Matters Alot</h3>
+                                </div>
+                                <div className="contact-form">
+                                    <form role='form' onSubmit={AddFeedback}>
+                                        <div className="row">
+                                            <div className="col-6 form-group">
+                                                <input type="text" className="form-control border-top-0 border-right-0 border-left-0 p-0"
+                                                    name="name" placeholder="Your Name" required="required" />
+                                            </div>
+                                            <div className="col-6 form-group">
+                                                <input type="email" className="form-control border-top-0 border-right-0 border-left-0 p-0"
+                                                    name="email" placeholder="Your Email" required="required" />
+                                            </div>
+                                        </div>
+                                        <div className="row">
+
+                                            <div className="col-6 form-group">
+                                                
+                                                <InputMask
+                                                    mask=" (0399)-9999999"
+                                                    placeholder=" Your Phone Number"
+                                                    className="form-control border-top-0 border-right-0 border-left-0 p-0"
+                                                    name="phonenumber"
+                                                    id="phonenumber"
+                                                    required
+                                                />
+                                            </div>
+
+                                            <Label
+                                                for="id"
+                                                hidden
+                                            >
+                                                ID
+                                            </Label>
+                                            <Input
+                                                id="id"
+                                                name="id"
+                                                placeholder="student id"
+                                                type="hidden"
+                                                value={user_id}
+                                            />
+
+                                        </div>
+                                        <Col md={6} style={{ marginLeft: "-20px" }}>
+                                            <FormGroup>
+                                                <Label for="category">
+                                                    Select  Course
+                                                </Label>
+
+                                                <Input
+                                                    id="Allcourses"
+                                                    name="course"
+                                                    type="select"
+                                                    required
+                                                >
+                                                    {coursetable ?
+                                                        coursetable
+
+                                                            .map((row, index) => {
+                                                                return (
+                                                                    <option key={index} value={row.Course_title}>
+                                                                        {row.Course_title}
+                                                                    </option>
+                                                                )
+                                                            })
+                                                        :
+                                                        <h1>Courses not assigned yet!</h1>
+                                                    }
+
+
+                                                </Input>
+
+                                            </FormGroup>
+                                        </Col>
+
+                                        <div className="form-group">
+                                            <b><p className="m-0">How do you rate your overall experience?</p></b>
+                                            <div className="form-check">
+                                                <input
+                                                    type="radio"
+                                                    className="form-check-input"
+                                                    name="feedback"
+                                                    id="bad"
+                                                    value="Bad"
+                                                    required
+                                                />
+                                                <label className="form-check-label" htmlFor="bad">
+                                                    Bad
+                                                </label>
+                                            </div>
+
+                                            <div className="form-check">
+                                                <input
+                                                    type="radio"
+                                                    className="form-check-input"
+                                                    name="feedback"
+                                                    id="average"
+                                                    value="Average"
+                                                    required
+                                                />
+                                                <label className="form-check-label" htmlFor="average">
+                                                    Average
+                                                </label>
+                                            </div>
+
+                                            <div className="form-check">
+                                                <input
+                                                    type="radio"
+                                                    className="form-check-input"
+                                                    name="feedback"
+                                                    id="good"
+                                                    value="Good"
+                                                    required
+                                                />
+                                                <label className="form-check-label" htmlFor="good">
+                                                    Good
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                        <div className="form-group">
+                                            <textarea className="form-control border-top-0 border-right-0 border-left-0 p-0" rows="5"
+                                                name="comments" placeholder="Comments" required="required"></textarea>
+                                        </div>
+                                        <div>
+                                            <button className="btn btn-primary py-3 px-5" type="submit" style={{ backgroundColor: '#ffc107', color: 'black' }}>Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <Row style={{ marginLeft: "50px", marginRight: "50px" }}>
+                <div className="col">
+                    <Card className="shadow">
+                        <CardHeader className="border-0">
+                            <Row className="align-items-center">
+                            </Row>
+                        </CardHeader>
+                        <h2 className="display-8" style={{ textAlign: 'center' }}>Recent Feedbacks</h2>
+                        <Table className="align-items-center table-flush " responsive>
+                            <thead className="thead-light">
+                                <tr>
+                                    <th scope="col">Name</th>
+
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Experience</th>
+                                    <th scope="col">Comments</th>
+
+                                    <th scope="col" />
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {feedbacktable ?
+                                    feedbacktable.map((row, index) => {
+                                        return (
+                                            <tr key={index}>
+                                                <th scope="row">
+                                                    {/* <i className="ni ni-book-bookmark text-blue"/> */}
+                                                    <span className="mb-0 text-sm">
+                                                        {row.Name}
+                                                    </span>
+
+                                                </th>
+
+                                                <td>
+                                                    <Badge color="" className="badge-dot">
+                                                        <i className="bg-info" />
+                                                        {moment(row.createdAt).format('DD-MM-YYYY')}
+                                                    </Badge>
+                                                </td>
+                                                <td>{row.Experience}</td>
+                                                <td>{row.Comments}</td>
+
+
+
+                                            </tr>)
+                                    })
+                                    :
+                                    <tr>
+                                        <td span="5">No Reviews Given Yet!</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </Table>
+
+                    </Card>
+                </div>
+            </Row>
+
+        </>
+    )
+};
+export default StudentFeedbackForm;

@@ -20,6 +20,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { Redirect,Link } from 'react-router-dom';
+import InputMask from 'react-input-mask';
 
 import {
   Button,
@@ -48,11 +49,13 @@ const [errorMessage, setErrorMessage] = useState("");
       const Lastname=e.target.Last_Name.value;
       const email=e.target.email.value;
       const password=e.target.password.value;
+      const confirm_password=e.target.confirm_password.value;
+      const phone_no=e.target.phone_no.value;
       const role = "Student";
       axios({
         method:'post',
         url:"http://localhost:8000/auth/register",
-        data:{Firstname:Firstname, Lastname:Lastname, email:email , password:password , role:role},
+        data:{Firstname:Firstname, Lastname:Lastname, email:email , password:password , role:role, confirm_password:confirm_password, phone_no:phone_no},
       })
       .then(res=>{
        if(res.data=="successfully inserted")
@@ -189,13 +192,54 @@ const [errorMessage, setErrorMessage] = useState("");
                   />
                 </InputGroup>
               </FormGroup>
+              <FormGroup>
+                <InputGroup className="input-group-alternative">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-lock-circle-open" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder="Confirm Password"
+                    type="password"
+                    name="confirm_password"
+                    // autoComplete="conform-password"
+                    required
+                  />
+                </InputGroup>
+              </FormGroup>
+             
+              <FormGroup>
+                <InputGroup className="input-group-alternative">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-phone-call" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <InputMask
+                                                    mask=" (0399)-9999999"
+                                                    placeholder="Phone Number"
+                                                    className="form-control border-top-0 border-right-0 border-left-0 p-0"
+                                                    name="phone_no"
+                                                    id="phone_no"
+                                                    required
+                                                />
+                  {/* <Input
+                    placeholder="Phone Number"
+                    type="Number"
+                    name="phone_no"
+                    // autoComplete=""
+                    required
+                  /> */}
+                </InputGroup>
+              </FormGroup>
               {/* <div className="text-muted font-italic">
                 <small>
                   password strength:{" "}
                   <span className="text-success font-weight-700">strong</span>
                 </small>
-              </div> */}
-             
+              </div>
+             */}
               <div className="text-center">
                 <Button className="mt-4" color="primary" type="submit">
                   Create account

@@ -64,7 +64,7 @@ const Attempt_Quiz = () => {
             data: formData,
         })
             .then(res => {
-                if (res.data == "success") {
+                if (res.data == "Quiz Submitted!") {
                     setaddSuccess(true);
                     GetStudentQuiz();
                     setRerender(!rerender);
@@ -104,13 +104,6 @@ const Attempt_Quiz = () => {
                         QuizQuestions: res.data.data.Questions
                         // Add other data here...
                     };
-
-                    // history.push({
-                    //     pathname: '/QuizPdf',
-                    //     state: {
-                    //         data: statedata,
-                    //     },
-                    // });
                 }
 
                 else if (res.data.message == "only student can access this") {
@@ -172,36 +165,7 @@ const Attempt_Quiz = () => {
     useEffect(() => {
 
         GetStudentQuiz();
-        //Obtained Marks API
-        // if (user_info == null) {
-        //     localStorage.setItem('state', JSON.stringify(location.state))
-
-        //     history.push('/auth/login');
-        // }
-        // else {
-        //     axios({
-        //         method: 'get',
-        //         withCredentials: true,
-        //         sameSite: 'none',
-        //         url: "http://localhost:8000/Quiz/GetObtainedMarks?temp_id=" + user_id,
-        //     })
-        //         .then(res => {
-        //             if (res.data.data && res.data.message == "success") {
-        //                 console.log(res.data.data);
-
-        //             }
-        //             else if (res.data.message == "only student can access this") {
-        //                 alert("only student can access this")
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.log(error);
-        //             if (error.response.data.message == "Not logged in") {
-        //                 localStorage.clear(); // Clear local storage
-        //                 history.push('/auth/login');
-        //             }
-        //         })
-        // }
+      
 
 
     }, []);
@@ -233,14 +197,13 @@ const Attempt_Quiz = () => {
 
                                     <thead className="thead-light">
                                         <tr>
-                                            <th scope="col">Course title</th>
+                                            <th scope="col">Quiz title</th>
                                             <th scope="col">Quiz start Date</th>
                                             <th scope="col">Quiz End Date</th>
                                             {/* <th scope="col">Status</th> */}
-                                            <th scope="col">Total Questions</th>
-
                                             <th scope="col">Action</th>
                                             <th scope="col">Upload Quiz</th>
+                                            <th scope="col">Total Marks</th>
                                             <th scope="col">Obtained Marks</th>
                                             <th scope="col" />
                                         </tr>
@@ -248,7 +211,9 @@ const Attempt_Quiz = () => {
                                     <tbody>
 
                                         {quiztable ?
-                                            quiztable.map((row, index) => {
+                                            quiztable
+                                            .filter(row => row._doc.status === 'Publish')
+                                            .map((row, index) => {
                                                 const endDate = moment(row._doc.End_date).endOf('day');
                                                 const currentDate = moment().endOf('day');
                                                 const isExpired = endDate.isBefore(currentDate);
@@ -276,7 +241,7 @@ const Attempt_Quiz = () => {
                                                             </Badge>
                                                         </td>
                                                         {/* <td>{row.Status}</td> */}
-                                                        <td style={{ textAlign: 'center' }}>{row._doc.Questions}</td>
+                                                        
 
 
                                                         <td>
@@ -335,6 +300,7 @@ const Attempt_Quiz = () => {
                                                                 : <> </>}
 
                                                         </td>
+                                                        <td style={{ textAlign: 'center' }}>{row._doc.Questions}</td>
                                                         <td style={{ textAlign: 'center' }}>
                                                             {row.has_submitted ? (
                                                                 row.marks_obtained !== "-1" ? (

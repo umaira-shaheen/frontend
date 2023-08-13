@@ -767,16 +767,7 @@ function GetTeacheQuestion()
                                                 </tr>
                                             )
                                         })
-                                        // :
-                                        // filtered_questions.length === 0?
-                                        // <tr>
-
-                                        //     <td colSpan="6">
-
-                                        //             "No Questions Exist for the Selected Course"
-                                        //     </td>
-
-                                        // </tr>
+                                       
 
                                         :
 

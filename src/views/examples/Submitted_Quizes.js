@@ -37,6 +37,8 @@ const Submitted_Quizes = (args) => {
     const [quiz_title, setQuizTitle] = useState('');
     const [total_marks, setTotalMarks] = useState('');
     const [studentId, setStudentID] = useState('');
+    const [studentFirstName, setStudentFirstName] = useState('');
+    const [studentLastName, setStudentLastName] = useState('');
     const [quizId, setQuizId] = useState('');
     const handleQuizChange = (e) => {
         // Function to filter the quiz questions based on the selected quiz
@@ -46,7 +48,8 @@ const Submitted_Quizes = (args) => {
         setFilteredQuestions(filteredQuestions);
         setCurrentQuiz(e.target.value)
     };
-    useEffect(() => {
+    function GetTeacherQuiz()
+    {
         const storedUser = localStorage.getItem('user');
         const user_info = JSON.parse(storedUser);
         const user_id = user_info._id;
@@ -67,7 +70,6 @@ const Submitted_Quizes = (args) => {
                 if (res.data.data && res.data.message == "success") {
                     console.log(res.data.data);
                     setteacherquiztable(res.data.data);
-                  
                     setQuizTitle(res.data.data.Quiz_title);
                 }
                 else if (res.data.message == "only Teacher can access this") {
@@ -84,13 +86,13 @@ const Submitted_Quizes = (args) => {
 
             })
 
-
-
-
+    }
+    useEffect(() => {
+        GetTeacherQuiz();
     }, []);
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
-    function FindQuiz(id, student_id) {
+    function FindQuiz(id, student_id,Firstname, Lastname) {
 
         axios({     //FindOneCourse on the base of id API Calling
             method: 'get',
@@ -102,7 +104,10 @@ const Submitted_Quizes = (args) => {
                 if (res.data) {
 
                     console.log(student_id);
+                    console.log(res.data);
                     setStudentID(student_id);
+                    setStudentFirstName(Firstname);
+                    setStudentLastName(Lastname);
                     setQuizId(res.data._id);
                     setQuizTitle(res.data.Quiz_title);
                     setTotalMarks(res.data.Questions);
@@ -127,6 +132,7 @@ const Submitted_Quizes = (args) => {
     const closeModal = () => setModal(false);
     const [addsuccess, setaddSuccess] = useState(false);
     const onDismissaddSuccess = () => setaddSuccess(false);
+    const [rerender, setRerender] = useState(false);
     function UploadMarks(e) {
         e.preventDefault();
         const Student_ID = e.target.student_id.value;
@@ -149,9 +155,11 @@ const Submitted_Quizes = (args) => {
         })
             .then(res => {
                 if (res.data.data && res.data.message == "Marks uploaded successfully") {
-                   console.log(res.data.data);
-                   setaddSuccess(true);
-                   
+                    console.log(res.data.data);
+                    setaddSuccess(true);
+                    GetTeacherQuiz();
+                    setRerender(!rerender);
+
                 }
                 else if (res.data.message == "only Teacher can access this") {
                     alert("only teacher can access this");
@@ -159,9 +167,9 @@ const Submitted_Quizes = (args) => {
                 else {
                     setErrorMessage(res.data.messege.message);
                     setError(true);
-                  }
-                  closeModal();
-               
+                }
+                closeModal();
+
 
             })
             .catch(error => {
@@ -227,7 +235,8 @@ const Submitted_Quizes = (args) => {
                                             name="student_id"
                                             placeholder="Student Id"
                                             type="text"
-                                            value={studentId}
+                                            value={studentFirstName + ' ' + studentLastName}
+
 
                                             readOnly
                                         />
@@ -380,16 +389,26 @@ const Submitted_Quizes = (args) => {
                                                                         </Button>
                                                                     </td>
                                                                     <td>
-                                                                        <Button
-                                                                            color="primary"
-                                                                            size="sm"
-                                                                            onClick={() => { FindQuiz(row._doc._id, submittedBy) }}
-
-
-                                                                        >
-                                                                            Mark Quiz
-                                                                        </Button>
+                                                                        {row.students[idx].marks_obtained !== "-1" ? (
+                                                                            <Button
+                                                                            color="default"
+                                                                                size="sm"
+                                                                            >
+                                                                                Marked
+                                                                            </Button>
+                                                                        ) : (
+                                                                            <Button
+                                                                                color="primary"
+                                                                                size="sm"
+                                                                                onClick={() => { FindQuiz(row._doc._id, submittedBy,row.students[idx].student_Firstname,row.students[idx].student_Lastname) }}
+                                                                            >
+                                                                                Mark Quiz
+                                                                            </Button>
+                                                                        )}
                                                                     </td>
+
+
+
                                                                     {/* Add more <td> elements for other data */}
                                                                 </tr>
                                                             );
@@ -409,14 +428,29 @@ const Submitted_Quizes = (args) => {
                                                                         </Button>
                                                                     </td>
                                                                     <td>
-                                                                        <Button
-                                                                            color="primary"
-                                                                            size="sm"
-                                                                            onClick={() => { FindQuiz(row._doc._id, submittedBy) }}
-                                                                        >
-                                                                            Mark Quiz
-                                                                        </Button>
+                                                                        {row.students[idx].marks_obtained !== "-1" ? (
+                                                                            <Button
+                                                                                color="default"
+                                                                                size="sm"
+                                                                            >
+                                                                                Marked
+                                                                            </Button>
+                                                                        ) : (
+                                                                            <Button
+                                                                                color="primary"
+                                                                                size="sm"
+                                                                                onClick={() => { FindQuiz(row._doc._id, submittedBy,row.students[idx].student_Firstname,row.students[idx].student_Lastname) }}
+                                                                            >
+                                                                                Mark Quiz
+                                                                            </Button>
+                                                                        )}
                                                                     </td>
+
+
+
+
+
+
                                                                     {/* Add more <td> elements for other data */}
                                                                 </tr>
                                                             );
@@ -452,14 +486,29 @@ const Submitted_Quizes = (args) => {
                                                                         </Button>
                                                                     </td>
                                                                     <td>
-                                                                        <Button
-                                                                            color="primary"
-                                                                            size="sm"
-                                                                            onClick={() => { FindQuiz(row._doc._id, submittedBy) }}
-                                                                        >
-                                                                            Mark Quiz
-                                                                        </Button>
+                                                                        {row.students[idx].marks_obtained !== "-1" ? (
+                                                                            <Button
+                                                                                color="default"
+                                                                                size="sm"
+                                                                            >
+                                                                                Marked
+                                                                            </Button>
+                                                                        ) : (
+                                                                            <Button
+                                                                                color="primary"
+                                                                                size="sm"
+                                                                                onClick={() => { FindQuiz(row._doc._id, submittedBy,row.students[idx].student_Firstname,row.students[idx].student_Lastname) }}
+                                                                            >
+                                                                                Mark Quiz
+                                                                            </Button>
+                                                                        )}
                                                                     </td>
+
+
+
+
+
+
                                                                     {/* Add more <td> elements for other data */}
                                                                 </tr>
                                                             );
@@ -478,21 +527,30 @@ const Submitted_Quizes = (args) => {
                                                                         </Button>
                                                                     </td>
                                                                     <td>
-                                                                    {row.has_marked? 
-                                                                     <Button  style={{width: '120px'}} color="default" size="sm" disabled>
-                                                                     Marked
-                                                                  </Button>
-                                                                   : (
-                                                                        <Button
-                                                                            color="primary"
-                                                                            size="sm"
-                                                                            onClick={() => { FindQuiz(row._doc._id, submittedBy) }}
-                                                                        >
-                                                                            Mark Quiz
-                                                                        </Button>
-                                                                   )}
+                                                                        {row.students[idx].marks_obtained !== "-1" ? (
+                                                                            <Button
+                                                                                color="default"
+                                                                                size="sm"
+                                                                            >
+                                                                                Marked
+                                                                            </Button>
+                                                                        ) : (
+                                                                            <Button
+                                                                                color="primary"
+                                                                                size="sm"
+                                                                                onClick={() => { FindQuiz(row._doc._id, submittedBy,row.students[idx].student_Firstname,row.students[idx].student_Lastname) }}
+                                                                            >
+                                                                                Mark Quiz
+                                                                            </Button>
+                                                                        )}
                                                                     </td>
-                                                                     
+
+
+
+
+
+
+
                                                                     {/* Add more <td> elements for other data */}
                                                                 </tr>
                                                             );

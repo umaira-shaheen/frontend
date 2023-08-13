@@ -134,6 +134,33 @@ const Sidebar = (props) => {
       if (user_info.Role === "Admin" && route.name === "My Courses") {
         return false; // Exclude the route for Teacher role
       }
+      if (user_info.Role === "Student" && route.name === "Feedbacks") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Teacher" && route.name === "Feedbacks") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Student" && route.name === "Messeges") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Teacher" && route.name === "Messeges") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Teacher" && route.name === "Lectures") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Admin" && route.name === "Lectures") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Admin" && route.name === "Manage Lectures") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Teacher" && route.name === "Feedback Form") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Student" && route.name === "Manage Lectures") {
+        return false; // Exclude the route for Teacher role
+      }
       if (route.name === "Login" || route.name === "Register") {
         return false; // Exclude the Login and Register routes
       }

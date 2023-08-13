@@ -20,6 +20,14 @@ const Profile = () => {
   const fileInputRef = useRef(null);
   const storedUser = localStorage.getItem('user');
   const user_info = JSON.parse(storedUser);
+  var user_image = ""
+  if(user_info.User_img)
+  {
+    user_image = user_info.User_img.replace('public/', '')
+  }
+  else{
+    user_image = "uploads/avater.png";
+  }
   const [error, setError] = useState(false);
   const [editsuccess, seteditSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -162,7 +170,7 @@ const Profile = () => {
                       <img
                         alt="..."
                         className="rounded-circle"
-                        src={`http://localhost:8000/${user_info.User_img}`}
+                        src={`http://localhost:8000/${user_image}`}
                       />
                     </a>
                   </div>

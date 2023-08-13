@@ -24,6 +24,14 @@ const AdminNavbar = (props) => {
   const storedUser = localStorage.getItem('user');
   const user_info = JSON.parse(storedUser);
   localStorage.setItem('user', JSON.stringify(user_info));
+  var user_image = ""
+  if(user_info.User_img)
+  {
+    user_image = user_info.User_img.replace('public/', '')
+  }
+  else{
+    user_image = "uploads/avater.png";
+  }
     const [isloggedout, setloggedOut]=useState(false);
    //  useState for error message. initially error message will be false
    const [error, setError] = useState(false);
@@ -82,7 +90,7 @@ const AdminNavbar = (props) => {
                   <span className="avatar avatar-sm rounded-circle">
                     <img
                       alt="..."
-                      src={`http://localhost:8000/${user_info.User_img}`}
+                      src={`http://localhost:8000/${user_image}`}
                     />
                   </span>
                   <Media className="ml-2 d-none d-lg-block">

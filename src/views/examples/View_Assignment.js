@@ -145,7 +145,9 @@ const View_Assignment = (args) => {
                                 <tbody>
 
                                     {Assignmenttable ?
-                                        Assignmenttable.map((row, index) => {
+                                        Assignmenttable
+                                        .filter(row => row._doc.Status === 'Publish')
+                                        .map((row, index) => {
                                             const currentDate = new Date();
                                             const dateToCompare = new Date(row._doc.Date);
                                             const isExpired = dateToCompare < currentDate ? true : false

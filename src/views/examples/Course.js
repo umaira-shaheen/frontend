@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
+import { Redirect ,Link , useHistory} from 'react-router-dom';
 import {
   Container,
   Row,
@@ -47,7 +47,8 @@ const Course = (args) => {
   const [description, setCoursedescription] = useState(null);
   const [category, setCoursecategory] = useState(null);
   const [courseImg, setCourseImg] = useState(null);
-
+  const [customerror, setcustomerror] = useState(false);
+  const onDismisscustomerror = () => setcustomerror(false);
   const [status, setCourseStatus] = useState(null);
   const [rerender, setRerender] = useState(false);
 
@@ -91,8 +92,22 @@ const Course = (args) => {
     const Category = e.target.category.value;
     const Description = e.target.description.value;
     const status=e.target.status.value
-    
-    
+    const selectedDate = new Date(start_date);
+    const currentDate = new Date();
+    if (selectedDate < currentDate) {
+      setcustomerror(true);
+      setErrorMessage("Start date should be greater than or equal to today's date");
+      // setError(true);
+      // closeModal();
+      return;
+    }
+    else if (new Date(end_date) < new Date(start_date)) {
+      setcustomerror(true);
+      setErrorMessage('End date should be greater than start date');
+      // setError(true);
+      // setEditModal(!editmodal);
+      return;
+    }
     axios({     //edit Course on the base of id API Calling
       method: 'post',
       url: "http://localhost:8000/course/EditCourse",
@@ -260,6 +275,23 @@ const Course = (args) => {
     const Category = e.target.category.value;
     const Description = e.target.description.value;
     const status = e.target.status.value;
+    const selectedDate = new Date(start_date);
+    const currentDate = new Date();
+    if (selectedDate < currentDate) {
+      setcustomerror(true);
+      setErrorMessage("Start date should be greater than or equal to today's date");
+      // setError(true);
+      // closeModal();
+      return;
+    }
+    else if (new Date(end_date) < new Date(start_date)) {
+      setcustomerror(true);
+      setErrorMessage('End date should be greater than start date');
+      // setError(true);
+      // setEditModal(!editmodal);
+      return;
+    }
+
     const formData = new FormData();
     if(file)
     {
@@ -368,6 +400,9 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
           <Form role="form" onSubmit={AddCourse}>
             <ModalHeader toggle={toggle}>Add new Course</ModalHeader>
             <ModalBody>
+            <Alert color="danger" isOpen={customerror} toggle={onDismisscustomerror}>
+                <strong> Error! {errorMessage} </strong>
+              </Alert>
               <Row >
                 <Col md={6}>
                   <FormGroup>
@@ -379,6 +414,7 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
                       name="Coursename"
                       placeholder="Enter Course Name"
                       type="text"
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -392,6 +428,7 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
                       name="coursecode"
                       placeholder="Enter Course code"
                       type="coursecode"
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -405,6 +442,7 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
                       name="startdate"
                       placeholder="Enter start date"
                       type="date"
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -418,6 +456,7 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
                       name="enddate"
                       placeholder="Enter End date"
                       type="date"
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -426,7 +465,9 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
                 <Col md={6}>
                   <Label>
                     Upload Course Image:
-                    <Input type="file" onChange={handleFileInputChange} />
+                    <Input type="file" onChange={handleFileInputChange} 
+                    required/>
+                    
                   </Label>
                 </Col>
               </Row>
@@ -441,6 +482,7 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
                       name="description"
                       placeholder="Course Description"
                       type='textarea'
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -455,6 +497,7 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
                       id="category"
                       name="category"
                       type="select"
+                      required
                     >
                       <option value="English">
                         English
@@ -474,6 +517,7 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
                       <option value="Computer">
                         Computer
                       </option>
+                     
                     </Input>
                   </FormGroup>
                 </Col>
@@ -488,6 +532,7 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
                       id="status"
                       name="status"
                       type="select"
+                      required
                     >
                       <option value="Draft">
                         Draft
@@ -600,6 +645,9 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
           <Form role="form" onSubmit={EditCourse} >
             <ModalHeader toggle={edittoggle1}>Update Course</ModalHeader>
             <ModalBody>
+            <Alert color="danger" isOpen={customerror} toggle={onDismisscustomerror}>
+                <strong> Error! {errorMessage} </strong>
+              </Alert>
               <Row>
                 <Col md={6}>
                   <FormGroup>
@@ -625,6 +673,8 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
                       placeholder="Enter Course Name"
                       type="text"
                       defaultValue={coursename}
+                      required
+                      readOnly
                     />
                   </FormGroup>
                 </Col>
@@ -639,6 +689,7 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
                       placeholder="Enter Course code"
                       type="coursecode"
                       defaultValue={coursecode}
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -664,6 +715,7 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
                       placeholder="Enter start date"
                       type="date"
                       defaultValue={new Date(startdate).toISOString().split('T')[0]}
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -678,6 +730,7 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
                       placeholder="Enter End date"
                       type="date"
                       defaultValue={new Date(enddate).toISOString().split('T')[0]}
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -694,6 +747,7 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
                       placeholder="Course Description"
                       type='textarea'
                       defaultValue={description}
+                      required
                     />
                   </FormGroup>
                 </Col>
@@ -709,6 +763,7 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
                       name="category"
                       type="select"
                       defaultValue={category}
+                      required
                     >
                       <option value="English">
                         English

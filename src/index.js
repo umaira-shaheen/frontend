@@ -31,7 +31,8 @@ import Home from "views/Frontpages/Homepage";
 import About from "views/Frontpages/About";
 import  MyPDFViewer from "views/examples/MyPdfDocument";
 import  MyAssignmentPDF from "views/examples/Assignment_pdf";
-
+import StudentLectures from "views/examples/StudentLectures";
+import FeedbackForm from "views/Frontpages/FeedbackForm";
 import Contact from "views/Frontpages/Contact";
 import ContactUs from "views/Frontpages/ContactUs";
 import CoursesList from "views/Frontpages/CoursesList";
@@ -60,7 +61,9 @@ root.render(
       <Route path="/testimonial" render={(props) => <Testimonial {...props} />} />
       <Route path="/detail" render={(props) => <Detail {...props} />} />
       <Route path="/QuizPdf" render={(props) => <MyPDFViewer {...props} />} />
+      <Route path="/Lectures" render={(props) => <StudentLectures {...props} />} />
       <Route path="/AssignmentPdf" render={(props) => <MyAssignmentPDF {...props} />} />
+      <Route path="/feedbackform" render={(props) => <FeedbackForm {...props} />} />
       {/* <Redirect from="/" to="/admin/index" /> */}
     </Switch>
   </BrowserRouter>
