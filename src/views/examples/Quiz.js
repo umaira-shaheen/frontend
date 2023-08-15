@@ -89,7 +89,6 @@ const Quiz = (args) => {
           setdeleteSuccess(true);
           GetOnlyTeacherQuiz();
           setRerender(!rerender);
-
         }
         else {
           setError(true);

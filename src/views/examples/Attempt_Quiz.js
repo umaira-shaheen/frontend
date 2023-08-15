@@ -110,9 +110,7 @@ const Attempt_Quiz = () => {
                     alert("only student can access this")
                 }
             })
-
             .catch(error => {
-
                 if (error.response.data.message == "Not logged in") {
                     localStorage.clear(); // Clear local storage
                     history.push('/auth/login');
@@ -122,7 +120,6 @@ const Attempt_Quiz = () => {
     }
   
     function GetStudentQuiz() {
-      
         const storedUser = localStorage.getItem('user');
         const user_info = JSON.parse(storedUser);
         const user_id = user_info._id;
@@ -212,7 +209,7 @@ const Attempt_Quiz = () => {
 
                                         {quiztable ?
                                             quiztable
-                                            .filter(row => row._doc.status === 'Publish')
+                                            .filter(row => row._doc.Status === 'Publish')
                                             .map((row, index) => {
                                                 const endDate = moment(row._doc.End_date).endOf('day');
                                                 const currentDate = moment().endOf('day');

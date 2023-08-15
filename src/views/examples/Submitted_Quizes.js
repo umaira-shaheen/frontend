@@ -236,8 +236,6 @@ const Submitted_Quizes = (args) => {
                                             placeholder="Student Id"
                                             type="text"
                                             value={studentFirstName + ' ' + studentLastName}
-
-
                                             readOnly
                                         />
                                     </FormGroup>
