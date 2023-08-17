@@ -90,7 +90,7 @@ const Courses = () => {
                                 </div>
                             }
 
-                        </div>//
+                        </div>
                     </div>
                 </div>
                 {/* <!-- Courses End --> */}

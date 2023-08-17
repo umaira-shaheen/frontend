@@ -158,7 +158,16 @@ const Sidebar = (props) => {
       if (user_info.Role === "Teacher" && route.name === "Feedback Form") {
         return false; // Exclude the route for Teacher role
       }
+      if (user_info.Role === "Admin" && route.name === "Feedback Form") {
+        return false; // Exclude the route for Teacher role
+      }
       if (user_info.Role === "Student" && route.name === "Manage Lectures") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Student" && route.name === "Reports") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Teacher" && route.name === "Reports") {
         return false; // Exclude the route for Teacher role
       }
       if (route.name === "Login" || route.name === "Register") {

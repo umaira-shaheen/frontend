@@ -1,7 +1,27 @@
 // import overlay_top from "assets/img/landing_images/overlay_top";
 import logo from '../../assets/img/theme/UKCELL.png'
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useState, useEffect } from "react";
 const Footer = () => {
+    const [coursetable, setCoursetable] = useState(null);
+    function GetCourse(e) {
+        axios({
+            method: 'get',
+            url: "http://localhost:8000/course/GetRecentCourse",
+        })
+            .then(res => {
+                if (res.data) {
+                    setCoursetable(res.data)
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }
+    useEffect(() => {
+        GetCourse();
+    }, []);
     return (
         <>
             <div className="my-front-css-custom">
@@ -11,10 +31,11 @@ const Footer = () => {
                         <div className="row">
                             <div className="col-md-6 mb-5">
                                 <h1 className="mt-n2 text-uppercase text-white">
-                                <Link to={"/"} className="navbar-brand">
-                                     <img className="logo" src={logo} alt="UKCELL logo" /></Link><span style={{ marginLeft: "10px" }}>UKCELL</span></h1>
+                                    <Link to={"/"} className="navbar-brand">
+                                        <img className="logo" src={logo} alt="UKCELL logo" /></Link><span style={{ marginLeft: "10px" }}>UKCELL</span></h1>
 
-                                <p className="m-0">Accusam nonumy clita sed rebum kasd eirmod elitr. Ipsum ea lorem at et diam est, tempor rebum ipsum sit ea tempor stet et consetetur dolores. Justo stet diam ipsum lorem vero clita diam</p>
+                                <p className="m-0">We are opening doors of education for students and providing flexible learning schedule by providing Online lecture uploading and other educational stuff .</p>
+
                             </div>
                             {/* <div className="col-md-6 mb-5">
                     <h3 className="text-white mb-4">Newsletter</h3>
@@ -43,13 +64,23 @@ const Footer = () => {
                             </div>
                             <div className="col-md-4 mb-5">
                                 <h3 className="text-white mb-4">Our Courses</h3>
-                                <div className="d-flex flex-column justify-content-start">
-                                    <a className="text-white-50 mb-2" href="#"><i className="fa fa-angle-right mr-2"></i>Web Design</a>
-                                    <a className="text-white-50 mb-2" href="#"><i className="fa fa-angle-right mr-2"></i>Graphic Designing</a>
-                                    <a className="text-white-50 mb-2" href="#"><i className="fa fa-angle-right mr-2"></i>SEO</a>
-                                    <a className="text-white-50 mb-2" href="#"><i className="fa fa-angle-right mr-2"></i>Computer Course</a>
-                                    <a className="text-white-50" href="#"><i className="fa fa-angle-right mr-2"></i>SEO</a>
+                                {coursetable ?
+                                coursetable
+                                .filter(row => row.status === 'Publish')
+                                .map((row, index) => {
+                                    return (
+                                <div className="d-flex flex-column justify-content-start" key={index}>
+                                <Link to={"/coursesList"} className="text-white-50 mb-2"><i className="fa fa-angle-right mr-2"></i>{row.Course_title}</Link> 
+
+                                    
                                 </div>
+                                 )
+                                })
+                                :
+                                <div>
+                                    <h1 >No course Added by UkCELL!</h1>
+                                </div>
+                            }
                             </div>
                             <div className="col-md-4 mb-5">
                                 <h3 className="text-white mb-4">Quick Links</h3>

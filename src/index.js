@@ -55,6 +55,8 @@ root.render(
       <Route path="/about-us" render={(props) => <About {...props} />} />
       <Route path="/AboutUs" render={(props) => <AboutUs {...props} />} />
       <Route path="/contact-us" render={(props) => <ContactUs {...props} />} />
+      <Route path="/Contact" render={(props) => <Contact {...props} />} />
+
       <Route path="/coursesList" render={(props) => <CoursesList {...props} />} />
       <Route path="/Our_team" render={(props) => <Team {...props} />} />
       <Route path="/Our_features" render={(props) => <Our_features {...props} />} />

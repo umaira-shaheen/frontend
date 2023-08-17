@@ -56,7 +56,7 @@ const NavBar = () => {
                             <Link to={"/"} className="nav-item nav-link ">Home</Link>
                             <Link to={"/AboutUs"} className="nav-item nav-link ">About</Link>
                             <Link to={"/coursesList"} className="nav-item nav-link ">Courses</Link>
-                            <Link to={"/feedbackform"} className="nav-item nav-link ">Feedback</Link>
+                            <Link to={"/Contact"} className="nav-item nav-link ">Contact</Link>
                             <Dropdown nav isOpen={dropdownOpen} toggle={toggle} >
                                 <DropdownToggle nav caret>
                                     Quick Links

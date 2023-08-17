@@ -110,8 +110,8 @@ const ViewFeedback = () => {
                                 <thead className="thead-light">
                                     <tr>
                                         <th scope="col">Name</th>
-
-                                        <th scope="col">Date</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Phone Number</th>
                                         <th scope="col">Experience</th>
                                         <th scope="col">Comments</th>
                                         <th scope="col">Action</th>
@@ -131,13 +131,22 @@ const ViewFeedback = () => {
                                                         </span>
 
                                                     </th>
+                                                    <th scope="row">
+                                                        {/* <i className="ni ni-book-bookmark text-blue"/> */}
+                                                        <span className="mb-0 text-sm">
+                                                            {row.Email}
+                                                        </span>
 
-                                                    <td>
-                                                        <Badge color="" className="badge-dot">
-                                                            <i className="bg-info" />
-                                                            {moment(row.createdAt).format('DD-MM-YYYY')}
-                                                        </Badge>
-                                                    </td>
+                                                    </th>
+                                                    <th scope="row">
+                                                        {/* <i className="ni ni-book-bookmark text-blue"/> */}
+                                                        <span className="mb-0 text-sm">
+                                                            {row.Phone_Number}
+                                                        </span>
+
+                                                    </th>
+
+                                                   
                                                     <td>{row.Experience}</td>
                                                     <td>{row.Comments}</td>
                                                     <td>

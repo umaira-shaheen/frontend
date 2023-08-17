@@ -348,8 +348,6 @@ const Quiz = (args) => {
   const [currentQuiz, setCurrentQuiz] = useState("No Quiz Selected Yet")
 
   const handleQuizChange = (e) => {
-
-
     const filteredQuestions = quiztable.filter(
       (quiz) => quiz.Quiz_Course === e.target.value
     );
@@ -707,7 +705,6 @@ const Quiz = (args) => {
                 </thead>
                 <tbody>
                   {filtered_questions.length > 0 ?
-
                     filtered_questions.map((row, index) => {
                       return (
                       
