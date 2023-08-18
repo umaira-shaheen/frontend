@@ -48,8 +48,7 @@ const Submitted_Quizes = (args) => {
         setFilteredQuestions(filteredQuestions);
         setCurrentQuiz(e.target.value)
     };
-    function GetTeacherQuiz()
-    {
+    function GetTeacherQuiz() {
         const storedUser = localStorage.getItem('user');
         const user_info = JSON.parse(storedUser);
         const user_id = user_info._id;
@@ -92,7 +91,7 @@ const Submitted_Quizes = (args) => {
     }, []);
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
-    function FindQuiz(id, student_id,Firstname, Lastname) {
+    function FindQuiz(id, student_id, Firstname, Lastname) {
 
         axios({     //FindOneCourse on the base of id API Calling
             method: 'get',
@@ -133,16 +132,24 @@ const Submitted_Quizes = (args) => {
     const [addsuccess, setaddSuccess] = useState(false);
     const onDismissaddSuccess = () => setaddSuccess(false);
     const [rerender, setRerender] = useState(false);
+    const [customerror, setcustomerror] = useState(false);
+    const onDismisscustomerror = () => setcustomerror(false);
     function UploadMarks(e) {
         e.preventDefault();
         const Student_ID = e.target.student_id.value;
         const quiz_id = e.target.quiz_id.value;
-        const obtained_marks = e.target.obtained_marks.value;
-        const total_marks = e.target.total_marks.value;
-        if (obtained_marks >= total_marks) {
+        const obtained_marks = Number(e.target.obtained_marks.value); // Convert to number
+        const total_marks = Number(e.target.total_marks.value); // Convert to number
+
+        if (obtained_marks > total_marks) {
+            console.log("obatined marks " + obtained_marks);
+            console.log("total marks " + total_marks);
+            console.log("student id"+ Student_ID);
+
+            setcustomerror(true);
             setErrorMessage('Obtained Marks should be less than or equal to total marks');
-            setError(true);
-            closeModal();
+            // setError(true);
+            // closeModal();
             return;
         }
 
@@ -200,13 +207,16 @@ const Submitted_Quizes = (args) => {
                 <Alert color="success" isOpen={addsuccess} toggle={onDismissaddSuccess}>
                     <strong> Marks Uploaded! </strong>
                 </Alert>
-                <Alert color="danger" isOpen={error} toggle={onDismiss}>
+                {/* <Alert color="danger" isOpen={error} toggle={onDismiss}>
                     <strong>Error! </strong> {errorMessage}
-                </Alert>
+                </Alert> */}
                 <Modal isOpen={modal} toggle={toggle} {...args} size='lg'>
                     <Form role="form" onSubmit={UploadMarks}>
                         <ModalHeader toggle={toggle}>Add new Quiz</ModalHeader>
                         <ModalBody>
+                            <Alert color="danger" isOpen={customerror} toggle={onDismisscustomerror}>
+                                <strong> Error! {errorMessage} </strong>
+                            </Alert>
                             <Row >
 
                                 <Col md={6}>
@@ -227,16 +237,16 @@ const Submitted_Quizes = (args) => {
                                 </Col>
                                 <Col md={6}>
                                     <FormGroup>
-                                        <Label for="student Id">
+                                        <Label for="student Name">
                                             Submitted By
                                         </Label>
                                         <Input
-                                            id="studentid"
-                                            name="student_id"
-                                            placeholder="Student Id"
+                                            id="studentname"
+                                            name="student_name"
+                                            placeholder="Student Name"
                                             type="text"
-                                            value={studentFirstName + ' ' + studentLastName}
-                                            readOnly
+                                            value={`${studentFirstName} ${studentLastName}`}
+                                            readOnly                                           
                                         />
                                     </FormGroup>
                                 </Col>
@@ -266,8 +276,7 @@ const Submitted_Quizes = (args) => {
                                             id="obtained_marks"
                                             name="obtained_marks"
                                             placeholder="Obtained marks"
-                                            type="Number"
-
+                                            type="text"
                                             required
                                         />
                                     </FormGroup>
@@ -285,6 +294,22 @@ const Submitted_Quizes = (args) => {
                                             value={quizId}
 
                                             hidden
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col md={6}>
+                                    <FormGroup>
+                                        <Label for="student Id" hidden>
+                                            Submitted By
+                                            
+                                        </Label>
+                                        <Input
+                                            id="studentid"
+                                            name="student_id"
+                                            placeholder="Student Id"
+                                            type="text"
+                                            value={studentId}
+                                            hidden                                         
                                         />
                                     </FormGroup>
                                 </Col>
@@ -389,7 +414,7 @@ const Submitted_Quizes = (args) => {
                                                                     <td>
                                                                         {row.students[idx].marks_obtained !== "-1" ? (
                                                                             <Button
-                                                                            color="default"
+                                                                                color="default"
                                                                                 size="sm"
                                                                             >
                                                                                 Marked
@@ -398,7 +423,7 @@ const Submitted_Quizes = (args) => {
                                                                             <Button
                                                                                 color="primary"
                                                                                 size="sm"
-                                                                                onClick={() => { FindQuiz(row._doc._id, submittedBy,row.students[idx].student_Firstname,row.students[idx].student_Lastname) }}
+                                                                                onClick={() => { FindQuiz(row._doc._id, submittedBy, row.students[idx].student_Firstname, row.students[idx].student_Lastname) }}
                                                                             >
                                                                                 Mark Quiz
                                                                             </Button>
@@ -437,7 +462,7 @@ const Submitted_Quizes = (args) => {
                                                                             <Button
                                                                                 color="primary"
                                                                                 size="sm"
-                                                                                onClick={() => { FindQuiz(row._doc._id, submittedBy,row.students[idx].student_Firstname,row.students[idx].student_Lastname) }}
+                                                                                onClick={() => { FindQuiz(row._doc._id, submittedBy, row.students[idx].student_Firstname, row.students[idx].student_Lastname) }}
                                                                             >
                                                                                 Mark Quiz
                                                                             </Button>
@@ -495,7 +520,7 @@ const Submitted_Quizes = (args) => {
                                                                             <Button
                                                                                 color="primary"
                                                                                 size="sm"
-                                                                                onClick={() => { FindQuiz(row._doc._id, submittedBy,row.students[idx].student_Firstname,row.students[idx].student_Lastname) }}
+                                                                                onClick={() => { FindQuiz(row._doc._id, submittedBy, row.students[idx].student_Firstname, row.students[idx].student_Lastname) }}
                                                                             >
                                                                                 Mark Quiz
                                                                             </Button>
@@ -536,7 +561,7 @@ const Submitted_Quizes = (args) => {
                                                                             <Button
                                                                                 color="primary"
                                                                                 size="sm"
-                                                                                onClick={() => { FindQuiz(row._doc._id, submittedBy,row.students[idx].student_Firstname,row.students[idx].student_Lastname) }}
+                                                                                onClick={() => { FindQuiz(row._doc._id, submittedBy, row.students[idx].student_Firstname, row.students[idx].student_Lastname) }}
                                                                             >
                                                                                 Mark Quiz
                                                                             </Button>

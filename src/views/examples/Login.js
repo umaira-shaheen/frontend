@@ -94,7 +94,7 @@ if (localStorage.getItem("user") != null) {
               <strong>Error! </strong> Invalid credentials
             </Alert>
             <div className="text-center text-muted mb-4">
-              <small>Sign in with credentials</small>
+            Sign in with credentials
             </div>
             <Form role="form" onSubmit={handleSubmit}>
               <FormGroup className="mb-3">

@@ -322,7 +322,8 @@ const Reports = (args) => {
     const quiz = e.target.quizes.value;
     const start_date = e.target.start_date.value;
     const end_date = e.target.end_date.value;
-    const url = `http://localhost:8000/Reports/StudentQuizReport?students=${students}&quizes=${quiz}&start_date=${start_date}&end_date=${end_date}`;
+    const sorting=e.target.sorting.value;
+    const url = `http://localhost:8000/Reports/StudentQuizReport?students=${students}&quizes=${quiz}&start_date=${start_date}&end_date=${end_date}&sorting=${sorting}`;
 
     axios({
       method: 'get',
@@ -351,6 +352,14 @@ const Reports = (args) => {
             localStorage.clear(); // Clear local storage
             history.push('/auth/login');
           }
+          else if (error.response.data.message && error.response.data.message == "Student not found in submitted list")
+          {
+            alert('Student quiz not found')
+          }
+          else if (error.response.data.message && error.response.data.message == "No Student has Submitted Quiz Yet!")
+          {
+            alert('No Student has Submitted Quiz Yet!')
+          }
         }
 
       })
@@ -362,7 +371,9 @@ const Reports = (args) => {
     const assignment = e.target.assignments.value;
     const start_date = e.target.start_date.value;
     const end_date = e.target.end_date.value;
-    const url = `http://localhost:8000/Reports/StudentAssignmentReport?students=${students}&assignments=${assignment}&start_date=${start_date}&end_date=${end_date}`;
+    const sorting = e.target.sorting.value;
+
+    const url = `http://localhost:8000/Reports/StudentAssignmentReport?students=${students}&assignments=${assignment}&start_date=${start_date}&end_date=${end_date}&sorting=${sorting}`;
 
     axios({
       method: 'get',
@@ -390,6 +401,16 @@ const Reports = (args) => {
           if (error.response.data && error.response.data == "Not logged in") {
             localStorage.clear(); // Clear local storage
             history.push('/auth/login');
+          }
+          else if (error.response.data.message && error.response.data.message == "Student not found in submitted list")
+          {
+            alert('Student Assignment not found')
+            return
+          }
+          else if (error.response.data.message && error.response.data.message == "No Student has Submitted Quiz Yet!")
+          {
+            alert('No Student has Submitted Quiz Yet!')
+            return
           }
         }
 
@@ -1087,16 +1108,16 @@ const Reports = (args) => {
 
                           </th>
                           <td>
-                            {row.Submitted_by.map((studentId) => (
-                              <div key={studentId}>
-                                {studentId}
+                            {row.Submitted_by.map((student) => (
+                              <div key={student}>
+                               {`${student.Student_First_name} ${student.Student_Last_name}`}
                               </div>
                             ))}
                           </td>
                           <td>
-                            {row.obtained_marks.map((obtainedmarks) => (
+                          {row.obtained_marks.map((obtainedmarks) => (
                               <div key={obtainedmarks}>
-                                {obtainedmarks}
+                                {obtainedmarks === '-1' ? "Not Marked" : obtainedmarks}
                               </div>
                             ))}
                           </td>
@@ -1108,7 +1129,7 @@ const Reports = (args) => {
                       <td>{assignmentreporttable instanceof Array ? assignmentreporttable[0].Start_date : assignmentreporttable?.Date}</td>
                       <td>{assignmentreporttable instanceof Array ? assignmentreporttable[0].End_date : assignmentreporttable?.Total_marks}</td>
                       <td>{assignmentreporttable instanceof Array ? assignmentreporttable[0].Quiz_Course : assignmentreporttable?.Assignment_Course}</td>
-                      <td>{assignmentreporttable instanceof Array ? assignmentreporttable[0].Submitted_by : assignmentreporttable?.Submitted_by}</td>
+                      <td>{assignmentreporttable instanceof Array ? assignmentreporttable[0].Student_First_name : assignmentreporttable?.Student_First_name}</td>
                       <td>
                         {assignmentreporttable ? (
                           assignmentreporttable instanceof Array ? (
@@ -1303,12 +1324,33 @@ const Reports = (args) => {
                     />
                   </FormGroup>
                 </Col>
+                <Col md={6}>
+                  <FormGroup>
+                    <Label for="students">
+                      Sort By
+                    </Label>
+
+                    <Input
+                      id="sorting"
+                      name="sorting"
+                      type="select"
+
+                    >
+                      <option value="normal">Normal sort</option>
+                      <option value="heighest">By heighest Marks</option>
+                      <option value="lowest">By Lowest Marks</option>
+
+                      
+                    </Input>
+
+                  </FormGroup>
+                </Col>
               </Row>
 
 
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" type="submit" onClick={() => setQuiztableModal(true)}>
+              <Button color="primary" type="submit">
                 Generate Report
               </Button>{' '}
               <Button color="secondary" onClick={quizModalClose}>
@@ -1594,12 +1636,31 @@ const Reports = (args) => {
                     />
                   </FormGroup>
                 </Col>
+                <Col md={6}>
+                  <FormGroup>
+                    <Label for="students">
+                      Sort By
+                    </Label>
+
+                    <Input
+                      id="sorting"
+                      name="sorting"
+                      type="select"
+
+                    >
+                      <option value="normal">Normal sort</option>
+                      <option value="heighest">By heighest Marks</option>
+                      <option value="lowest">By Lowest Marks</option>
+
+                      
+                    </Input>
+
+                  </FormGroup>
+                </Col>
               </Row>
-
-
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" type="submit" onClick={() => setAssignmenttableModal(true)}>
+              <Button color="primary" type="submit" >
                 Generate Report
               </Button>{' '}
               <Button color="secondary" onClick={assignmentModalClose}>

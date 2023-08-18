@@ -19,7 +19,7 @@
 // reactstrap components
 import axios from 'axios';
 import { useState } from 'react';
-import { Redirect,Link } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import InputMask from 'react-input-mask';
 
 import {
@@ -35,67 +35,63 @@ import {
   InputGroup,
   Row,
   Col,
-  Alert 
+  Alert
 } from "reactstrap";
 
 const Register = () => {
-const [isregistered, setRegister]=useState(false);
-const [error, setError] = useState(false);
-const [errorMessage, setErrorMessage] = useState("");
-  function handleSubmit(e)
-    {
-      e.preventDefault();
-      const Firstname=e.target.First_Name.value;
-      const Lastname=e.target.Last_Name.value;
-      const email=e.target.email.value;
-      const password=e.target.password.value;
-      const confirm_password=e.target.confirm_password.value;
-      const phone_no=e.target.phone_no.value;
-      const role = "Student";
-      axios({
-        method:'post',
-        url:"http://localhost:8000/auth/register",
-        data:{Firstname:Firstname, Lastname:Lastname, email:email , password:password , role:role, confirm_password:confirm_password, phone_no:phone_no},
-      })
-      .then(res=>{
-       if(res.data=="successfully inserted")
-       {
-        setRegister(true);
+  const [isregistered, setRegister] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  function handleSubmit(e) {
+    e.preventDefault();
+    const Firstname = e.target.First_Name.value;
+    const Lastname = e.target.Last_Name.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    const confirm_password = e.target.confirm_password.value;
+    const phone_no = e.target.phone_no.value;
+    const role = "Student";
+    axios({
+      method: 'post',
+      url: "http://localhost:8000/auth/register",
+      data: { Firstname: Firstname, Lastname: Lastname, email: email, password: password, role: role, confirm_password: confirm_password, phone_no: phone_no },
+    })
+      .then(res => {
+        if (res.data == "successfully inserted") {
+          setRegister(true);
 
-       }
-       else
-       {
-         setErrorMessage(res.data);
-         setError(true);
-       }
+        }
+        else {
+          setErrorMessage(res.data);
+          setError(true);
+        }
         console.log(res);
-       
+
       })
-      .catch(error=>{
+      .catch(error => {
         console.log(error);
         setErrorMessage("Failed to connect to backend");
         setError(true);
       })
-    }
-    const onDismiss = () => setError(false); 
+  }
+  const onDismiss = () => setError(false);
 
-    if(isregistered)
-    {
-      return <Redirect to="/admin/index" />;   
-   }
-  return ( 
+  if (isregistered) {
+    return <Redirect to="/admin/index" />;
+  }
+  return (
     <>
       <Col lg="6" md="8">
         <Card className="bg-secondary shadow border-0">
           {/* <CardHeader className="bg-transparent pb-5"> */}
           <Alert color="success" isOpen={isregistered} toggle={onDismiss}>
-          <strong> You are successfully registered!! </strong>
-        </Alert>
-        <Alert color="danger" isOpen={error} toggle={onDismiss}>
-          <strong>Error! </strong> {errorMessage}
-        </Alert>
-          
-            {/* <div className="text-muted text-center mt-2 mb-4">
+            <strong> You are successfully registered!! </strong>
+          </Alert>
+          <Alert color="danger" isOpen={error} toggle={onDismiss}>
+            <strong>Error! </strong> {errorMessage}
+          </Alert>
+
+          {/* <div className="text-muted text-center mt-2 mb-4">
               <small>Sign up with</small>
             </div>
             <div className="text-center">
@@ -137,7 +133,7 @@ const [errorMessage, setErrorMessage] = useState("");
           {/* </CardHeader> */}
           <CardBody className="px-lg-5 py-lg-5">
             <div className="text-center text-muted mb-4">
-              <small> sign up with credentials</small>
+               sign up with credentials
             </div>
             <Form role="form" onSubmit={handleSubmit}>
               <FormGroup>
@@ -187,7 +183,7 @@ const [errorMessage, setErrorMessage] = useState("");
                     placeholder="Password"
                     type="password"
                     name="password"
-                    autoComplete="new-password"
+                    // autoComplete="new-password"
                     required
                   />
                 </InputGroup>
@@ -208,7 +204,7 @@ const [errorMessage, setErrorMessage] = useState("");
                   />
                 </InputGroup>
               </FormGroup>
-             
+
               <FormGroup>
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
@@ -217,13 +213,13 @@ const [errorMessage, setErrorMessage] = useState("");
                     </InputGroupText>
                   </InputGroupAddon>
                   <InputMask
-                                                    mask=" (0399)-9999999"
-                                                    placeholder="Phone Number"
-                                                    className="form-control border-top-0 border-right-0 border-left-0 p-0"
-                                                    name="phone_no"
-                                                    id="phone_no"
-                                                    required
-                                                />
+                    mask=" (0399)-9999999"
+                    placeholder="Phone Number"
+                    className="form-control border-top-0 border-right-0 border-left-0 p-0"
+                    name="phone_no"
+                    id="phone_no"
+                    required
+                  />
                   {/* <Input
                     placeholder="Phone Number"
                     type="Number"
@@ -248,12 +244,12 @@ const [errorMessage, setErrorMessage] = useState("");
             </Form>
           </CardBody>
         </Card>
-        <Row className="my-4" style={{marginLeft:"100px"}}>
-                <Col  className="text-right" xs="6">
-                <span className="text-light"><small>Already have an account?</small></span>
-                <Link to={"/auth/login"} style={{ paddingLeft: '10px' }} className="text-success font-weight-300 ml-90"><small>Login</small></Link> 
-                </Col>
-          </Row>
+        <Row className="my-4" style={{ marginLeft: "100px" }}>
+          <Col className="text-right" xs="6">
+            <span className="text-light"><small>Already have an account?</small></span>
+            <Link to={"/auth/login"} style={{ paddingLeft: '10px' }} className="text-success font-weight-300 ml-90"><small>Login</small></Link>
+          </Col>
+        </Row>
       </Col>
     </>
   );

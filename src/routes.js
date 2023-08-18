@@ -187,6 +187,13 @@ var routes = [
     layout: "/auth"
   },
   {
+    path: "/ForgotPassword",
+    name: "FogotPassword",
+    icon: "ni ni-circle-08 text-pink",
+    component: Forgot_password,
+    layout: "/auth"
+  },
+  {
     path: "/Submitted Quizes",
     name: "Submitted Quizes",
     icon: "ni ni-circle-08 text-pink",
