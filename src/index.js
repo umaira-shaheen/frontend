@@ -38,6 +38,7 @@ import ContactUs from "views/Frontpages/ContactUs";
 import CoursesList from "views/Frontpages/CoursesList";
 import Our_features from "views/Frontpages/Our_features";
 import Detail from "views/Frontpages/Detail";
+import Certificate_Pdf from "views/examples/Certificate_pdf";
 import Forgot_password from "views/examples/Forgot_password";
 import Feature from "views/Frontpages/Feature";
 import Team from "views/Frontpages/Our_team";
@@ -56,6 +57,7 @@ root.render(
       <Route path="/AboutUs" render={(props) => <AboutUs {...props} />} />
       <Route path="/contact-us" render={(props) => <ContactUs {...props} />} />
       <Route path="/Contact" render={(props) => <Contact {...props} />} />
+      <Route path="/Certificate_Pdf" render={(props) => <Certificate_Pdf {...props} />} />
 
       <Route path="/coursesList" render={(props) => <CoursesList {...props} />} />
       <Route path="/Our_team" render={(props) => <Team {...props} />} />
@@ -63,7 +65,7 @@ root.render(
       <Route path="/testimonial" render={(props) => <Testimonial {...props} />} />
       <Route path="/detail" render={(props) => <Detail {...props} />} />
       <Route path="/QuizPdf" render={(props) => <MyPDFViewer {...props} />} />
-      <Route path="/Lectures" render={(props) => <StudentLectures {...props} />} />
+      {/* <Route path="/Lectures" render={(props) => <StudentLectures {...props} />} /> */}
       <Route path="/AssignmentPdf" render={(props) => <MyAssignmentPDF {...props} />} />
       <Route path="/feedbackform" render={(props) => <FeedbackForm {...props} />} />
       {/* <Redirect from="/" to="/admin/index" /> */}

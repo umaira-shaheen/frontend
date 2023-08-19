@@ -341,7 +341,7 @@ const Reports = (args) => {
           setQuiztableModal(true);
         }
         else {
-          setErrorMessage(res.data.message);
+          setErrorMessage(res.data);
           setError(true);
         }
       })

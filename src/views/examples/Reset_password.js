@@ -35,41 +35,59 @@ import {
   Col,
   Alert 
 } from "reactstrap";
-
-const Login = () => {
- const [isloggedin, setlogin]=useState(false);
-//  useState for error message. initially error message will be false
+const search = window.location.search;
+const params = new URLSearchParams(search);
+const token = params.get('token');
+console.log("token"+ token);
+const Reset_password = () => {
+ const [passwordchange, setpasswordchange]=useState(false);
+ const [isvalidrequest, setvalidrequest]=useState(false);
+ const [customerror, setcustomerror] = useState(false);
+ const onDismisscustomerror = () => setcustomerror(false);
 const [error, setError] = useState(false);
 const history = useHistory();
+axios({
+    method:'get',
+    withCredentials: true,
+    url :"http://localhost:8000/auth/CheckToken?token_id=" + token,
+  })
+  .then(res=>{
+    if(res.data==="valid request")
+    {
+        setvalidrequest(true);
+    } 
+  })
+  .catch(error=>{
+    setError(true)
+  })
+  
 function handleSubmit(e)
 {
 e.preventDefault()
-const email=e.target.elements.email.value;
 const password=e.target.elements.password.value;
-// axios.get('http://localhost:8000/auth/get_data?name=rida').then(res =>{console.log(res)})
+const confirm_password=e.target.elements.confirm_password.value;
+if(password!==confirm_password)
+{
+  setcustomerror(true);
+  setcustomMessage("Password and Confirm password are not same!");
+  return
+}
 axios({
   method:'post',
   withCredentials: true,
-  url :"http://localhost:8000/auth/validate",
-  data:{email:email , password:password}
+  url :"http://localhost:8000/auth/ResetPassword",
+  data:{confirm_password:confirm_password , password:password}
 })
 .then(res=>{
-  // return <Redirect to="/admin/index">
-  var state = localStorage.getItem('state');
-  state = JSON.parse(state)
-  if(state !== null && state !== undefined)
-  {
-    localStorage.clear('state')
-    localStorage.setItem('user', JSON.stringify(res.data));
-    history.push('/detail', state);
-    return
+ if(res.data==="success")
+ {
+    setpasswordchange(true);
+    history.push('/auth/login');
+ }
+ else {
+    setError(true);
+    setErrorMessage("Failed to update your password");
   }
-
-  setlogin(true);
-   const user_id=res.data._id;
-   const user_role=res.data.Role;
-   
-   localStorage.setItem('user', JSON.stringify(res.data));
 })
 .catch(error=>{
   setError(true)
@@ -77,15 +95,9 @@ axios({
 
 }
 const onDismiss = () => setError(false); 
-if (localStorage.getItem("user") != null) {
-  const storedUser = localStorage.getItem('user');
-  const user_info = JSON.parse(storedUser);
-  if(user_info.Email)
-  {
-    return <Redirect to="/admin/user-profile" />;
-  }
-}
+
   return (
+    isvalidrequest ?(
     <>
       <Col lg="5" md="7">
         <Card className="bg-secondary shadow border-0">
@@ -93,6 +105,9 @@ if (localStorage.getItem("user") != null) {
             <Alert color="danger" isOpen={error} toggle={onDismiss}>
               <strong>Error! </strong> Invalid credentials
             </Alert>
+            <Alert color="danger" isOpen={customerror} toggle={onDismisscustomerror}>
+                <strong> Error! {errorMessage} </strong>
+              </Alert>
             <div className="text-center text-muted mb-4">
             Sign in with credentials
             </div>
@@ -105,10 +120,9 @@ if (localStorage.getItem("user") != null) {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
-                    placeholder="Email"
-                    type="email"
-                    name="email"
-                    autoComplete="new-email"
+                    placeholder="password"
+                    type="password"
+                    name="password"
                   />
                 </InputGroup>
               </FormGroup>
@@ -120,44 +134,37 @@ if (localStorage.getItem("user") != null) {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
-                    placeholder="Password"
+                    placeholder="Confirm Password"
                     type="password"
-                    name="password"
+                    name="confirm_password"
                   />
                 </InputGroup>
               </FormGroup>
-              {/* <div className="custom-control custom-control-alternative custom-checkbox">
-                <input
-                  className="custom-control-input"
-                  id=" customCheckLogin"
-                  type="checkbox"
-                />
-                <label
-                  className="custom-control-label"
-                  htmlFor=" customCheckLogin"
-                >
-                  <span className="text-muted">Remember me</span>
-                </label>
-              </div> */}
+             
               <div className="text-center">
                 <Button className="my-4" color="primary" type="submit">
-                  Sign in
+                  Change Password
                 </Button>
               </div>
             </Form>
           </CardBody>
         </Card>
         <Row className="mt-3">
-          <Col xs="6">
+          {/* <Col xs="6">
           <Link to={"/auth/ForgotPassword"} className="text-light"><small>Forgot Password?</small></Link> 
           </Col>
           <Col className="text-right" xs="6">
             <Link to={"/auth/register"} className="text-light"><small>Create new account</small></Link> 
-          </Col>
+          </Col> */}
         </Row>
       </Col>
     </>
+    )
+    :(
+        alert("invalid Request")
+
+    )
   );
 };
 
-export default Login;
+export default Reset_password;

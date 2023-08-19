@@ -89,17 +89,16 @@ const Student_Courses = () => {
                                 </Row>
                             </CardHeader>
 
-                            <Table className="align-items-center table-flush" responsive>
+                            <Table className="align-items-center table-flush" responsive >
 
                                 <thead className="thead-light">
                                     <tr>
                                         <th scope="col">Course title</th>
-                                        <th scope="col">Course Id</th>
-
-                                        <th scope="col">Status</th>
+                                        <th scope="col">Course Code</th>
                                         <th scope="col">start date</th>
                                         <th scope="col">End date</th>
                                         <th scope="col">Open Lectures</th>
+                                        <th scope="col">Certificates</th>
 
                                     </tr>
                                 </thead>
@@ -117,9 +116,9 @@ const Student_Courses = () => {
                                                         </span>
 
                                                     </th>
-                                                    <td>{row._id}</td>
+                                                    <td>{row.Course_code}</td>
                                                    
-                                                    <td>{row.status}</td>
+                                                 
                                                     <td>
                                                         <Badge color="" className="badge-dot">
                                                             <i className="bg-info" />
@@ -136,13 +135,26 @@ const Student_Courses = () => {
                                                     </td>
                                                     <td>
                                                         <>
-                                                        <Link to={"/Lectures?course_id=" + row._id}
-                                                                        
+                                                        <Link to={"/admin/Lectures?course_id=" + row._id}                                                                        
                                                                     >
                                                                         <Button color="primary"
                                                                        
                                                                             style={{ fontSize: '13px', padding: '4px 8px', width: '120px' }}>
                                                                             Open Lectures
+
+                                                                        </Button>
+                                                                    </Link>
+                                                        </>
+                                                    </td>
+                                                    <td>
+                                                        <>
+                                                        <Link to={"/Certificate_Pdf?course_id=" + row._id}
+      
+                                                                    >
+                                                                        <Button color="primary"
+                                                                       
+                                                                            style={{ fontSize: '13px', padding: '4px 8px', width: '150px' }}>
+                                                                            Download Certificate
 
                                                                         </Button>
                                                                     </Link>
@@ -157,13 +169,6 @@ const Student_Courses = () => {
                       <td span="5">You are not enrolled in any course yet!! </td>
                     </tr>
                   }
-
-
-                                               
-
-
-
-
 
                                 </tbody>
                             </Table>

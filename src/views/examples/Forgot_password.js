@@ -18,6 +18,8 @@ import {
   } from "reactstrap";
 const Forgot_password=()=>{
   const [isloggedin, setlogin]=useState(false);
+  const [addsuccess, setaddSuccess] = useState(false);
+  const onDismissaddSuccess = () => setaddSuccess(false);
   //  useState for error message. initially error message will be false
   const [error, setError] = useState(false);
 
@@ -32,6 +34,10 @@ const Forgot_password=()=>{
     data:{email:email}
   })
   .then(res=>{
+    if(res.data==="Email Sent to reset your password")
+    {
+            setaddSuccess(true);
+    }
    
     
   })
@@ -47,12 +53,13 @@ const Forgot_password=()=>{
         <Col lg="5" md="7">
         <Card className="bg-secondary shadow border-0">
           <CardBody className="px-lg-5 py-lg-5">
+          <Alert color="success" isOpen={addsuccess} toggle={onDismissaddSuccess}>
+          <strong> Email Sent to reset your password! </strong>
+        </Alert>
           <Alert color="danger" isOpen={error} toggle={onDismiss}>
-              <strong>Error! </strong> Invalid credentials
+              <strong>Error! </strong> Email Address Donot Exists
             </Alert>
-            {/* <Alert color="danger" isOpen={error} toggle={onDismiss}>
-              <strong>Error! </strong> Invalid credentials
-            </Alert> */}
+           
             <div className="text-center text-muted mb-4">
               <small>Enter your email to change your password</small>
             </div>

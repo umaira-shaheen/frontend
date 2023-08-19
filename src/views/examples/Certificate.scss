@@ -1,0 +1,202 @@
+// import url('https://fonts.googleapis.com/css?family=Open+Sans|Pinyon+Script|Rochester') !important;
+.cert-custom-parent{ 
+  .row
+  {
+    width: 100%;
+    display: block;
+  }
+  .col-xs-12 {
+    width: 100%;
+    float: left;
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  .col-xs-2 {
+    width: 16.66666667%;
+    float: left;
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  .col-xs-4 {
+    width: 33.33333333%;
+    float: left;
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  .col-xs-8 {
+    width: 66.66666667%;
+    float: left;
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  @font-face {
+    font-family: 'Open Sans' !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    font-stretch: normal !important;
+    src: url(https://fonts.gstatic.com/s/opensans/v35/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVc.ttf) format('truetype') !important;
+  }
+  @font-face {
+    font-family: 'Pinyon Script' !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    src: url(https://fonts.gstatic.com/s/pinyonscript/v18/6xKpdSJbL9-e9LuoeQiDRQR8WOXaPw.ttf) format('truetype') !important;
+  }
+  @font-face {
+    font-family: 'Rochester' !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    src: url(https://fonts.gstatic.com/s/rochester/v18/6ae-4KCqVa4Zy6Fif-UC2FHS.ttf) format('truetype') !important;
+  }
+  .cursive {
+    font-family: 'Pinyon Script', cursive !important;
+  }
+  .sans {
+    font-family: 'Open Sans', sans-serif !important;
+  }
+  .bold {
+    font-weight: bold !important;
+  }
+  .block {
+    display: block !important;
+  }
+  .underline {
+    border-bottom: 1px solid #777 !important;
+    padding: 5px !important;
+    margin-bottom: 15px !important;
+  }
+  .margin-0 {
+    margin: 0 !important;
+  }
+  .padding-0 {
+    padding: 0 !important;
+  }
+  .pm-empty-space {
+    height: 40px !important;
+    width: 100% !important;
+  }
+  body {
+    padding: 10px 0 !important;
+    background: #ccc !important;
+  }
+  .pm-certificate-container {
+    position: relative !important;
+    width: 800px !important;
+    height: 600px !important;
+    background-color: #618597 !important;
+    padding: 30px !important;
+    color: #333 !important;
+    font-family: 'Open Sans', sans-serif !important;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5) !important;
+    /*background: -webkit-repeating-linear-gradient(
+      45deg,
+      #618597,
+      #618597 1px,
+      #b2cad6 1px,
+      #b2cad6 2px
+    ) !important;
+    background: repeating-linear-gradient(
+      90deg,
+      #618597,
+      #618597 1px,
+      #b2cad6 1px,
+      #b2cad6 2px
+    ) !important;*/
+  }
+  .pm-certificate-container .outer-border {
+    width: 794px !important;
+    height: 594px !important;
+    position: absolute !important;
+    left: 50% !important;
+    margin-left: -397px !important;
+    top: 50% !important;
+    margin-top: -297px !important;
+    border: 2px solid #fff !important;
+  }
+  .pm-certificate-container .inner-border {
+    width: 730px !important;
+    height: 530px !important;
+    position: absolute !important;
+    left: 50% !important;
+    margin-left: -365px !important;
+    top: 50% !important;
+    margin-top: -265px !important;
+    border: 2px solid #fff !important;
+  }
+  .pm-certificate-container .pm-certificate-border {
+    position: relative !important;
+    width: 720px !important;
+    height: 520px !important;
+    padding: 0 !important;
+    border: 1px solid #E1E5F0 !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    left: 50% !important;
+    margin-left: -360px !important;
+    top: 50% !important;
+    margin-top: -260px !important;
+  }
+  .pm-certificate-container .pm-certificate-border .pm-certificate-block {
+    width: 650px !important;
+    height: 200px !important;
+    position: relative !important;
+    left: 50% !important;
+    margin-left: -325px !important;
+    top: 70px !important;
+    margin-top: 0 !important;
+  }
+  .pm-certificate-container .pm-certificate-border .pm-certificate-header {
+    margin-bottom: 10px !important;
+  }
+  .pm-certificate-container .pm-certificate-border .pm-certificate-title {
+    position: relative !important;
+    top: 40px !important;
+  }
+  .pm-certificate-container .pm-certificate-border .pm-certificate-title h2 {
+    font-size: 26px !important;
+  }
+  .pm-certificate-container .pm-certificate-border .pm-certificate-body {
+    padding: 10px !important;
+  }
+  .pm-certificate-container .pm-certificate-border .pm-certificate-body .pm-name-text {
+    font-size: 20px !important;
+  }
+  .pm-certificate-container .pm-certificate-border .pm-earned {
+    margin: 15px 0 20px !important;
+  }
+  .pm-certificate-container .pm-certificate-border .pm-earned .pm-earned-text {
+    font-size: 20px !important;
+  }
+  .pm-certificate-container .pm-certificate-border .pm-earned .pm-credits-text {
+    font-size: 15px !important;
+  }
+  .pm-certificate-container .pm-certificate-border .pm-course-title .pm-earned-text {
+    font-size: 20px !important;
+  }
+  .pm-certificate-container .pm-certificate-border .pm-course-title .pm-credits-text {
+    font-size: 15px !important;
+  }
+  .pm-certificate-container .pm-certificate-border .pm-certified {
+    margin-top: 20px;
+    font-size: 17px !important;
+  }
+  .pm-certificate-container .pm-certificate-border .pm-certified .underline {
+    margin-bottom: 5px !important;
+  }
+  .pm-certificate-container .pm-certificate-border .pm-certificate-footer {
+    width: 650px !important;
+    height: 100px !important;
+    position: relative !important;
+    left: 50% !important;
+    margin-left: -325px !important;
+    bottom: -105px !important;
+  }
+}

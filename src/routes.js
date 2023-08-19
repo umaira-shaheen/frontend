@@ -30,6 +30,7 @@ import Upload_Lectures from "views/examples/Upload_Lectures";
 import ViewFeedback from "views/examples/ViewFeedback";
 import ViewMessege from "views/examples/ViewMessege";
 import Reports from "views/examples/Reports";
+import Generate_Certificate from "views/examples/Generate_Certificate";
 import StudentLectures from "views/examples/StudentLectures";
 // import Maps from "views/examples/Maps.js";
 import Forgot_password from "views/examples/Forgot_password";
@@ -62,6 +63,13 @@ var routes = [
     name: "Users",
     icon: "ni ni-single-02 text-yellow",
     component: User,
+    layout: "/admin"
+  },
+  {
+    path: "/Certificates",
+    name: "Certificates",
+    icon: "ni ni-single-02 text-yellow",
+    component: Generate_Certificate,
     layout: "/admin"
   },
 
@@ -143,13 +151,13 @@ var routes = [
     component: ViewMessege,
     layout: "/admin"
   },
-  // {
-  //   path: "/Lectures",
-  //   name: "Lectures",
-  //   icon: "ni ni-collection text-yellow",
-  //   component: StudentLectures,
-  //   layout: "/admin"
-  // },
+  {
+    path: "/Lectures",
+    name: "Lectures",
+    icon: "ni ni-collection text-yellow",
+    component: StudentLectures,
+    layout: "/admin"
+  },
   {
     path: "/Feedback Form",
     name: "Feedback Form",
