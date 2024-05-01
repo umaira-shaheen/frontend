@@ -39,8 +39,6 @@ const Add_Course = () => {
               <CardHeader className="border-0">
                 <h3 className="mb-5 text-center">Course Registration Form</h3>
                
-              
-             
               <Form>
                       <Row >
                         <Col md={6}>

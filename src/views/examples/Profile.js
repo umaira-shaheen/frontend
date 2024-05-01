@@ -1,5 +1,6 @@
-import React, { useState,useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
+import InputMask from 'react-input-mask';
 import {
   Button,
   Card,
@@ -21,11 +22,10 @@ const Profile = () => {
   const storedUser = localStorage.getItem('user');
   const user_info = JSON.parse(storedUser);
   var user_image = ""
-  if(user_info.User_img)
-  {
+  if (user_info.User_img) {
     user_image = user_info.User_img.replace('public/', '')
   }
-  else{
+  else {
     user_image = "uploads/avater.png";
   }
   const [error, setError] = useState(false);
@@ -53,19 +53,19 @@ const Profile = () => {
   //       if (res.data == "success") {
   //         setaddSuccess(true);
   //         console.log(res.data);
-          
+
   //       }
   //       else {
   //         setErrorMessage(res.data);
   //         setError(true);
   //       }
-        
+
   //       // window.location.reload(false);
   //     })
   //     .catch(error => {
   //       setErrorMessage("Failed to connect to backend")
   //       setError(true);
-       
+
   //     })
   // }
   function EditProfile(e) {
@@ -76,11 +76,10 @@ const Profile = () => {
     const last_name = e.target.lastname.value;
     const address = e.target.address.value;
     const phone_no = e.target.phoneno.value;
-    const bio=e.target.bio.value;
+    const bio = e.target.bio.value;
     const formData = new FormData();
-    if(profile_pic)
-    {
-     
+    if (profile_pic) {
+
       formData.append('file', profile_pic);
     }
     formData.append('user_name', user_name);
@@ -97,31 +96,30 @@ const Profile = () => {
       sameSite: 'none',
       url: "http://localhost:8000/User/EditProfile",
       data: formData,
-     })
+    })
       .then(res => {
         if (res.data.indicator == "success") {
           seteditSuccess(true);
-       
-          if(profile_pic)
-          {
-            user_info.User_img=res.data.path;
+
+          if (profile_pic) {
+            user_info.User_img = res.data.path;
             localStorage.setItem('user', JSON.stringify(user_info));
 
-           
+
           }
           user_info.Address = address;
-          user_info.UserName=  user_name;
-          user_info.First_name=first_name;
-          user_info.Last_name=last_name;
-          user_info.Phone_no=phone_no;
-          user_info.Bio=bio;
+          user_info.UserName = user_name;
+          user_info.First_name = first_name;
+          user_info.Last_name = last_name;
+          user_info.Phone_no = phone_no;
+          user_info.Bio = bio;
           localStorage.setItem('user', JSON.stringify(user_info));
 
           setRerender(!rerender);
 
         }
         else {
-          setErrorMessage(res.data.messege);          
+          setErrorMessage(res.data.messege);
           setError(true);
         }
 
@@ -132,29 +130,29 @@ const Profile = () => {
         if (error.response.data == "Not logged in") {
           localStorage.clear(); // Clear local storage
           history.push('/auth/login');
-      }
+        }
         setErrorMessage("Failed to connect to backend");
         setError(true);
         console.log(error);
 
       })
   };
-   const[profile_pic, setProfile_Pic]=useState();
-   const [rerender, setRerender] = useState(false);
+  const [profile_pic, setProfile_Pic] = useState();
+  const [rerender, setRerender] = useState(false);
   const handleFileInputChange = (event) => {
     const file_1 = event.target.files[0];
     setProfile_Pic(file_1);
     EditProfile();
   };
-  
+
   return (
     <>
-     
+
       <UserHeader />
-     
+
       {/* Page content */}
       <Container className="mt--7" fluid>
-      <Alert color="danger" isOpen={error} toggle={onDismiss}>
+        <Alert color="danger" isOpen={error} toggle={onDismiss}>
           <strong>Error! </strong> {errorMessage}
         </Alert>
         <Alert color="success" isOpen={editsuccess} toggle={onDismisseditSuccess}>
@@ -187,23 +185,23 @@ const Profile = () => {
                   >
                     Remove 
                   </Button> */}
-                 
-                    <Button
-                      className="float-right"
-                      color="default"
-                      size="sm"
-                      onClick={() => fileInputRef.current.click()}
-                    >
-                      Edit Image
-                    </Button>
-                    <input
-                      id="fileInput"
-                      type="file"
-                      ref={fileInputRef}
-                      style={{ display: 'none' }}
-                      onChange={handleFileInputChange}
-                    />
-                 
+
+                  <Button
+                    className="float-right"
+                    color="default"
+                    size="sm"
+                    onClick={() => fileInputRef.current.click()}
+                  >
+                    Edit Image
+                  </Button>
+                  <input
+                    id="fileInput"
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                    onChange={handleFileInputChange}
+                  />
+
                 </div>
               </CardHeader>
               <CardBody className="pt-0 pt-md-4">
@@ -212,7 +210,7 @@ const Profile = () => {
                   <div className="col">
                     <div className="card-profile-stats d-flex justify-content-center mt-md-5">
                       <div>
-                       
+
                         {/* <span className="heading">22</span>
                         <span className="description">Friends</span>
                       </div>
@@ -247,7 +245,7 @@ const Profile = () => {
                   <hr className="my-4" />
                   <div className="h5 mt-4" style={{ fontSize: '16px' }}>
                     <i className="ni business_briefcase-24 mr-2" />
-                   Bio
+                    Bio
                   </div>
                   <p>
                     “{user_info.Bio}”
@@ -364,6 +362,7 @@ const Profile = () => {
                             placeholder="First name"
                             type="text"
                             name="firstname"
+                            required
                           />
                         </FormGroup>
                       </Col>
@@ -383,6 +382,7 @@ const Profile = () => {
                             placeholder="Last name"
                             type="text"
                             name="lastname"
+                            required
                           />
                         </FormGroup>
                       </Col>
@@ -420,46 +420,49 @@ const Profile = () => {
                         <FormGroup>
                           <label
                             className="form-control-label"
-                            htmlFor="input-city"
+                            htmlFor="input-phonenumber"
                           >
                             Phone Number
                           </label>
-                          <Input
-                            className="form-control-alternative"
+                          <InputMask
+                            mask=" (0399)-9999999"
+                            placeholder="Phone Number"
                             defaultValue={user_info.Phone_no}
+                            className="form-control border-top-0 border-right-0 border-left-0 p-0"
                             id="input-city"
-                            placeholder="City"
                             type="text"
                             name="phoneno"
+                            required
                           />
+
                         </FormGroup>
                       </Col>
-                     
+
                     </Row>
                     <hr className="my-4" />
-                
-                <div className="pl-lg-4">
-                  <FormGroup>
-                    <label>About Me</label>
-                    <Input
-                      className="form-control-alternative"
-                      placeholder="A few words about you ..."
-                      rows="4"
-                      name="bio"
-                     defaultValue={user_info.Bio}
-                      type="textarea"
-                    />
-                  </FormGroup>
-                </div>
+
+                    <div className="pl-lg-4">
+                      <FormGroup>
+                        <label>About Me</label>
+                        <Input
+                          className="form-control-alternative"
+                          placeholder="A few words about you ..."
+                          rows="4"
+                          name="bio"
+                          defaultValue={user_info.Bio}
+                          type="textarea"
+                        />
+                      </FormGroup>
+                    </div>
                     <Button
                       color="info"
                       type="submit"
-                      // onClick={(e) => e.preventDefault()}
+                    // onClick={(e) => e.preventDefault()}
                     >
                       Edit profile
                     </Button>
                   </div>
-                 
+
                 </Form>
               </CardBody>
             </Card>

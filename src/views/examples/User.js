@@ -150,6 +150,8 @@ const User = (args) => {
         setEditModal(!editmodal);
       })
   };
+  const [customerror, setcustomerror] = useState(false);
+  const onDismisscustomerror = () => setcustomerror(false);
   function AddUser(e) {
     e.preventDefault();
     const first_name = e.target.Firstname.value;
@@ -164,10 +166,17 @@ const User = (args) => {
       data: { first_name: first_name, last_name: last_name, email: email, phone_no: phone_no, address: address, role: role },
     })
       .then(res => {
-        if (res.data == "success") {
+        if (res.data == "Email Sent to user and account registered") {
           setaddSuccess(true);
           GetUser();
           setRerender(!rerender);
+        }
+        else if(res.data=="Email Address already exists!")
+        {
+           setcustomerror(true);
+           setErrorMessage("Another user with same email address already exists!");
+
+          return
         }
         else {
           setErrorMessage(res.data);
@@ -234,7 +243,7 @@ const User = (args) => {
       <Container className="mt--7" fluid>
 
         <Alert color="success" isOpen={addsuccess} toggle={onDismissaddSuccess}>
-          <strong> New User Added! </strong>
+          <strong> Email Sent to user and account registered </strong>
         </Alert>
         <Alert color="danger" isOpen={error} toggle={onDismiss}>
           <strong>Error! </strong> {errorMessage}
@@ -401,6 +410,9 @@ const User = (args) => {
           <Form role="form" onSubmit={AddUser}>
             <ModalHeader toggle={toggle}>Add new User</ModalHeader>
             <ModalBody>
+            <Alert color="danger" isOpen={customerror} toggle={onDismisscustomerror}>
+                <strong> Error! {errorMessage} </strong>
+              </Alert>
               <Row >
                 <Col md={6}>
                   <FormGroup>

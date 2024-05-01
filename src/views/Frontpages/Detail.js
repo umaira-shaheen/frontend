@@ -122,7 +122,9 @@ const Detail = () => {
                                         <h1 className="display-4">{courseName}</h1>
                                     </div>
                                     <img className="img-fluid rounded w-100 mb-4" src={courseImage} alt="Image" />
-                                    <p>Tempor erat elitr at rebum at at clita aliquyam consetetur. Diam dolor diam ipsum et, tempor voluptua sit consetetur sit. Aliquyam diam amet diam et eos sadipscing labore. Clita erat ipsum et lorem et sit, sed stet no labore lorem sit. Sanctus clita duo justo et tempor consetetur takimata eirmod, dolores takimata consetetur invidunt magna dolores aliquyam dolores dolore. Amet erat amet et magna</p>
+                                    <p>UKCELL is offering this course for everyone. Whether you are a begineer or at intermediate level. This Course is best for you
+                                        We have professional and experienced teachers that provies hands on training and Quality education {description}
+                                    </p>
 
                                     <p>{description}</p>
                                 </div>

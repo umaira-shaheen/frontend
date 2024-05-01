@@ -96,7 +96,9 @@ const Reports = (args) => {
     setassignmentModal(!assignmentmodal);
   };
   const tabletoggle1 = (event) => {
+    setUsertable([]);
     settableModal(!tablemodal);
+
   };
   const quiztabletoggle1 = (event) => {
     setQuiztableModal(!quiztablemodal);
@@ -115,6 +117,7 @@ const Reports = (args) => {
   };
   const tableModalClose = () => {
     settableModal(!tablemodal);
+    setUsertable([]);
   }
   const quiztableModalClose = () => {
     setQuiztableModal(!quiztablemodal);
@@ -207,10 +210,29 @@ const Reports = (args) => {
 
   function RegistrationReport(e) {
     e.preventDefault();
-    const date_to = e.target.start_date.value;
-    const date_from = e.target.end_date.value;
-    const All_Time = e.target.time.value;
-    const url = `http://localhost:8000/Reports/StudentRegistrationReport?date_from=${date_from}&date_to=${date_to}&All_Time=${All_Time}`;
+    const date_to = e.target.end_date.value;
+    const date_from = e.target.start_date.value;
+    const All_Time = e.target.time.checked;
+    let url = '';
+
+    if (All_Time) {
+      // All Time is checked, so ignore start and end dates
+      url = `http://localhost:8000/Reports/StudentRegistrationReport?All_Time=true`;
+    }
+    else if (date_from && date_to) {
+      // All Time is not checked and both start and end dates are provided
+      url = `http://localhost:8000/Reports/StudentRegistrationReport?date_from=${date_from}&date_to=${date_to}`;
+    }
+    else {
+      setcustomerror(true);
+      setErrorMessage("Enter Start date and end date to get data");
+      return;
+
+    }
+
+    // if all time is checked then ignore start and end dates
+    // if all time is not checked then make sure that start and end dates are entered by the user.
+    // if(date_from && date_to) - this condition means that both dates are netered by the user
 
     axios({     //FindOneCourse on the base of id API Calling
       method: 'get',
@@ -219,16 +241,12 @@ const Reports = (args) => {
       url: url,
     })
       .then(res => {
-        if (res.data.message === "Success!") {
-          setRegistrationModal(!registrationmodal);
-          console.log(res.data);
-          setUsertable(res.data);
-          settableModal(true);
-        }
-        else {
-          setErrorMessage(res.data.message);
-          setError(true);
-        }
+
+        setRegistrationModal(!registrationmodal);
+        console.log(res.data);
+        setUsertable(res.data);
+        // setUsertable([])
+        settableModal(true);
 
       })
       .catch(error => {
@@ -245,8 +263,8 @@ const Reports = (args) => {
   }
   function EnrollmentReport(e) {
     e.preventDefault();
-    const date_to = e.target.start_date.value;
-    const date_from = e.target.end_date.value;
+    const date_from = e.target.start_date.value;
+    const date_to = e.target.end_date.value;
     const courses = e.target.courses.value;
     const url = `http://localhost:8000/Reports/CourseEnrollmentReport?date_from=${date_from}&date_to=${date_to}&courses=${courses}`;
 
@@ -263,6 +281,7 @@ const Reports = (args) => {
           setenrollmentreporttable(res.data.data);
           setenrollmenttableModal(true);
         }
+       
         else {
           setErrorMessage(res.data.message);
           setError(true);
@@ -274,9 +293,14 @@ const Reports = (args) => {
           localStorage.clear(); // Clear local storage
           history.push('/auth/login');
         }
+        else if(error.response.data.message==="Course not Found")
+        {
+          alert("Course not Found");
+          return;
+        }
         console.log(error);
         setError(true);
-        setRegistrationModal(!registrationmodal);
+        // setRegistrationModal(!registrationmodal);
       })
 
   }
@@ -313,8 +337,8 @@ const Reports = (args) => {
     GetAssignment();
     GetCourse();
     console.log(coursetable);
-    
- 
+
+
   }, []);
   function StudentQuizReport(e) {
     e.preventDefault();
@@ -322,7 +346,7 @@ const Reports = (args) => {
     const quiz = e.target.quizes.value;
     const start_date = e.target.start_date.value;
     const end_date = e.target.end_date.value;
-    const sorting=e.target.sorting.value;
+    const sorting = e.target.sorting.value;
     const url = `http://localhost:8000/Reports/StudentQuizReport?students=${students}&quizes=${quiz}&start_date=${start_date}&end_date=${end_date}&sorting=${sorting}`;
 
     axios({
@@ -352,12 +376,10 @@ const Reports = (args) => {
             localStorage.clear(); // Clear local storage
             history.push('/auth/login');
           }
-          else if (error.response.data.message && error.response.data.message == "Student not found in submitted list")
-          {
+          else if (error.response.data.message && error.response.data.message == "Student not found in submitted list") {
             alert('Student quiz not found')
           }
-          else if (error.response.data.message && error.response.data.message == "No Student has Submitted Quiz Yet!")
-          {
+          else if (error.response.data.message && error.response.data.message == "No Student has Submitted Quiz Yet!") {
             alert('No Student has Submitted Quiz Yet!')
           }
         }
@@ -390,6 +412,10 @@ const Reports = (args) => {
           setassignmentreporttable(res.data.data);
           setAssignmenttableModal(true);
         }
+        else if (res.data === "No Assignment found between these dates!") {
+          alert("No Assignment found between these dates!");
+          return;
+        }
         else {
           setErrorMessage(res.data.message);
           setError(true);
@@ -402,13 +428,11 @@ const Reports = (args) => {
             localStorage.clear(); // Clear local storage
             history.push('/auth/login');
           }
-          else if (error.response.data.message && error.response.data.message == "Student not found in submitted list")
-          {
+          else if (error.response.data.message && error.response.data.message == "Student not found in submitted list") {
             alert('Student Assignment not found')
             return
           }
-          else if (error.response.data.message && error.response.data.message == "No Student has Submitted Quiz Yet!")
-          {
+          else if (error.response.data.message && error.response.data.message == "No Student has Submitted Quiz Yet!") {
             alert('No Student has Submitted Quiz Yet!')
             return
           }
@@ -535,46 +559,48 @@ const Reports = (args) => {
                 <tbody>
 
                   {usertable ?
-                    usertable.map((row, index) => {
-                      return (
-                        <tr key={index}>
-                          <th scope="row">
-                            {/* <i className="ni ni-book-bookmark text-blue"/> */}
-                            <span className="mb-0 text-sm">
-                              {row.First_name}
-                            </span>
+                    usertable
+                      .filter(row => row.Role === 'Student')
+                      .map((row, index) => {
+                        return (
+                          <tr key={index}>
+                            <th scope="row">
+                              {/* <i className="ni ni-book-bookmark text-blue"/> */}
+                              <span className="mb-0 text-sm">
+                                {row.First_name}
+                              </span>
 
-                          </th>
-                          <th scope="row">
-                            {/* <i className="ni ni-book-bookmark text-blue"/> */}
-                            <span className="mb-0 text-sm">
-                              {row.Last_name}
-                            </span>
+                            </th>
+                            <th scope="row">
+                              {/* <i className="ni ni-book-bookmark text-blue"/> */}
+                              <span className="mb-0 text-sm">
+                                {row.Last_name}
+                              </span>
 
-                          </th>
-                          <th scope="row">
-                            {/* <i className="ni ni-book-bookmark text-blue"/> */}
-                            <span className="mb-0 text-sm">
-                              {row.Email}
-                            </span>
+                            </th>
+                            <th scope="row">
+                              {/* <i className="ni ni-book-bookmark text-blue"/> */}
+                              <span className="mb-0 text-sm">
+                                {row.Email}
+                              </span>
 
-                          </th>
-                          <th scope="row">
-                            {/* <i className="ni ni-book-bookmark text-blue"/> */}
-                            <span className="mb-0 text-sm">
-                              {row.Phone_no}
-                            </span>
+                            </th>
+                            <th scope="row">
+                              {/* <i className="ni ni-book-bookmark text-blue"/> */}
+                              <span className="mb-0 text-sm">
+                                {row.Phone_no}
+                              </span>
 
-                          </th>
-                          <th scope="row">
-                            {/* <i className="ni ni-book-bookmark text-blue"/> */}
-                            <span className="mb-0 text-sm">
-                              {row.Address}
-                            </span>
+                            </th>
+                            <th scope="row">
+                              {/* <i className="ni ni-book-bookmark text-blue"/> */}
+                              <span className="mb-0 text-sm">
+                                {row.Address}
+                              </span>
 
-                          </th>
-                        </tr>)
-                    })
+                            </th>
+                          </tr>)
+                      })
                     :
                     <tr>
                       <td span="5">No User Record Found!</td>
@@ -585,9 +611,9 @@ const Reports = (args) => {
 
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" type="submit" >
+              {/* <Button color="primary" type="submit" >
                 Download in Excel
-              </Button>{' '}
+              </Button>{' '} */}
               <Button color="secondary" onClick={tableModalClose}>
                 Cancel
               </Button>
@@ -705,9 +731,9 @@ const Reports = (args) => {
 
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" type="submit" >
+              {/* <Button color="primary" type="submit" >
                 Download in Excel
-              </Button>{' '}
+              </Button>{' '} */}
               <Button color="secondary" onClick={quiztableModalClose}>
                 Cancel
               </Button>
@@ -818,10 +844,10 @@ const Reports = (args) => {
 
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" type="submit" >
+              {/* <Button color="primary" type="submit" >
                 Download in Excel
-              </Button>{' '}
-              <Button color="secondary" onClick={quiztableModalClose}>
+              </Button>{' '} */}
+              <Button color="secondary" onClick={teachertableModalClose}>
                 Cancel
               </Button>
             </ModalFooter>
@@ -936,9 +962,9 @@ const Reports = (args) => {
 
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" type="submit" >
+              {/* <Button color="primary" type="submit" >
                 Download in Excel
-              </Button>{' '}
+              </Button>{' '} */}
               <Button color="secondary" onClick={coursetableModalClose}>
                 Cancel
               </Button>
@@ -1016,7 +1042,7 @@ const Reports = (args) => {
                           <td>
                             {row.Students.map((student) => (
                               <div key={student}>
-                                {student}
+                                {student.Student_First_name} {student.Student_Last_name}
                               </div>
                             ))}
                           </td>
@@ -1028,10 +1054,17 @@ const Reports = (args) => {
                       <td>{enrollmentreporttable instanceof Array ? enrollmentreporttable[0].Course_title : enrollmentreporttable?.Course_title}</td>
                       <td>{enrollmentreporttable instanceof Array ? enrollmentreporttable[0].Course_code : enrollmentreporttable?.Course_code}</td>
                       <td>{enrollmentreporttable instanceof Array ? enrollmentreporttable[0].Course_category : enrollmentreporttable?.Course_category}</td>
-                      <td>{enrollmentreporttable instanceof Array ? enrollmentreporttable[0].start_date : enrollmentreporttable?.start_date}</td>
-                      <td>{enrollmentreporttable instanceof Array ? enrollmentreporttable[0].end_date : enrollmentreporttable?.end_date}</td>
-                      <td>{enrollmentreporttable instanceof Array ? enrollmentreporttable[0].status : enrollmentreporttable?.status}</td>
-                      <td>{enrollmentreporttable instanceof Array ? enrollmentreporttable[0].Students : enrollmentreporttable?.Students}</td>
+                      <td>
+                        {enrollmentreporttable instanceof Array
+                          ? moment(enrollmentreporttable[0].start_date).format('YYYY-MM-DD ')
+                          : moment(enrollmentreporttable?.start_date).format('YYYY-MM-DD ')}
+                      </td>
+                      <td>
+                        {enrollmentreporttable instanceof Array
+                          ? moment(enrollmentreporttable[0].end_date).format('YYYY-MM-DD ')
+                          : moment(enrollmentreporttable?.end_date).format('YYYY-MM-DD ')}
+                      </td>
+                      <td>{enrollmentreporttable instanceof Array ? enrollmentreporttable[0].Student_First_name : enrollmentreporttable?.Student_Last_name}</td>
 
                     </tr>
 
@@ -1042,9 +1075,9 @@ const Reports = (args) => {
 
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" type="submit" >
+              {/* <Button color="primary" type="submit" >
                 Download in Excel
-              </Button>{' '}
+              </Button>{' '} */}
               <Button color="secondary" onClick={enrollmenttableModalClose}>
                 Cancel
               </Button>
@@ -1110,12 +1143,12 @@ const Reports = (args) => {
                           <td>
                             {row.Submitted_by.map((student) => (
                               <div key={student}>
-                               {`${student.Student_First_name} ${student.Student_Last_name}`}
+                                {`${student.Student_First_name} ${student.Student_Last_name}`}
                               </div>
                             ))}
                           </td>
                           <td>
-                          {row.obtained_marks.map((obtainedmarks) => (
+                            {row.obtained_marks.map((obtainedmarks) => (
                               <div key={obtainedmarks}>
                                 {obtainedmarks === '-1' ? "Not Marked" : obtainedmarks}
                               </div>
@@ -1151,9 +1184,9 @@ const Reports = (args) => {
               </Table>
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" type="submit" >
+              {/* <Button color="primary" type="submit" >
                 Download in Excel
-              </Button>{' '}
+              </Button>{' '} */}
               <Button color="secondary" onClick={assignmenttableModalClose}>
                 Cancel
               </Button>
@@ -1206,6 +1239,7 @@ const Reports = (args) => {
                       placeholder="time"
                       type="checkbox"
                       style={{ width: '30px', height: '30px', marginLeft: '3px' }}
+                      defaultChecked={false} // Set this to `false` to make the checkbox unchecked by default
 
                     />
                     <Label for="time" className="ml-5">
@@ -1218,7 +1252,7 @@ const Reports = (args) => {
 
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" type="submit" onClick={() => settableModal(true)}>
+              <Button color="primary" type="submit">
                 Generate Report
               </Button>{' '}
               <Button color="secondary" onClick={RegistrationModalClose}>
@@ -1340,7 +1374,7 @@ const Reports = (args) => {
                       <option value="heighest">By heighest Marks</option>
                       <option value="lowest">By Lowest Marks</option>
 
-                      
+
                     </Input>
 
                   </FormGroup>
@@ -1429,7 +1463,7 @@ const Reports = (args) => {
               </Row>
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" type="submit" onClick={() => setenrollmenttableModal(true)}>
+              <Button color="primary" type="submit" >
                 Generate Report
               </Button>{' '}
               <Button color="secondary" onClick={enrollmentModalClose}>
@@ -1532,7 +1566,7 @@ const Reports = (args) => {
               </Row>
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" type="submit" onClick={() => setcoursetableModal(true)}>
+              <Button color="primary" type="submit">
                 Generate Report
               </Button>{' '}
               <Button color="secondary" onClick={courseModalClose}>
@@ -1652,7 +1686,7 @@ const Reports = (args) => {
                       <option value="heighest">By heighest Marks</option>
                       <option value="lowest">By Lowest Marks</option>
 
-                      
+
                     </Input>
 
                   </FormGroup>
@@ -1798,7 +1832,7 @@ const Reports = (args) => {
               </Row>
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" type="submit" onClick={() => setteachertableModal(true)}>
+              <Button color="primary" type="submit" >
                 Generate Report
               </Button>{' '}
               <Button color="secondary" onClick={teachertoggle}>

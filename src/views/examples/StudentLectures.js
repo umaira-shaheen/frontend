@@ -31,16 +31,18 @@ import {
 } from "reactstrap";
 import NewHeader from "components/Headers/NewHeader.js";
 
-const StudentLectures=()=>{
-   
+const StudentLectures = () => {
+
     const [lecturetable, setLecturetable] = useState(null);
     const [coursename, setCourseName] = useState(null);
+    const [id, setLectureid] = useState(null);
+    const [lecturetitle, setLectureTitle] = useState(null);
+    const [lecturecourse, setLectureCourse] = useState(null);
 
-       
-       
-
-    function DownloadLecture(id)
-    {
+    const [lecturenumber, setLectureNumber] = useState(null);
+    const [description, setDescription] = useState(null);
+    const [lec_files, setLecturefiles] = useState(null);
+    function DownloadLecture(id) {
         axios({     //FindOneCourse on the base of id API Calling
             method: 'get',
             withCredentials: true,
@@ -48,21 +50,21 @@ const StudentLectures=()=>{
             url: "http://localhost:8000/Lecture/FindLecture?temp_id=" + id
         })
             .then(res => {
-                if (res.data) {        
+                if (res.data) {
                     let lec_files = res.data.Lecture_files
                     console.log(lec_files);
                     lec_files.forEach(fileUrl => {
-                    
-                        new JsFileDownloader({ 
+
+                        new JsFileDownloader({
                             url: "http://localhost:8000/" + fileUrl
                         })
-                        .then(function () {
-                            console.log('success')
-                        })
-                        .catch(function (error) {
-                           console.log('error')
-                        });
-                      });             
+                            .then(function () {
+                                console.log('success')
+                            })
+                            .catch(function (error) {
+                                console.log('error')
+                            });
+                    });
                 }
             })
             .catch(error => {
@@ -74,47 +76,77 @@ const StudentLectures=()=>{
                 }
                 console.log(error);
                 setError(true);
-               
+
             })
     }
 
     useEffect(() => {
-
         const search = window.location.search;
         const params = new URLSearchParams(search);
         const course_id = params.get('course_id');
         console.log('course ID: ' + course_id);
-
         axios({     //FindOneCourse on the base of id API Calling
             method: 'get',
             url: "http://localhost:8000/course/FindCourse?temp_id=" + course_id
-          })
+        })
             .then(res => {
-              if (res.data) {
-          
-                setCourseName(res.data.Course_title);
-            
-              }
-      
+                if (res.data) {
+
+                    setCourseName(res.data.Course_title);
+
+                }
+
             })
             .catch(error => {
-      
-              console.log(error);
-              setError(true);
-        
+
+                console.log(error);
+                setError(true);
+
             })
-    
+        StudentLecture();
+
     }, []);
-    return(
+    function StudentLecture() {
+        const search = window.location.search;
+        const params = new URLSearchParams(search);
+        const course_id = params.get('course_id');
+        console.log('course ID: ' + course_id);
+        axios({     //FindOneCourse on the base of id API Calling
+            method: 'get',
+            url: "http://localhost:8000/Lecture/StudentFindLecture?course_id=" + course_id
+        })
+            .then(res => {
+                if (res.data) {
+
+                    setLecturetable(res.data);
+                    setLectureTitle(res.data.Course_title);
+                    setLectureNumber(res.data.Course_title);
+                    setLectureCourse(res.data.Course_title);
+                    setDescription(res.data.Course_title);
+
+
+                }
+
+            })
+            .catch(error => {
+
+                console.log(error);
+                setError(true);
+
+            })
+    }
+    const onDismiss = () => setError(false);
+    const [error, setError] = useState(false);
+    return (
         <>
-        <NewHeader/>
-        <Container className="mt--7" fluid>
-        <Row>
+            <NewHeader />
+            <Container className="mt--7" fluid>
+                <Row>
                     <div className="col">
-                    <h2 style={{color:"white"}}>{coursename}</h2>
+                        <h2 style={{ color: "white" }}>{coursename}</h2>
                         <Card className="shadow">
                             <CardHeader className="border-0">
-                             
+
                             </CardHeader>
 
                             <Table className="align-items-center table-flush" responsive>
@@ -128,7 +160,7 @@ const StudentLectures=()=>{
 
                                         <th scope="col">Description</th>
 
-                                        
+
 
                                         <th scope="col" />
                                     </tr>
@@ -166,7 +198,7 @@ const StudentLectures=()=>{
                                                         {<div dangerouslySetInnerHTML={{ __html: row.description }} />}
 
                                                     </td>
-                                                   
+
                                                 </tr>)
                                         })
                                         :

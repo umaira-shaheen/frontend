@@ -103,7 +103,7 @@ const Upload_Lectures = (args) => {
                 console.log(error);
             })
     }
-
+    const [rerender, setRerender] = useState(false);
     function AddLecture(e) {
         e.preventDefault();
 
@@ -117,13 +117,6 @@ const Upload_Lectures = (args) => {
             formData.append('files', file);
         });
 
-
-        // if (Lecturefiles) {
-        //     formData.append('files', Lecturefiles);
-        // }
-        // if (audiofile) {
-        //     formData.append('file', audiofile);
-        // }
         formData.append('Lecture_title', lecture_title);
         formData.append('Lecture_Number', lecture_number);
         formData.append('Lecture_Course', lecture_course);
@@ -140,8 +133,9 @@ const Upload_Lectures = (args) => {
                 if (res.data) {
                     console.log(res.data);
                     setaddSuccess(true);
-                    //   GetTe();
-                    //   setRerender(!rerender);
+                    GetLecture();
+                   
+                      setRerender(!rerender);
                 }
                 else {
                     setErrorMessage(res.data);
@@ -163,12 +157,10 @@ const Upload_Lectures = (args) => {
         const lecture_course = e.target.courses.value;
         const description = editorContent;
         const formData = new FormData();
-        if (file) {
-            formData.append('file', file);
-        }
-        // if (audiofile) {
-        //     formData.append('audiofile', audiofile);
-        // }
+        files.forEach((file) => {
+            formData.append('files', file);
+        });
+        formData.append('id', id);
         formData.append('Lecture_title', lecture_title);
         formData.append('Lecture_Number', lecture_number);
         formData.append('Lecture_Course', lecture_course);
@@ -465,7 +457,7 @@ const Upload_Lectures = (args) => {
                                             initialValue='Lecture Description'
                                             onEditorChange={HandleEditor}
                                             defaultValue={description}
-                                            required
+                                            
                                         />
                                     </FormGroup>
                                 </Col>
@@ -474,7 +466,7 @@ const Upload_Lectures = (args) => {
                         </ModalBody>
                         <ModalFooter>
                             <Button color="primary" type="submit" >
-                                Add Course
+                                Add Lecture
                             </Button>{' '}
                             <Button color="secondary" onClick={toggle}>
                                 Cancel
@@ -572,7 +564,10 @@ const Upload_Lectures = (args) => {
                                 <Col md={6}>
                                     <Label>
                                         Upload Lecture Notes (Pdf):
-                                        <Input type="file" onChange={handleFileInputChange} />
+                                        <Input type="file" onChange={handleFileInputChange} 
+                                        multiple
+                                        />
+                                        
                                     </Label>
                                 </Col>
 
@@ -597,7 +592,7 @@ const Upload_Lectures = (args) => {
                         </ModalBody>
                         <ModalFooter>
                             <Button color="primary" type="submit" >
-                                Edit Course
+                                Edit Lecture
                             </Button>{' '}
                             <Button color="secondary" onClick={editModalClose}>
                                 Cancel

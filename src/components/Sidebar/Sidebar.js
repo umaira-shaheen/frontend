@@ -170,7 +170,13 @@ const Sidebar = (props) => {
       if (user_info.Role === "Teacher" && route.name === "Reports") {
         return false; // Exclude the route for Teacher role
       }
-      if (route.name === "Login" || route.name === "Register" || route.name == "FogotPassword" || route.name=="Lectures") {
+      if (user_info.Role === "Teacher" && route.name === "Certificates") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (user_info.Role === "Student" && route.name === "Certificates") {
+        return false; // Exclude the route for Teacher role
+      }
+      if (route.name === "Login" || route.name === "Register" || route.name == "FogotPassword" || route.name=="Lectures" || route.name=="Reset Password") {
         return false; // Exclude the Login and Register routes
       }
       return true; // Include all other routes

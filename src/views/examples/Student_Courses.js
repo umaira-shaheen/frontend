@@ -34,7 +34,7 @@ const Student_Courses = () => {
     const onDismiss = () => setError(false);
     const [coursetable, setCoursetable] = useState(null);
     var moment = require('moment');
-    const history= useHistory();
+    const history = useHistory();
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
         const user_info = JSON.parse(storedUser);
@@ -59,7 +59,7 @@ const Student_Courses = () => {
                         console.log(res.data.data);
                         setCoursetable(res.data.data);
                     }
-                    else if(res.data.message == "only student can access this") {
+                    else if (res.data.message == "only student can access this") {
                         alert("only student can access this")
                     }
                 })
@@ -69,7 +69,7 @@ const Student_Courses = () => {
                         history.push('/auth/login');
                     }
 
-                    
+
                     console.log(error);
                 })
         }
@@ -112,13 +112,13 @@ const Student_Courses = () => {
                                                     <th scope="row">
                                                         {/* <i className="ni ni-book-bookmark text-blue"/> */}
                                                         <span className="mb-0 text-sm">
-                                                        {row.Course_title}
+                                                            {row.Course_title}
                                                         </span>
 
                                                     </th>
                                                     <td>{row.Course_code}</td>
-                                                   
-                                                 
+
+
                                                     <td>
                                                         <Badge color="" className="badge-dot">
                                                             <i className="bg-info" />
@@ -135,40 +135,37 @@ const Student_Courses = () => {
                                                     </td>
                                                     <td>
                                                         <>
-                                                        <Link to={"/admin/Lectures?course_id=" + row._id}                                                                        
-                                                                    >
-                                                                        <Button color="primary"
-                                                                       
-                                                                            style={{ fontSize: '13px', padding: '4px 8px', width: '120px' }}>
-                                                                            Open Lectures
+                                                            <Link to={"/admin/Lectures?course_id=" + row._id}
+                                                            >
+                                                                <Button color="primary"
 
-                                                                        </Button>
-                                                                    </Link>
+                                                                    style={{ fontSize: '13px', padding: '4px 8px', width: '120px' }}>
+                                                                    Open Lectures
+
+                                                                </Button>
+                                                            </Link>
                                                         </>
                                                     </td>
                                                     <td>
                                                         <>
-                                                        <Link to={"/Certificate_Pdf?course_id=" + row._id}
-      
-                                                                    >
-                                                                        <Button color="primary"
-                                                                       
-                                                                            style={{ fontSize: '13px', padding: '4px 8px', width: '150px' }}>
-                                                                            Download Certificate
-
-                                                                        </Button>
-                                                                    </Link>
+                                                            <Link to={"/Certificate_Pdf?course_id=" + row._id} target="_blank">
+                                                                <Button
+                                                                    color="primary"
+                                                                    style={{ fontSize: '13px', padding: '4px 8px', width: '150px' }}
+                                                                >
+                                                                    Download Certificate
+                                                                </Button>
+                                                            </Link>
                                                         </>
                                                     </td>
 
-
-                                                    </tr>)
-                    })
-                    :
-                    <tr>
-                      <td span="5">You are not enrolled in any course yet!! </td>
-                    </tr>
-                  }
+                                                </tr>)
+                                        })
+                                        :
+                                        <tr>
+                                            <td span="5">You are not enrolled in any course yet!! </td>
+                                        </tr>
+                                    }
 
                                 </tbody>
                             </Table>

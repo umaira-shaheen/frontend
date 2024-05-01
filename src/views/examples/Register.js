@@ -87,9 +87,7 @@ const Register = () => {
           <Alert color="success" isOpen={isregistered} toggle={onDismiss}>
             <strong> You are successfully registered!! </strong>
           </Alert>
-          <Alert color="danger" isOpen={error} toggle={onDismiss}>
-            <strong>Error! </strong> {errorMessage}
-          </Alert>
+         
 
           {/* <div className="text-muted text-center mt-2 mb-4">
               <small>Sign up with</small>
@@ -132,6 +130,9 @@ const Register = () => {
             </div> */}
           {/* </CardHeader> */}
           <CardBody className="px-lg-5 py-lg-5">
+          <Alert color="danger" isOpen={error} toggle={onDismiss}>
+            <strong>Error! </strong> {errorMessage}
+          </Alert>
             <div className="text-center text-muted mb-4">
                sign up with credentials
             </div>
@@ -180,9 +181,11 @@ const Register = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
-                    placeholder="Password"
+                    placeholder="Enter password of max 8 characters"
                     type="password"
                     name="password"
+                    minLength={4} // Set the minimum password length
+                    maxLength={8} // Set the maximum password length
                     // autoComplete="new-password"
                     required
                   />
@@ -199,6 +202,8 @@ const Register = () => {
                     placeholder="Confirm Password"
                     type="password"
                     name="confirm_password"
+                    minLength={4} // Set the minimum password length
+                    maxLength={8} // Set the maximum password length
                     // autoComplete="conform-password"
                     required
                   />
@@ -209,12 +214,13 @@ const Register = () => {
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="ni ni-phone-call" />
+                    <i className="ni ni-mobile-button" />
                     </InputGroupText>
                   </InputGroupAddon>
                   <InputMask
                     mask=" (0399)-9999999"
                     placeholder="Phone Number"
+                   
                     className="form-control border-top-0 border-right-0 border-left-0 p-0"
                     name="phone_no"
                     id="phone_no"

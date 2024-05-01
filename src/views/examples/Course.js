@@ -94,7 +94,7 @@ const Course = (args) => {
     const status=e.target.status.value
     const selectedDate = new Date(start_date);
     const currentDate = new Date();
-    if (selectedDate < currentDate) {
+    if (selectedDate <= currentDate) {
       setcustomerror(true);
       setErrorMessage("Start date should be greater than or equal to today's date");
       // setError(true);
@@ -108,11 +108,25 @@ const Course = (args) => {
       // setEditModal(!editmodal);
       return;
     }
+    const formData = new FormData();
+    if(file)
+    {
+      formData.append('file', file);
+    }
+    formData.append('id', id);
+    formData.append('course_name', course_name);
+    formData.append('course_code', course_code);
+    formData.append('start_date', start_date);
+    formData.append('end_date', end_date);
+    formData.append('Description', Description);
+    formData.append('Category', Category);
+    formData.append('status', status);
     axios({     //edit Course on the base of id API Calling
       method: 'post',
       url: "http://localhost:8000/course/EditCourse",
-       data: { id: id, course_name: course_name, course_code: course_code, status:status, start_date: start_date, end_date: end_date, Description: Description, Category: Category },
-    
+      //  data: { id: id, course_name: course_name, course_code: course_code, status:status, start_date: start_date, end_date: end_date, Description: Description, Category: Category },
+      data: formData,
+
     })
       .then(res => {
         if (res.data == "success") {
@@ -149,10 +163,14 @@ const Course = (args) => {
       data: { teacher_id: teacher_id, course_id: course_id },
     })
       .then(res => {
-        if (res.data == "success") {
-          seteditSuccess(true);
+        if (res.data == "success!") {
+          setassignSuccess(true);
           GetCourse();
           setRerender(!rerender);
+        }
+        else if(res.data=="You have already assigned this course to this teacher")
+        {
+          alert("You have already assigned this course to this teacher");
         }
         else {
           setErrorMessage(res.data);
@@ -206,6 +224,8 @@ const Course = (args) => {
   const [error, setError] = useState(false);
   const [addsuccess, setaddSuccess] = useState(false);
   const [editsuccess, seteditSuccess] = useState(false);
+  
+  const [assignsuccess, setassignSuccess] = useState(false);
   const [deletesuccess, setdeleteSuccess] = useState(false);
   const [tempId, setTempId] = useState('');
   const [tempName, setTempName] = useState('');
@@ -317,6 +337,13 @@ const Course = (args) => {
           GetCourse();
           setRerender(!rerender);
         }
+        else if(res.data=="Course with the same coursecode or coursename exists")
+        {
+          // alert("Course with the same coursecode or coursename exists");
+          setcustomerror(true);
+          setErrorMessage("Course with the same coursecode or coursename exists");
+          return;
+        }
         else {
           setErrorMessage(res.data);
           setError(true);
@@ -334,6 +361,7 @@ const Course = (args) => {
   const onDismissaddSuccess = () => setaddSuccess(false);
   const onDismissdeleteSuccess = () => setdeleteSuccess(false);
   const onDismisseditSuccess = () => seteditSuccess(false);
+  const onDismissassignSuccess = () => setassignSuccess(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [modal, setModal] = useState(false);
   const [editmodal, setEditModal] = useState(false);
@@ -395,6 +423,9 @@ const [currentCourse, setCurrentCourse] = useState("No Course Selected Yet");
         </Alert>
         <Alert color="success" isOpen={editsuccess} toggle={onDismisseditSuccess}>
           <strong> Course Updated successfully! </strong>
+        </Alert>
+        <Alert color="success" isOpen={assignsuccess} toggle={onDismissassignSuccess}>
+          <strong> Course Assigned successfully! </strong>
         </Alert>
         <Modal isOpen={modal} toggle={toggle} {...args} size='lg'>
           <Form role="form" onSubmit={AddCourse}>

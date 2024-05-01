@@ -47,8 +47,8 @@ const Attempt_Quiz = () => {
     const [file, setFile] = useState(null);
     const fileInputRef = useRef(null);
     const [rerender, setRerender] = useState(false);
-    const handleFileInputChange = (event, id) => {
-
+    const handleFileInputChange = (event, id, index) => {
+        console.log(index)
         const file = event.target.files[0];
         setFile(file);
         console.log(file);
@@ -281,16 +281,18 @@ const Attempt_Quiz = () => {
                                                                             color="default"
                                                                             size="sm"
                                                                             style={{ width: '120px' }}
-                                                                            onClick={() => fileInputRef.current.click()}
+                                                                            // onClick={() => fileInputRef.current.click()}
+                                                                            // onClick={() => alert(row._doc._id)}
                                                                         >
-                                                                            Submit Quiz
+                                                                            <label style={{margin: 0}} htmlFor={"fileInput_" + index }>Submit Quiz</label>
                                                                         </Button>
                                                                         <input
-                                                                            id="fileInput"
+                                                                            id={"fileInput_" + index }
                                                                             type="file"
-                                                                            ref={fileInputRef}
+                                                                            // ref={fileInputRef}
                                                                             style={{ display: 'none' }}
-                                                                            onChange={(event) => handleFileInputChange(event, row._doc._id)}
+                                                                            // onClick={() => alert(row._doc._id)}
+                                                                            onChange={(event) => handleFileInputChange(event, row._doc._id, index)}
                                                                         />
                                                                     </>
                                                                 ))

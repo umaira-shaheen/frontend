@@ -32,6 +32,7 @@ import ViewMessege from "views/examples/ViewMessege";
 import Reports from "views/examples/Reports";
 import Generate_Certificate from "views/examples/Generate_Certificate";
 import StudentLectures from "views/examples/StudentLectures";
+import Reset_password from "views/examples/Reset_password";
 // import Maps from "views/examples/Maps.js";
 import Forgot_password from "views/examples/Forgot_password";
 import Register from "views/examples/Register.js";
@@ -68,7 +69,7 @@ var routes = [
   {
     path: "/Certificates",
     name: "Certificates",
-    icon: "ni ni-single-02 text-yellow",
+    icon: "ni ni-badge",
     component: Generate_Certificate,
     layout: "/admin"
   },
@@ -140,7 +141,7 @@ var routes = [
   {
     path: "/Feedbacks",
     name: "Feedbacks",
-    icon: "ni ni-collection text-yellow",
+    icon: "ni ni-paper-diploma",
     component: ViewFeedback,
     layout: "/admin"
   },
@@ -168,7 +169,7 @@ var routes = [
   {
     path: "/Reports",
     name: "Reports",
-    icon: "ni ni-collection text-yellow",
+    icon: "ni ni-folder-17",
     component: Reports,
     layout: "/admin"
   },
@@ -192,6 +193,13 @@ var routes = [
     name: "Register",
     icon: "ni ni-circle-08 text-pink",
     component: Register,
+    layout: "/auth"
+  },
+  {
+    path: "/reset-password",
+    name: "Reset Password",
+    icon: "ni ni-circle-08 text-pink",
+    component: Reset_password,
     layout: "/auth"
   },
   {

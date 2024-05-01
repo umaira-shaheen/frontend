@@ -53,11 +53,14 @@ const AdminNavbar = (props) => {
         setError(true);
       });
   }
-  // if(isloggedout)
-  // {
-  //   <Redirect to="/auth/login" />; 
-    
-  // }
+  var user_image = ""
+  if (user_info.User_img) {
+    user_image = user_info.User_img.replace('public/', '')
+  }
+  else {
+    user_image = "uploads/avater.png";
+  }
+ 
   return(
 
  

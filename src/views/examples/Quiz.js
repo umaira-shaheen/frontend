@@ -121,14 +121,14 @@ const Quiz = (args) => {
     const quiz_course = e.target.courses.value;
     const selectedDate = new Date(start_date);
     const currentDate = new Date();
-    if (selectedDate < currentDate) {
+    if (selectedDate <=currentDate) {
       setcustomerror(true);
       setErrorMessage("Start date should be greater than or equal to today's date");
       // setError(true);
       // closeModal();
       return;
     }
-    else if (new Date(end_date) < new Date(start_date)) {
+    else if (new Date(end_date) <= new Date(start_date)) {
       setcustomerror(true);
       setErrorMessage('End date should be greater than start date');
       // setError(true);

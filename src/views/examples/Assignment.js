@@ -190,54 +190,55 @@ const Assignment = (args) => {
 
     }
   }
-  function GetAssignment(e) {
+  // function GetAssignment(e) {
 
-    axios({
-      method: 'get',
-      withCredentials: true,
-      sameSite: 'none',
-      url: "http://localhost:8000/Assignment/GetAssignment",
-    })
-      .then(res => {
-        if (res.data) {
-          setAssignmenttable(res.data)
-        }
-      })
-      .catch(error => {
-        if (error && error.response) {
-          if (error.response.data && error.response.data == "Not logged in") {
-            localStorage.clear(); // Clear local storage
-            history.push('/auth/login');
-          }
-        }
-        console.log(error);
-      })
-  }
+  //   axios({
+  //     method: 'get',
+  //     withCredentials: true,
+  //     sameSite: 'none',
+  //     url: "http://localhost:8000/Assignment/GetAssignment",
+  //   })
+  //     .then(res => {
+  //       if (res.data) {
+  //         setAssignmenttable(res.data)
+  //       }
+  //     })
+  //     .catch(error => {
+  //       if (error && error.response) {
+  //         if (error.response.data && error.response.data == "Not logged in") {
+  //           localStorage.clear(); // Clear local storage
+  //           history.push('/auth/login');
+  //         }
+  //       }
+  //       console.log(error);
+  //     })
+  // }
 
   useEffect(() => {
     // Update the document title using the browser API
     //  GetCourse();
     GetTeacherCourses();
-    axios({
-      method: 'get',
-      withCredentials: true,
-      sameSite: 'none',
-      url: "http://localhost:8000/Assignment/GetAssignment",
-    })
-      .then(res => {
-        if (res.data) {
-          setAssignmenttable(res.data)
-        }
-      })
-      .catch(error => {
-        if (error && error.response) {
-          if (error.response.data && error.response.data == "Not logged in") {
-            localStorage.clear(); // Clear local storage
-            history.push('/auth/login');
-          }
-        }
-        console.log(error);
-      })
+    getonlyteacherAssignment();
+    // axios({
+    //   method: 'get',
+    //   withCredentials: true,
+    //   sameSite: 'none',
+    //   url: "http://localhost:8000/Assignment/GetAssignment",
+    // })
+    //   .then(res => {
+    //     if (res.data) {
+    //       setAssignmenttable(res.data)
+    //     }
+    //   })
+    //   .catch(error => {
+    //     if (error && error.response) {
+    //       if (error.response.data && error.response.data == "Not logged in") {
+    //         localStorage.clear(); // Clear local storage
+    //         history.push('/auth/login');
+    //       }
+    //     }
+    //     console.log(error);
+    //   })
   }, []);
   function EditAssignment(e) {
     e.preventDefault();

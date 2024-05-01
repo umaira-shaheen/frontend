@@ -39,6 +39,7 @@ import CoursesList from "views/Frontpages/CoursesList";
 import Our_features from "views/Frontpages/Our_features";
 import Detail from "views/Frontpages/Detail";
 import Certificate_Pdf from "views/examples/Certificate_pdf";
+import Reset_password from "views/examples/Reset_password";
 import Forgot_password from "views/examples/Forgot_password";
 import Feature from "views/Frontpages/Feature";
 import Team from "views/Frontpages/Our_team";
@@ -58,7 +59,7 @@ root.render(
       <Route path="/contact-us" render={(props) => <ContactUs {...props} />} />
       <Route path="/Contact" render={(props) => <Contact {...props} />} />
       <Route path="/Certificate_Pdf" render={(props) => <Certificate_Pdf {...props} />} />
-
+      {/* <Route path="/reset-password" render={(props) => <Reset_password {...props} />} /> */}
       <Route path="/coursesList" render={(props) => <CoursesList {...props} />} />
       <Route path="/Our_team" render={(props) => <Team {...props} />} />
       <Route path="/Our_features" render={(props) => <Our_features {...props} />} />
